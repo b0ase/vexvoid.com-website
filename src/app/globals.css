@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 10, 10, 10;
+  --background-end-rgb: 5, 5, 5;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  );
+  min-height: 100vh;
+}
+
+@layer components {
+  .neon-text {
+    @apply text-neon-green animate-glow;
+  }
+  
+  .neon-border {
+    @apply border-2 border-neon-green shadow-[0_0_10px_#39FF14];
+  }
+  
+  .nav-link {
+    @apply text-white hover:text-neon-green transition-colors duration-300;
+  }
+} 
