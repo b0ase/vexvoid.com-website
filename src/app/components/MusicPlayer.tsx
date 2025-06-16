@@ -148,15 +148,15 @@ export default function MusicPlayer() {
         preload="metadata"
       />
       
-      {/* Compact Player Box - Made Bigger */}
-      <div className="bg-black/95 border border-white p-4 text-white lo-fi-text w-80">
+      {/* Compact Player Box - Medium Size */}
+      <div className="bg-black/95 border border-white p-3 text-white lo-fi-text w-72">
         {/* Header */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="text-xs font-bold">V3XV0ID MUSIC</div>
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-[10px] font-bold">V3XV0ID MUSIC</div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setAutoPlay(!autoPlay)}
-              className={`text-xs px-2 py-1 border transition-colors ${
+              className={`text-[10px] px-1.5 py-0.5 border transition-colors ${
                 autoPlay 
                   ? 'border-green-400 text-green-400' 
                   : 'border-white/30 text-white/50'
@@ -167,7 +167,7 @@ export default function MusicPlayer() {
             </button>
             <button
               onClick={() => setShowPlaylist(!showPlaylist)}
-              className="text-sm hover:text-cyan-400 transition-colors"
+              className="text-xs hover:text-cyan-400 transition-colors"
               title="Show playlist"
             >
               ☰
@@ -176,24 +176,24 @@ export default function MusicPlayer() {
         </div>
 
         {/* Now Playing */}
-        <div className="mb-3">
-          <div className="text-xs text-white/60 mb-1">
+        <div className="mb-2">
+          <div className="text-[10px] text-white/60 mb-1">
             {isPlaying ? 'NOW PLAYING:' : 'PAUSED:'}
           </div>
-          <div className="text-sm font-medium truncate" title={currentTrackTitle}>
+          <div className="text-xs font-medium truncate" title={currentTrackTitle}>
             {currentTrackTitle}
           </div>
-          <div className="text-xs text-white/50 mt-1">
+          <div className="text-[10px] text-white/50 mt-1">
             Track {currentTrack + 1} of {musicTracks.length} • {autoPlay ? 'Random' : 'Sequential'}
           </div>
         </div>
 
         {/* Controls */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <button
               onClick={prevTrack}
-              className="text-lg hover:text-cyan-400 transition-colors"
+              className="text-sm hover:text-cyan-400 transition-colors"
               title="Previous track"
             >
               ⏮
@@ -201,7 +201,7 @@ export default function MusicPlayer() {
             
             <button
               onClick={togglePlay}
-              className="text-xl hover:text-cyan-400 transition-colors mx-2"
+              className="text-base hover:text-cyan-400 transition-colors mx-1"
               disabled={isLoading}
               title={isPlaying ? 'Pause' : 'Play'}
             >
@@ -210,14 +210,14 @@ export default function MusicPlayer() {
             
             <button
               onClick={nextTrack}
-              className="text-lg hover:text-cyan-400 transition-colors"
+              className="text-sm hover:text-cyan-400 transition-colors"
               title="Next track"
             >
               ⏭
             </button>
           </div>
 
-          <div className="text-xs text-white/50">
+          <div className="text-[10px] text-white/50">
             ATMOSPHERIC • ELECTRONIC
           </div>
         </div>
@@ -225,22 +225,22 @@ export default function MusicPlayer() {
         {/* Playlist Dropdown */}
         {showPlaylist && (
           <div className="absolute top-full left-0 right-0 mt-1 bg-black/95 border border-white max-h-60 overflow-y-auto">
-            <div className="p-3">
-              <div className="text-xs text-white/60 mb-2 border-b border-white/20 pb-2">
+            <div className="p-2">
+              <div className="text-[10px] text-white/60 mb-2 border-b border-white/20 pb-1">
                 SELECT TRACK ({musicTracks.length} available)
               </div>
               {musicTracks.map((track, index) => (
                 <div
                   key={index}
                   onClick={() => selectTrack(index)}
-                  className={`cursor-pointer text-sm p-2 hover:bg-white/10 transition-colors ${
+                  className={`cursor-pointer text-xs p-1.5 hover:bg-white/10 transition-colors ${
                     index === currentTrack ? 'bg-white/20 text-cyan-400' : 'text-white/80'
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="truncate">{index + 1}. {track.title}</span>
                     {index === currentTrack && (
-                      <span className="text-cyan-400 ml-2 text-sm">
+                      <span className="text-cyan-400 ml-2 text-xs">
                         {isPlaying ? '♪' : '▫'}
                       </span>
                     )}
