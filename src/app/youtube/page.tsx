@@ -3,28 +3,88 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import VideoGeneratorComponent from './components/VideoGenerator'
+import OrganicFlowDemo from './components/OrganicFlowDemo'
+import EnhancedVideoGenerator from './components/EnhancedVideoGenerator'
+import BatchGenerator from './components/BatchGenerator'
+import YouTubeAuth from './components/YouTubeAuth'
+import PublicGenerator from './components/PublicGenerator'
+import SimpleVideoGenerator from './components/SimpleVideoGenerator'
+import TestVideoGenerator from './components/TestVideoGenerator'
+import { getRandomImages } from '../lib/images'
 
 export default function YouTubePage() {
   const [videos, setVideos] = useState([])
   const [generatedVideos, setGeneratedVideos] = useState<string[]>([])
+  const [isYouTubeAuthenticated, setIsYouTubeAuthenticated] = useState(false)
+  const [showPublicGenerator, setShowPublicGenerator] = useState(false)
+  const [generatorMode, setGeneratorMode] = useState<'test' | 'simple' | 'enhanced' | 'public'>('test')
 
-  // Mock video data - will be replaced with YouTube API
+  // Mock video data using random concept art images
+  const randomThumbnails = getRandomImages(8)
   const mockVideos = [
     {
       id: 'echoes-abyss-1',
       title: 'Echoes in the Abyss - Visual Mix',
-      thumbnail: '/images/VexVoid_concept_art/download.jpg',
-      duration: '3:42',
+      thumbnail: randomThumbnails[0]?.path || '/images/VexVoid_concept_art/download.jpg',
+      duration: '2:24',
       views: '1.2K',
       uploadDate: '2 days ago'
     },
     {
       id: 'shadowed-depths-1',
       title: 'Shadowed Depths - Generative Visuals',
-      thumbnail: '/images/VexVoid_concept_art/download-1.jpg',
-      duration: '4:15',
+      thumbnail: randomThumbnails[1]?.path || '/images/VexVoid_concept_art/download-1.jpg',
+      duration: '4:06',
       views: '856',
       uploadDate: '1 week ago'
+    },
+    {
+      id: 'midnight-reverie-1',
+      title: 'Midnight Reverie - Atmospheric Journey',
+      thumbnail: randomThumbnails[2]?.path || '/images/VexVoid_concept_art_2/download.jpg',
+      duration: '6:18',
+      views: '2.1K',
+      uploadDate: '3 days ago'
+    },
+    {
+      id: 'whispers-smoke-1',
+      title: 'Whispers in the Smoke - Dark Ambient',
+      thumbnail: randomThumbnails[3]?.path || '/images/VexVoid_concept_art_3/download.jpg',
+      duration: '5:24',
+      views: '1.8K',
+      uploadDate: '5 days ago'
+    },
+    {
+      id: 'shadows-mind-1',
+      title: 'Shadows of the Mind - Extended Mix',
+      thumbnail: randomThumbnails[4]?.path || '/images/VexVoid_concept_art_3/download-10.jpg',
+      duration: '4:48',
+      views: '943',
+      uploadDate: '1 week ago'
+    },
+    {
+      id: 'echoes-mist-1',
+      title: 'Echoes in the Mist - Generative Art',
+      thumbnail: randomThumbnails[5]?.path || '/images/VexVoid_concept_art_2/download-5.jpg',
+      duration: '5:18',
+      views: '1.5K',
+      uploadDate: '4 days ago'
+    },
+    {
+      id: 'echoes-fog-1',
+      title: 'Echoes in the Fog - Minimal Mix',
+      thumbnail: randomThumbnails[6]?.path || '/images/VexVoid_concept_art_3/download-15.jpg',
+      duration: '4:00',
+      views: '1.3K',
+      uploadDate: '6 days ago'
+    },
+    {
+      id: 'shadowed-whispers-1',
+      title: 'Shadowed Whispers - Deep Ambient',
+      thumbnail: randomThumbnails[7]?.path || '/images/VexVoid_concept_art_2/download-7.jpg',
+      duration: '5:12',
+      views: '2.4K',
+      uploadDate: '1 day ago'
     }
   ]
 
@@ -45,7 +105,11 @@ export default function YouTubePage() {
 
       <div className="max-w-6xl mx-auto p-4">
         {/* Channel Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-8 text-center">
+        <div className="grid grid-cols-4 gap-4 mb-8 text-center">
+          <div className="border border-white/20 p-3">
+            <div className="text-sm md:text-base cyber-text">{24 + generatedVideos.length}</div>
+            <div className="text-xs text-white/70">TRACKS</div>
+          </div>
           <div className="border border-white/20 p-3">
             <div className="text-sm md:text-base cyber-text">{12 + generatedVideos.length}</div>
             <div className="text-xs text-white/70">VIDEOS</div>
@@ -60,9 +124,84 @@ export default function YouTubePage() {
           </div>
         </div>
 
-        {/* Video Generator */}
+        {/* YouTube Authentication */}
         <div className="mb-8">
-          <VideoGeneratorComponent onVideoGenerated={handleVideoGenerated} />
+          <YouTubeAuth onAuthChange={setIsYouTubeAuthenticated} />
+        </div>
+
+        {/* Generator Mode Toggle */}
+        <div className="mb-8 flex gap-2">
+          <button
+            onClick={() => setGeneratorMode('test')}
+            className={`px-3 py-2 text-xs font-mono border transition-colors ${
+              generatorMode === 'test'
+                ? 'border-white bg-white text-black' 
+                : 'border-white/30 text-white hover:bg-white/10'
+            }`}
+          >
+            TEST (DEBUG)
+          </button>
+          <button
+            onClick={() => setGeneratorMode('simple')}
+            className={`px-3 py-2 text-xs font-mono border transition-colors ${
+              generatorMode === 'simple'
+                ? 'border-white bg-white text-black' 
+                : 'border-white/30 text-white hover:bg-white/10'
+            }`}
+          >
+            SIMPLE (WORKING)
+          </button>
+          <button
+            onClick={() => setGeneratorMode('enhanced')}
+            className={`px-3 py-2 text-xs font-mono border transition-colors ${
+              generatorMode === 'enhanced'
+                ? 'border-white bg-white text-black' 
+                : 'border-white/30 text-white hover:bg-white/10'
+            }`}
+          >
+            ENHANCED (FFMPEG)
+          </button>
+          <button
+            onClick={() => setGeneratorMode('public')}
+            className={`px-3 py-2 text-xs font-mono border transition-colors ${
+              generatorMode === 'public'
+                ? 'border-white bg-white text-black' 
+                : 'border-white/30 text-white hover:bg-white/10'
+            }`}
+          >
+            PUBLIC (BRAND SAFE)
+          </button>
+        </div>
+
+        {/* Video Generator - Different Modes */}
+        <div className="mb-8">
+          {generatorMode === 'test' && (
+            <TestVideoGenerator />
+          )}
+          {generatorMode === 'simple' && (
+            <SimpleVideoGenerator onVideoGenerated={handleVideoGenerated} />
+          )}
+          {generatorMode === 'enhanced' && (
+            <EnhancedVideoGenerator onVideoGenerated={handleVideoGenerated} />
+          )}
+          {generatorMode === 'public' && (
+            <PublicGenerator onVideoGenerated={handleVideoGenerated} />
+          )}
+        </div>
+
+        {/* Live Art Preview */}
+        <div className="mb-8">
+          <h2 className="text-sm md:text-base cyber-text mb-4">LIVE GENERATIVE ART PREVIEW</h2>
+          <OrganicFlowDemo width={400} height={400} />
+        </div>
+
+        {/* Batch Generator */}
+        <div className="mb-8">
+          <BatchGenerator onBatchComplete={(count) => {
+            console.log(`Batch complete: ${count} videos generated`);
+            // Update generated videos count
+            setGeneratedVideos(prev => [...prev, ...Array(count).fill(0).map((_, i) => `batch-${Date.now()}-${i}`)]);
+          }} />
         </div>
 
         {/* Generated Videos Alert */}

@@ -1,3 +1,4 @@
 {
+  "/youtube/page": "app/youtube/page.js",
   "/page": "app/page.js"
 }

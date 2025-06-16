@@ -2,19 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { conceptArtImages, getRandomImages, getAllImagePaths } from '../lib/images'
 
-const backgroundImages = [
-  'download.jpg',
-  'download-1.jpg',
-  'download-2.jpg',
-  'download-3.jpg',
-  'download-4.jpg',
-  'download-5.jpg',
-  'download-6.jpg',
-  'download-7.jpg',
-  'download-8.jpg',
-  'download-9.jpg',
-]
+// Use all available images for backgrounds
+const backgroundImages = getAllImagePaths()
+
+// Get random selection for floating elements
+const floatingImages = getRandomImages(16)
+const cornerImages = conceptArtImages.slice(0, 4)
 
 export default function Hero() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -31,15 +26,15 @@ export default function Hero() {
     <section className="h-screen flex items-center justify-center relative overflow-hidden">
       {/* Multiple Background Images */}
       <div className="absolute inset-0">
-        {backgroundImages.map((img, index) => (
+        {backgroundImages.map((imgPath, index) => (
           <div
-            key={img}
+            key={imgPath}
             className={`absolute inset-0 transition-opacity duration-[3000ms] ${
               index === currentImageIndex ? 'opacity-60' : 'opacity-0'
             }`}
           >
             <Image
-              src={`/images/VexVoid_concept_art/${img}`}
+              src={imgPath}
               alt={`Background ${index + 1}`}
               fill
               className="object-cover filter grayscale contrast-150 brightness-75"
@@ -51,9 +46,9 @@ export default function Hero() {
 
       {/* Floating Image Grid */}
       <div className="absolute inset-0 pointer-events-none">
-        {backgroundImages.map((img, index) => (
+        {floatingImages.slice(0, 12).map((img, index) => (
           <div
-            key={`floating-${img}`}
+            key={`floating-${img.path}`}
             className="absolute opacity-30 border border-white/20"
             style={{
               width: `${80 + (index % 3) * 40}px`,
@@ -64,7 +59,7 @@ export default function Hero() {
             }}
           >
             <Image
-              src={`/images/VexVoid_concept_art/${img}`}
+              src={img.path}
               alt=""
               fill
               className="object-cover filter grayscale"
@@ -75,9 +70,9 @@ export default function Hero() {
 
       {/* More Floating Images */}
       <div className="absolute inset-0 pointer-events-none">
-        {backgroundImages.slice(0, 6).map((img, index) => (
+        {floatingImages.slice(12, 16).map((img, index) => (
           <div
-            key={`extra-${img}`}
+            key={`extra-${img.path}`}
             className="absolute opacity-20 border border-white/10"
             style={{
               width: `${60 + (index % 2) * 30}px`,
@@ -88,7 +83,7 @@ export default function Hero() {
             }}
           >
             <Image
-              src={`/images/VexVoid_concept_art/${img}`}
+              src={img.path}
               alt=""
               fill
               className="object-cover filter grayscale brightness-50"
@@ -123,7 +118,7 @@ export default function Hero() {
       {/* Corner Images */}
       <div className="absolute top-4 left-4 w-16 h-16 opacity-40">
         <Image
-          src="/images/VexVoid_concept_art/download.jpg"
+          src={cornerImages[0].path}
           alt=""
           fill
           className="object-cover filter grayscale border border-white/30"
@@ -131,7 +126,7 @@ export default function Hero() {
       </div>
       <div className="absolute top-4 right-4 w-16 h-16 opacity-40">
         <Image
-          src="/images/VexVoid_concept_art/download-1.jpg"
+          src={cornerImages[1].path}
           alt=""
           fill
           className="object-cover filter grayscale border border-white/30"
@@ -139,7 +134,7 @@ export default function Hero() {
       </div>
       <div className="absolute bottom-4 left-4 w-16 h-16 opacity-40">
         <Image
-          src="/images/VexVoid_concept_art/download-2.jpg"
+          src={cornerImages[2].path}
           alt=""
           fill
           className="object-cover filter grayscale border border-white/30"
@@ -147,7 +142,7 @@ export default function Hero() {
       </div>
       <div className="absolute bottom-4 right-4 w-16 h-16 opacity-40">
         <Image
-          src="/images/VexVoid_concept_art/download-3.jpg"
+          src={cornerImages[3].path}
           alt=""
           fill
           className="object-cover filter grayscale border border-white/30"
