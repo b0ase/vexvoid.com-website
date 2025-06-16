@@ -2,32 +2,110 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 10, 10, 10;
-  --background-end-rgb: 5, 5, 5;
+body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.0;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  margin: 0;
+  padding: 0;
+  cursor: crosshair;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-    to bottom,
-    rgb(var(--background-start-rgb)),
-    rgb(var(--background-end-rgb))
-  );
-  min-height: 100vh;
+* {
+  box-sizing: border-box;
 }
 
 @layer components {
-  .neon-text {
-    @apply text-neon-green animate-glow;
+  .cyber-text {
+    color: #ffffff;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
   }
   
-  .neon-border {
-    @apply border-2 border-neon-green shadow-[0_0_10px_#39FF14];
+  .cyber-border {
+    border: 1px solid #ffffff;
   }
   
-  .nav-link {
-    @apply text-white hover:text-neon-green transition-colors duration-300;
+  .cyber-card {
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 1px solid #ffffff;
   }
+  
+  .cyber-button {
+    background-color: #ffffff;
+    color: #000000;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid #ffffff;
+  }
+  
+  .cyber-grid-line {
+    background-image: 
+      linear-gradient(#ffffff 1px, transparent 1px),
+      linear-gradient(90deg, #ffffff 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.1;
+  }
+
+  .lo-fi-text {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.05em;
+    font-weight: normal;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-transform: uppercase;
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  }
+
+  .scan-lines {
+    position: relative;
+  }
+
+  .scan-lines::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.02) 2px,
+      rgba(255, 255, 255, 0.02) 4px
+    );
+    pointer-events: none;
+  }
+}
+
+@layer utilities {
+  .duration-2000 {
+    transition-duration: 2000ms;
+  }
+}
+
+/* Custom tiny text sizes */
+.text-\[6px\] {
+  font-size: 6px;
+}
+
+.text-\[8px\] {
+  font-size: 8px;
+}
+
+.text-\[10px\] {
+  font-size: 10px;
 } 

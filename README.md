@@ -1,6 +1,6 @@
 # V3XV0ID Website
 
-A modern, responsive website for digital musician and hacker V3XV0ID, built with Next.js, TypeScript, and Tailwind CSS.
+A modern, responsive website for digital musician and hacker V3XV0ID, built with Next.js, TypeScript, and Tailwind CSS. Features include a music generation platform and custom fashion item creator.
 
 ## Features
 
@@ -10,6 +10,35 @@ A modern, responsive website for digital musician and hacker V3XV0ID, built with
 - ⚡ Built with Next.js 14 and TypeScript
 - 🎨 Styled with Tailwind CSS
 - ✨ Smooth animations with Framer Motion
+- 🎹 AI-driven music generation platform
+- 👕 Custom fashion item generator
+
+## Project Structure
+
+```
+src/
+├── app/              # Next.js application
+├── music/            # Music generation platform
+│   ├── templates/    # Music generation templates
+│   ├── examples/     # Example implementations
+│   └── generation/   # AI generation logic
+├── fashion/          # Fashion item generator
+│   ├── templates/    # Design templates
+│   ├── examples/     # Example designs
+│   └── generation/   # AI generation logic
+└── components/       # React components
+
+public/
+├── images/          # Static images
+│   ├── photographs/
+│   ├── graphics/
+│   ├── logos/
+│   ├── album-covers/
+│   ├── single-covers/
+│   ├── decals/
+│   └── motifs/
+└── videos/          # Video content
+```
 
 ## Getting Started
 
@@ -45,6 +74,30 @@ npm run dev
 - Tailwind CSS
 - Framer Motion
 - Inter & JetBrains Mono fonts
+
+## Platform Features
+
+### Music Generation Platform
+- AI-driven music composition
+- Template-based generation system
+- Real-time preview
+- Export functionality
+- Style consistency maintenance
+
+### Fashion Item Generator
+- Custom t-shirt design creation
+- Brand integration
+- Design preview system
+- Print-ready output
+- User customization options
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
