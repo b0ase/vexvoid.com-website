@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { conceptArtImages, getRandomImages, getAllImagePaths } from '../lib/images'
+import SocialLinks from './SocialLinks'
 
 // Use all available images for backgrounds
 const backgroundImages = getAllImagePaths()
@@ -107,10 +108,15 @@ export default function Hero() {
           DIGITAL MUSICIAN & HACKER
         </p>
         
+        {/* Social Links */}
+        <div className="mb-4">
+          <SocialLinks />
+        </div>
+        
         <div className="flex justify-center gap-2 text-xs md:text-sm flex-wrap">
           <a href="#audio" className="bg-white text-black px-3 py-1.5 lo-fi-text hover:bg-gray-200 transition-colors">AUDIO</a>
           <a href="#visual" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">VISUAL</a>
-          <a href="/youtube" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">YOUTUBE</a>
+          <a href="/studio" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">STUDIO</a>
           <a href="/token" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">$V3X</a>
           <a href="#projects" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">PROJ</a>
         </div>

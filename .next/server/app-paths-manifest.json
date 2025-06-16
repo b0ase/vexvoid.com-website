@@ -1,12 +1,3 @@
 {
-  "/_not-found": "app/_not-found.js",
-  "/api/auth/callback/route": "app/api/auth/callback/route.js",
-  "/api/debug/route": "app/api/debug/route.js",
-  "/api/youtube/auth/route": "app/api/youtube/auth/route.js",
-  "/api/youtube/upload/route": "app/api/youtube/upload/route.js",
-  "/page": "app/page.js",
-  "/studio/page": "app/studio/page.js",
-  "/test/page": "app/test/page.js",
-  "/token/page": "app/token/page.js",
-  "/youtube/page": "app/youtube/page.js"
+  "/page": "app/page.js"
 }
