@@ -13,6 +13,10 @@ import SimpleVideoGenerator from '../components/youtube/SimpleVideoGenerator'
 import TestVideoGenerator from '../components/youtube/TestVideoGenerator'
 import WorkingVideoGenerator from '../components/youtube/WorkingVideoGenerator'
 import AdvancedVideoGenerator from '../components/youtube/AdvancedVideoGenerator'
+import MusicManager from '../components/studio/MusicManager'
+import AssetManager from '../components/studio/AssetManager'
+import ContentCalendar from '../components/studio/ContentCalendar'
+import AIAgent from '../components/studio/AIAgent'
 import { getRandomImages } from '../lib/images'
 
 const STUDIO_PASSWORD = 'shadow'
@@ -21,7 +25,7 @@ export default function StudioPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'music' | 'youtube'>('music')
+  const [activeTab, setActiveTab] = useState<'music' | 'youtube' | 'assets' | 'calendar' | 'ai'>('music')
   const [videos, setVideos] = useState([])
   const [generatedVideos, setGeneratedVideos] = useState<string[]>([])
   const [isYouTubeAuthenticated, setIsYouTubeAuthenticated] = useState(false)
@@ -165,7 +169,7 @@ export default function StudioPage() {
 
       <div className="max-w-6xl mx-auto p-4">
         {/* Tab Navigation */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 mb-6 flex-wrap">
           <button
             onClick={() => setActiveTab('music')}
             className={`px-4 py-2 lo-fi-text transition-colors ${
@@ -186,16 +190,86 @@ export default function StudioPage() {
           >
             🎬 YOUTUBE
           </button>
+          <button
+            onClick={() => setActiveTab('assets')}
+            className={`px-4 py-2 lo-fi-text transition-colors ${
+              activeTab === 'assets'
+                ? 'bg-white text-black' 
+                : 'bg-black/50 border border-white/20 text-white hover:bg-white/10'
+            }`}
+          >
+            📁 ASSETS
+          </button>
+          <button
+            onClick={() => setActiveTab('calendar')}
+            className={`px-4 py-2 lo-fi-text transition-colors ${
+              activeTab === 'calendar'
+                ? 'bg-white text-black' 
+                : 'bg-black/50 border border-white/20 text-white hover:bg-white/10'
+            }`}
+          >
+            📅 CALENDAR
+          </button>
+          <button
+            onClick={() => setActiveTab('ai')}
+            className={`px-4 py-2 lo-fi-text transition-colors ${
+              activeTab === 'ai'
+                ? 'bg-white text-black' 
+                : 'bg-black/50 border border-white/20 text-white hover:bg-white/10'
+            }`}
+          >
+            🤖 AI AGENT
+          </button>
         </div>
 
         {/* Music Tab */}
         {activeTab === 'music' && (
+          <div className="space-y-6">
+            <div className="bg-black/50 border border-white/20 p-6">
+              <h2 className="text-xl font-bold lo-fi-text mb-4">🎵 Music Management</h2>
+              <p className="text-white/70 text-sm lo-fi-text mb-4">
+                Upload and manage V3XV0ID music tracks in Supabase Storage.
+              </p>
+              <MusicUploader />
+            </div>
+            
+            <div className="bg-black/50 border border-white/20 p-6">
+              <h2 className="text-xl font-bold lo-fi-text mb-4">🎧 Music Library</h2>
+              <MusicManager />
+            </div>
+          </div>
+        )}
+
+        {/* Assets Tab */}
+        {activeTab === 'assets' && (
           <div className="bg-black/50 border border-white/20 p-6">
-            <h2 className="text-xl font-bold lo-fi-text mb-4">🎵 Music Management</h2>
+            <h2 className="text-xl font-bold lo-fi-text mb-4">📁 Asset Management</h2>
             <p className="text-white/70 text-sm lo-fi-text mb-4">
-              Upload and manage V3XV0ID music tracks in Supabase Storage.
+              Manage images, concept art, and visual assets for video generation.
             </p>
-            <MusicUploader />
+            <AssetManager />
+          </div>
+        )}
+
+        {/* Calendar Tab */}
+        {activeTab === 'calendar' && (
+          <div className="bg-black/50 border border-white/20 p-6">
+            <h2 className="text-xl font-bold lo-fi-text mb-4">📅 Content Calendar</h2>
+            <p className="text-white/70 text-sm lo-fi-text mb-4">
+              Schedule and track your content publishing pipeline.
+            </p>
+            <ContentCalendar />
+          </div>
+        )}
+
+        {/* AI Agent Tab */}
+        {activeTab === 'ai' && (
+          <div className="bg-black/50 border border-white/20 p-6">
+            <h2 className="text-xl font-bold lo-fi-text mb-4">🤖 V3XV0ID AI Agent</h2>
+            <p className="text-white/70 text-sm lo-fi-text mb-4">
+              Automated content creation, editing, and publishing system.
+            </p>
+            <AIAgent />
           </div>
         )}
 

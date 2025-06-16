@@ -1,1 +1,11 @@
-{}
+{
+  "/_not-found": "app/_not-found.js",
+  "/api/debug/route": "app/api/debug/route.js",
+  "/page": "app/page.js",
+  "/api/youtube/upload/route": "app/api/youtube/upload/route.js",
+  "/studio/page": "app/studio/page.js",
+  "/api/auth/callback/route": "app/api/auth/callback/route.js",
+  "/api/youtube/auth/route": "app/api/youtube/auth/route.js",
+  "/token/page": "app/token/page.js",
+  "/test/page": "app/test/page.js"
+}

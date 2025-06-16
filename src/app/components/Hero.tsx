@@ -104,21 +104,21 @@ export default function Hero() {
         
         <div className="w-16 h-px bg-white mx-auto mb-2"></div>
         
-        <p className="text-base md:text-lg text-white mb-4 lo-fi-text">
+        <p className="text-base md:text-lg text-white mb-6 lo-fi-text">
           DIGITAL MUSICIAN & HACKER
         </p>
         
-        {/* Social Links */}
-        <div className="mb-4">
-          <SocialLinks />
-        </div>
-        
-        <div className="flex justify-center gap-2 text-xs md:text-sm flex-wrap">
+        <div className="flex justify-center gap-2 text-xs md:text-sm flex-wrap mb-4">
           <a href="#audio" className="bg-white text-black px-3 py-1.5 lo-fi-text hover:bg-gray-200 transition-colors">AUDIO</a>
           <a href="#visual" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">VISUAL</a>
           <a href="/studio" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">STUDIO</a>
           <a href="/token" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">$V3X</a>
           <a href="#projects" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">PROJ</a>
+        </div>
+
+        {/* Social Links - Under buttons */}
+        <div>
+          <SocialLinks />
         </div>
       </div>
 
