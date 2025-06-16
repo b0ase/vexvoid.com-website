@@ -12,6 +12,7 @@ import PublicGenerator from '../components/youtube/PublicGenerator'
 import SimpleVideoGenerator from '../components/youtube/SimpleVideoGenerator'
 import TestVideoGenerator from '../components/youtube/TestVideoGenerator'
 import WorkingVideoGenerator from '../components/youtube/WorkingVideoGenerator'
+import AdvancedVideoGenerator from '../components/youtube/AdvancedVideoGenerator'
 import { getRandomImages } from '../lib/images'
 
 const STUDIO_PASSWORD = 'shadow'
@@ -24,7 +25,7 @@ export default function StudioPage() {
   const [videos, setVideos] = useState([])
   const [generatedVideos, setGeneratedVideos] = useState<string[]>([])
   const [isYouTubeAuthenticated, setIsYouTubeAuthenticated] = useState(false)
-  const [generatorMode, setGeneratorMode] = useState<'test' | 'simple' | 'enhanced' | 'public'>('test')
+  const [generatorMode, setGeneratorMode] = useState<'test' | 'simple' | 'enhanced' | 'public' | 'advanced'>('test')
 
   useEffect(() => {
     const savedAuth = localStorage.getItem('v3xv0id_studio_auth')
@@ -271,6 +272,16 @@ export default function StudioPage() {
                 >
                   PUBLIC (BRAND SAFE)
                 </button>
+                <button
+                  onClick={() => setGeneratorMode('advanced')}
+                  className={`px-3 py-2 text-xs lo-fi-text border transition-colors ${
+                    generatorMode === 'advanced'
+                      ? 'border-white bg-white text-black' 
+                      : 'border-white/30 text-white hover:bg-white/10'
+                  }`}
+                >
+                  ADVANCED (P5.JS)
+                </button>
               </div>
 
               {/* Video Generator - Different Modes */}
@@ -286,6 +297,9 @@ export default function StudioPage() {
                 )}
                 {generatorMode === 'public' && (
                   <PublicGenerator onVideoGenerated={handleVideoGenerated} />
+                )}
+                {generatorMode === 'advanced' && (
+                  <AdvancedVideoGenerator />
                 )}
               </div>
             </div>
