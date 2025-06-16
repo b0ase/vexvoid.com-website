@@ -1,1 +1,13 @@
 node_modules
+.env.local
+.env
+.env.*
+!.env.example
+perchance_password.txt
+*.txt
+!README.md
+!workflow-setup.md
+.history/
+.next/
+.DS_Store
+*.log
