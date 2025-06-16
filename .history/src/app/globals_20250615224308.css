@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS for testing */
+body {
+  background-color: #0A0A0A;
+  color: white;
+}
+
+.test-neon {
+  color: #39FF14;
+  font-family: monospace;
+}
+
+@layer components {
+  .neon-text {
+    @apply text-neon-green animate-glow;
+  }
+  
+  .neon-border {
+    @apply border-2 border-neon-green shadow-[0_0_10px_#39FF14];
+  }
+  
+  .nav-link {
+    @apply text-white hover:text-neon-green transition-colors duration-300;
+  }
+} 

@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Courier New', monospace;
+  font-size: 16px;
+  line-height: 1.1;
+  font-weight: normal;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  text-rendering: pixelated;
+  margin: 0;
+  padding: 0;
+  cursor: crosshair;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@layer components {
+  .cyber-text {
+    color: #ffffff;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+  
+  .cyber-border {
+    border: 2px solid #ffffff;
+  }
+  
+  .cyber-card {
+    background-color: #000000;
+    border: 2px solid #ffffff;
+  }
+  
+  .cyber-button {
+    background-color: #ffffff;
+    color: #000000;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: 2px solid #ffffff;
+  }
+  
+  .cyber-grid-line {
+    background-image: 
+      linear-gradient(#ffffff 1px, transparent 1px),
+      linear-gradient(90deg, #ffffff 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.1;
+  }
+
+  .lo-fi-text {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.2em;
+    font-weight: normal;
+    text-rendering: pixelated;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: unset;
+    text-transform: uppercase;
+  }
+
+  .scan-lines {
+    position: relative;
+  }
+
+  .scan-lines::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.02) 2px,
+      rgba(255, 255, 255, 0.02) 4px
+    );
+    pointer-events: none;
+  }
+}
+
+@layer utilities {
+  .duration-2000 {
+    transition-duration: 2000ms;
+  }
+} 

@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+}
+
+@layer components {
+  .cyber-text {
+    @apply text-cyber-white font-mono tracking-wider;
+  }
+  
+  .cyber-border {
+    @apply border border-cyber-light hover:border-cyber-white transition-colors duration-300;
+  }
+  
+  .cyber-card {
+    @apply bg-cyber-dark border border-cyber-gray hover:border-cyber-light transition-all duration-300;
+  }
+  
+  .cyber-button {
+    @apply bg-cyber-white text-cyber-black hover:bg-cyber-accent transition-colors duration-200 font-mono tracking-wide;
+  }
+  
+  .cyber-grid-line {
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+}
+
+@layer utilities {
+  .duration-2000 {
+    transition-duration: 2000ms;
+  }
+} 

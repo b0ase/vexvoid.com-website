@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Courier New', 'Courier', monospace;
+  line-height: 1.2;
+  font-weight: normal;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  text-rendering: pixelated;
+}
+
+@layer components {
+  .cyber-text {
+    @apply text-cyber-white font-retro;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  
+  .cyber-border {
+    @apply border border-cyber-white;
+  }
+  
+  .cyber-card {
+    @apply bg-cyber-black border border-cyber-white;
+  }
+  
+  .cyber-button {
+    @apply bg-cyber-white text-cyber-black font-retro;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  
+  .cyber-grid-line {
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .lo-fi-text {
+    font-family: 'Courier New', 'Courier', monospace;
+    letter-spacing: 0.1em;
+    font-weight: normal;
+    text-rendering: pixelated;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: unset;
+    text-transform: uppercase;
+  }
+
+  .scan-lines {
+    position: relative;
+  }
+
+  .scan-lines::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      transparent 50%,
+      rgba(255, 255, 255, 0.03) 51%,
+      rgba(255, 255, 255, 0.03) 52%,
+      transparent 53%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+  }
+}
+
+@layer utilities {
+  .duration-2000 {
+    transition-duration: 2000ms;
+  }
+} 
