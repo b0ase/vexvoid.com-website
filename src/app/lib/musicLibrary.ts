@@ -1,24 +1,28 @@
 // Music Library for V3XV0ID
-// Automatically manages all available music tracks
+// Automatically manages all available music tracks from Supabase Storage
+
+import { getMusicUrl } from './supabase'
 
 export interface MusicTrack {
   id: string;
   title: string;
   filename: string;
   path: string;
+  supabaseUrl: string; // Add Supabase URL field
   duration?: number;
   bpm?: number;
   key?: string;
   mood?: string;
 }
 
-// All your atmospheric tracks
+// All your atmospheric tracks - now with Supabase URLs
 export const musicTracks: MusicTrack[] = [
   {
     id: 'echoes-abyss',
     title: 'Echoes in the Abyss',
     filename: 'Echoes in the Abyss.mp3',
-    path: '/music/Echoes in the Abyss.mp3',
+    path: '/music/Echoes in the Abyss.mp3', // Keep for backward compatibility
+    supabaseUrl: getMusicUrl('Echoes in the Abyss.mp3'),
     mood: 'dark-ambient'
   },
   {
@@ -26,6 +30,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Echoes in the Abyss (Alt)',
     filename: 'Echoes in the Abyss (1).mp3',
     path: '/music/Echoes in the Abyss (1).mp3',
+    supabaseUrl: getMusicUrl('Echoes in the Abyss (1).mp3'),
     mood: 'dark-ambient'
   },
   {
@@ -33,6 +38,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Echoes in the Dust',
     filename: 'Echoes in the Dust.mp3',
     path: '/music/Echoes in the Dust.mp3',
+    supabaseUrl: getMusicUrl('Echoes in the Dust.mp3'),
     mood: 'atmospheric'
   },
   {
@@ -40,6 +46,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Echoes in the Dust (Alt)',
     filename: 'Echoes in the Dust (1).mp3',
     path: '/music/Echoes in the Dust (1).mp3',
+    supabaseUrl: getMusicUrl('Echoes in the Dust (1).mp3'),
     mood: 'atmospheric'
   },
   {
@@ -47,6 +54,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Echoes in the Fog',
     filename: 'Echoes in the Fog.mp3',
     path: '/music/Echoes in the Fog.mp3',
+    supabaseUrl: getMusicUrl('Echoes in the Fog.mp3'),
     mood: 'ethereal'
   },
   {
@@ -54,6 +62,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Echoes in the Fog (Alt)',
     filename: 'Echoes in the Fog (1).mp3',
     path: '/music/Echoes in the Fog (1).mp3',
+    supabaseUrl: getMusicUrl('Echoes in the Fog (1).mp3'),
     mood: 'ethereal'
   },
   {
@@ -61,6 +70,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Echoes in the Mist',
     filename: 'Echoes in the Mist.mp3',
     path: '/music/Echoes in the Mist.mp3',
+    supabaseUrl: getMusicUrl('Echoes in the Mist.mp3'),
     mood: 'mysterious'
   },
   {
@@ -68,6 +78,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Echoes in the Mist (Alt)',
     filename: 'Echoes in the Mist (1).mp3',
     path: '/music/Echoes in the Mist (1).mp3',
+    supabaseUrl: getMusicUrl('Echoes in the Mist (1).mp3'),
     mood: 'mysterious'
   },
   {
@@ -75,6 +86,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Midnight Reverie',
     filename: 'Midnight Reverie.mp3',
     path: '/music/Midnight Reverie.mp3',
+    supabaseUrl: getMusicUrl('Midnight Reverie.mp3'),
     mood: 'dreamy'
   },
   {
@@ -82,6 +94,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Midnight Reverie (Alt)',
     filename: 'Midnight Reverie (1).mp3',
     path: '/music/Midnight Reverie (1).mp3',
+    supabaseUrl: getMusicUrl('Midnight Reverie (1).mp3'),
     mood: 'dreamy'
   },
   {
@@ -89,6 +102,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Shadowed Depths',
     filename: 'Shadowed Depths.mp3',
     path: '/music/Shadowed Depths.mp3',
+    supabaseUrl: getMusicUrl('Shadowed Depths.mp3'),
     mood: 'deep-dark'
   },
   {
@@ -96,6 +110,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Shadowed Depths (Alt)',
     filename: 'Shadowed Depths (1).mp3',
     path: '/music/Shadowed Depths (1).mp3',
+    supabaseUrl: getMusicUrl('Shadowed Depths (1).mp3'),
     mood: 'deep-dark'
   },
   {
@@ -103,6 +118,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Shadowed Whispers',
     filename: 'Shadowed Whispers.mp3',
     path: '/music/Shadowed Whispers.mp3',
+    supabaseUrl: getMusicUrl('Shadowed Whispers.mp3'),
     mood: 'whispered'
   },
   {
@@ -110,6 +126,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Shadowed Whispers (Alt)',
     filename: 'Shadowed Whispers (1).mp3',
     path: '/music/Shadowed Whispers (1).mp3',
+    supabaseUrl: getMusicUrl('Shadowed Whispers (1).mp3'),
     mood: 'whispered'
   },
   {
@@ -117,6 +134,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Shadows and Silhouettes',
     filename: 'Shadows and Silhouettes.mp3',
     path: '/music/Shadows and Silhouettes.mp3',
+    supabaseUrl: getMusicUrl('Shadows and Silhouettes.mp3'),
     mood: 'cinematic'
   },
   {
@@ -124,6 +142,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Shadows and Silhouettes (Alt)',
     filename: 'Shadows and Silhouettes (1).mp3',
     path: '/music/Shadows and Silhouettes (1).mp3',
+    supabaseUrl: getMusicUrl('Shadows and Silhouettes (1).mp3'),
     mood: 'cinematic'
   },
   {
@@ -131,6 +150,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Shadows in the Smoke',
     filename: 'Shadows in the Smoke.mp3',
     path: '/music/Shadows in the Smoke.mp3',
+    supabaseUrl: getMusicUrl('Shadows in the Smoke.mp3'),
     mood: 'smoky'
   },
   {
@@ -138,6 +158,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Shadows in the Smoke (Alt)',
     filename: 'Shadows in the Smoke (1).mp3',
     path: '/music/Shadows in the Smoke (1).mp3',
+    supabaseUrl: getMusicUrl('Shadows in the Smoke (1).mp3'),
     mood: 'smoky'
   },
   {
@@ -145,6 +166,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Shadows of the Mind',
     filename: 'Shadows of the Mind.mp3',
     path: '/music/Shadows of the Mind.mp3',
+    supabaseUrl: getMusicUrl('Shadows of the Mind.mp3'),
     mood: 'psychological'
   },
   {
@@ -152,6 +174,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Shadows of the Mind (Alt 1)',
     filename: 'Shadows of the Mind (1).mp3',
     path: '/music/Shadows of the Mind (1).mp3',
+    supabaseUrl: getMusicUrl('Shadows of the Mind (1).mp3'),
     mood: 'psychological'
   },
   {
@@ -159,6 +182,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Shadows of the Mind (Alt 2)',
     filename: 'Shadows of the Mind (2).mp3',
     path: '/music/Shadows of the Mind (2).mp3',
+    supabaseUrl: getMusicUrl('Shadows of the Mind (2).mp3'),
     mood: 'psychological'
   },
   {
@@ -166,6 +190,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Shadows of the Mind (Alt 3)',
     filename: 'Shadows of the Mind (3).mp3',
     path: '/music/Shadows of the Mind (3).mp3',
+    supabaseUrl: getMusicUrl('Shadows of the Mind (3).mp3'),
     mood: 'psychological'
   },
   {
@@ -173,6 +198,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Whispers in the Smoke',
     filename: 'Whispers in the Smoke.mp3',
     path: '/music/Whispers in the Smoke.mp3',
+    supabaseUrl: getMusicUrl('Whispers in the Smoke.mp3'),
     mood: 'whispered-smoky'
   },
   {
@@ -180,6 +206,7 @@ export const musicTracks: MusicTrack[] = [
     title: 'Whispers in the Smoke (Alt)',
     filename: 'Whispers in the Smoke (1).mp3',
     path: '/music/Whispers in the Smoke (1).mp3',
+    supabaseUrl: getMusicUrl('Whispers in the Smoke (1).mp3'),
     mood: 'whispered-smoky'
   }
 ];
@@ -209,15 +236,36 @@ export const getTracksByMood = (mood: string): MusicTrack[] => {
   return musicTracks.filter(track => track.mood === mood);
 };
 
-// Get recommended art pattern for track
-export const getRecommendedArtPattern = (track: MusicTrack): string => {
-  return moodToArtPattern[track.mood as keyof typeof moodToArtPattern] || 'organicFlow';
+// Get track by ID
+export const getTrackById = (id: string): MusicTrack | undefined => {
+  return musicTracks.find(track => track.id === id);
 };
 
-// Load audio and get duration
+// Get recommended art pattern based on track mood
+export const getRecommendedArtPattern = (track: MusicTrack): string => {
+  const patterns: Record<string, string> = {
+    'dark-ambient': 'void-spiral',
+    'atmospheric': 'fractal-waves',
+    'ethereal': 'plasma-flow',
+    'mysterious': 'shadow-dance',
+    'dreamy': 'crystal-formations',
+    'deep-dark': 'void-spiral',
+    'whispered': 'particle-swarm',
+    'cinematic': 'geometric-evolution',
+    'smoky': 'fluid-dynamics',
+    'psychological': 'neural-network',
+    'whispered-smoky': 'particle-swarm'
+  };
+  
+  return patterns[track.mood || 'atmospheric'] || 'fractal-waves';
+};
+
+// Load audio and get duration - now supports both local and Supabase URLs
 export const loadAudioMetadata = async (track: MusicTrack): Promise<MusicTrack> => {
   return new Promise((resolve, reject) => {
-    const audio = new Audio(track.path);
+    // Try Supabase URL first, fallback to local path
+    const audioUrl = track.supabaseUrl || track.path;
+    const audio = new Audio(audioUrl);
     
     audio.addEventListener('loadedmetadata', () => {
       resolve({
@@ -227,11 +275,34 @@ export const loadAudioMetadata = async (track: MusicTrack): Promise<MusicTrack> 
     });
     
     audio.addEventListener('error', () => {
-      reject(new Error(`Failed to load audio: ${track.path}`));
+      // If Supabase URL fails, try local path
+      if (audioUrl === track.supabaseUrl && track.path) {
+        const fallbackAudio = new Audio(track.path);
+        
+        fallbackAudio.addEventListener('loadedmetadata', () => {
+          resolve({
+            ...track,
+            duration: fallbackAudio.duration
+          });
+        });
+        
+        fallbackAudio.addEventListener('error', () => {
+          reject(new Error(`Failed to load audio: ${track.path} and ${track.supabaseUrl}`));
+        });
+        
+        fallbackAudio.load();
+      } else {
+        reject(new Error(`Failed to load audio: ${audioUrl}`));
+      }
     });
     
     audio.load();
   });
+};
+
+// Get audio URL (prioritizes Supabase, falls back to local)
+export const getAudioUrl = (track: MusicTrack): string => {
+  return track.supabaseUrl || track.path;
 };
 
 // Generate video combinations

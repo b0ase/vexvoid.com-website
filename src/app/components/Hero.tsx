@@ -95,23 +95,23 @@ export default function Hero() {
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/70"></div>
 
-      {/* Tiny Content */}
+      {/* Main Content - Made Bigger */}
       <div className="text-center z-10 px-4">
-        <h1 className="text-base md:text-lg cyber-text mb-1">
+        <h1 className="text-2xl md:text-3xl cyber-text mb-2 font-bold">
           V3XV0ID
         </h1>
         
-        <div className="w-8 h-px bg-white mx-auto mb-1"></div>
+        <div className="w-16 h-px bg-white mx-auto mb-2"></div>
         
-        <p className="text-xs md:text-sm text-white mb-2 lo-fi-text">
+        <p className="text-lg md:text-xl text-white mb-4 lo-fi-text">
           DIGITAL MUSICIAN & HACKER
         </p>
         
-        <div className="flex justify-center gap-1 text-[10px] md:text-xs">
-          <a href="#audio" className="bg-white text-black px-2 py-1 lo-fi-text">AUDIO</a>
-          <a href="#visual" className="border border-white text-white px-2 py-1 lo-fi-text">VISUAL</a>
-          <a href="/youtube" className="border border-white text-white px-2 py-1 lo-fi-text">YOUTUBE</a>
-          <a href="#projects" className="border border-white text-white px-2 py-1 lo-fi-text">PROJ</a>
+        <div className="flex justify-center gap-2 text-sm md:text-base">
+          <a href="#audio" className="bg-white text-black px-4 py-2 lo-fi-text hover:bg-gray-200 transition-colors">AUDIO</a>
+          <a href="#visual" className="border border-white text-white px-4 py-2 lo-fi-text hover:bg-white hover:text-black transition-colors">VISUAL</a>
+          <a href="/youtube" className="border border-white text-white px-4 py-2 lo-fi-text hover:bg-white hover:text-black transition-colors">YOUTUBE</a>
+          <a href="#projects" className="border border-white text-white px-4 py-2 lo-fi-text hover:bg-white hover:text-black transition-colors">PROJ</a>
         </div>
       </div>
 
