@@ -11,3 +11,10 @@ perchance_password.txt
 .next/
 .DS_Store
 *.log
+
+# Audio files - too large for git
+public/music/
+*.mp3
+*.wav
+*.m4a
+*.flac
