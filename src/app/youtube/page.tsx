@@ -10,6 +10,7 @@ import YouTubeAuth from './components/YouTubeAuth'
 import PublicGenerator from './components/PublicGenerator'
 import SimpleVideoGenerator from './components/SimpleVideoGenerator'
 import TestVideoGenerator from './components/TestVideoGenerator'
+import WorkingVideoGenerator from './components/WorkingVideoGenerator'
 import { getRandomImages } from '../lib/images'
 
 export default function YouTubePage() {
@@ -159,7 +160,7 @@ export default function YouTubePage() {
                 : 'border-white/30 text-white hover:bg-white/10'
             }`}
           >
-            ENHANCED (FFMPEG)
+            WORKING (FFMPEG)
           </button>
           <button
             onClick={() => setGeneratorMode('public')}
@@ -182,7 +183,7 @@ export default function YouTubePage() {
             <SimpleVideoGenerator onVideoGenerated={handleVideoGenerated} />
           )}
           {generatorMode === 'enhanced' && (
-            <EnhancedVideoGenerator onVideoGenerated={handleVideoGenerated} />
+            <WorkingVideoGenerator onVideoGenerated={handleVideoGenerated} />
           )}
           {generatorMode === 'public' && (
             <PublicGenerator onVideoGenerated={handleVideoGenerated} />

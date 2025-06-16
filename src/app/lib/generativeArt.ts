@@ -173,12 +173,5 @@ export const generateFrames = async (
   return frames;
 };
 
-// Create video from frames (requires additional setup)
-export const createVideoFromFrames = async (
-  frames: Blob[],
-  audioBlob?: Blob
-): Promise<Blob> => {
-  // This would require a video encoding library like FFmpeg.wasm
-  // For now, return a placeholder
-  throw new Error('Video encoding requires FFmpeg.wasm setup - see implementation notes');
-}; 
+// Export the video encoder function for use in this module
+export { createVideoFromFrames } from './videoEncoder'; 

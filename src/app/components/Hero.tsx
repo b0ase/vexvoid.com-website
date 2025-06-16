@@ -107,10 +107,11 @@ export default function Hero() {
           DIGITAL MUSICIAN & HACKER
         </p>
         
-        <div className="flex justify-center gap-2 text-xs md:text-sm">
+        <div className="flex justify-center gap-2 text-xs md:text-sm flex-wrap">
           <a href="#audio" className="bg-white text-black px-3 py-1.5 lo-fi-text hover:bg-gray-200 transition-colors">AUDIO</a>
           <a href="#visual" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">VISUAL</a>
           <a href="/youtube" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">YOUTUBE</a>
+          <a href="/token" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">$V3X</a>
           <a href="#projects" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">PROJ</a>
         </div>
       </div>

@@ -21,7 +21,7 @@ export const musicTracks: MusicTrack[] = [
     id: 'echoes-abyss',
     title: 'Echoes in the Abyss',
     filename: 'Echoes in the Abyss.mp3',
-    path: '/music/Echoes in the Abyss.mp3', // Keep for backward compatibility
+    path: '/music/Echoes in the Abyss.mp3',
     supabaseUrl: getMusicUrl('Echoes in the Abyss.mp3'),
     mood: 'dark-ambient'
   },
@@ -47,6 +47,14 @@ export const musicTracks: MusicTrack[] = [
     filename: 'Echoes in the Dust (1).mp3',
     path: '/music/Echoes in the Dust (1).mp3',
     supabaseUrl: getMusicUrl('Echoes in the Dust (1).mp3'),
+    mood: 'atmospheric'
+  },
+  {
+    id: 'echoes-dust-alt2',
+    title: 'Echoes in the Dust (Alt 2)',
+    filename: 'Echoes in the Dust (2).mp3',
+    path: '/music/Echoes in the Dust (2).mp3',
+    supabaseUrl: getMusicUrl('Echoes in the Dust (2).mp3'),
     mood: 'atmospheric'
   },
   {
@@ -82,6 +90,70 @@ export const musicTracks: MusicTrack[] = [
     mood: 'mysterious'
   },
   {
+    id: 'four-ton-shadow',
+    title: 'Four Ton Shadow',
+    filename: 'Four Ton Shadow.mp3',
+    path: '/music/Four Ton Shadow.mp3',
+    supabaseUrl: getMusicUrl('Four Ton Shadow.mp3'),
+    mood: 'heavy-dark'
+  },
+  {
+    id: 'four-ton-shadow-alt1',
+    title: 'Four Ton Shadow (Alt 1)',
+    filename: 'Four Ton Shadow (1).mp3',
+    path: '/music/Four Ton Shadow (1).mp3',
+    supabaseUrl: getMusicUrl('Four Ton Shadow (1).mp3'),
+    mood: 'heavy-dark'
+  },
+  {
+    id: 'four-ton-shadow-alt2',
+    title: 'Four Ton Shadow (Alt 2)',
+    filename: 'Four Ton Shadow (2).mp3',
+    path: '/music/Four Ton Shadow (2).mp3',
+    supabaseUrl: getMusicUrl('Four Ton Shadow (2).mp3'),
+    mood: 'heavy-dark'
+  },
+  {
+    id: 'four-ton-shadow-alt3',
+    title: 'Four Ton Shadow (Alt 3)',
+    filename: 'Four Ton Shadow (3).mp3',
+    path: '/music/Four Ton Shadow (3).mp3',
+    supabaseUrl: getMusicUrl('Four Ton Shadow (3).mp3'),
+    mood: 'heavy-dark'
+  },
+  {
+    id: 'four-ton-shadow-alt4',
+    title: 'Four Ton Shadow (Alt 4)',
+    filename: 'Four Ton Shadow (4).mp3',
+    path: '/music/Four Ton Shadow (4).mp3',
+    supabaseUrl: getMusicUrl('Four Ton Shadow (4).mp3'),
+    mood: 'heavy-dark'
+  },
+  {
+    id: 'four-ton-shadow-alt5',
+    title: 'Four Ton Shadow (Alt 5)',
+    filename: 'Four Ton Shadow (5).mp3',
+    path: '/music/Four Ton Shadow (5).mp3',
+    supabaseUrl: getMusicUrl('Four Ton Shadow (5).mp3'),
+    mood: 'heavy-dark'
+  },
+  {
+    id: 'four-ton-shadows',
+    title: 'Four Ton Shadows',
+    filename: 'Four Ton Shadows.mp3',
+    path: '/music/Four Ton Shadows.mp3',
+    supabaseUrl: getMusicUrl('Four Ton Shadows.mp3'),
+    mood: 'heavy-dark'
+  },
+  {
+    id: 'four-ton-shadows-alt',
+    title: 'Four Ton Shadows (Alt)',
+    filename: 'Four Ton Shadows (1).mp3',
+    path: '/music/Four Ton Shadows (1).mp3',
+    supabaseUrl: getMusicUrl('Four Ton Shadows (1).mp3'),
+    mood: 'heavy-dark'
+  },
+  {
     id: 'midnight-reverie',
     title: 'Midnight Reverie',
     filename: 'Midnight Reverie.mp3',
@@ -96,6 +168,22 @@ export const musicTracks: MusicTrack[] = [
     path: '/music/Midnight Reverie (1).mp3',
     supabaseUrl: getMusicUrl('Midnight Reverie (1).mp3'),
     mood: 'dreamy'
+  },
+  {
+    id: 'shadow-steps',
+    title: 'Shadow Steps',
+    filename: 'Shadow Steps.mp3',
+    path: '/music/Shadow Steps.mp3',
+    supabaseUrl: getMusicUrl('Shadow Steps.mp3'),
+    mood: 'rhythmic'
+  },
+  {
+    id: 'shadow-steps-alt',
+    title: 'Shadow Steps (Alt)',
+    filename: 'Shadow Steps (1).mp3',
+    path: '/music/Shadow Steps (1).mp3',
+    supabaseUrl: getMusicUrl('Shadow Steps (1).mp3'),
+    mood: 'rhythmic'
   },
   {
     id: 'shadowed-depths',
@@ -194,12 +282,76 @@ export const musicTracks: MusicTrack[] = [
     mood: 'psychological'
   },
   {
+    id: 'shadows-past',
+    title: 'Shadows of the Past',
+    filename: 'Shadows of the Past.mp3',
+    path: '/music/Shadows of the Past.mp3',
+    supabaseUrl: getMusicUrl('Shadows of the Past.mp3'),
+    mood: 'nostalgic'
+  },
+  {
+    id: 'shadows-past-alt',
+    title: 'Shadows of the Past (Alt)',
+    filename: 'Shadows of the Past (1).mp3',
+    path: '/music/Shadows of the Past (1).mp3',
+    supabaseUrl: getMusicUrl('Shadows of the Past (1).mp3'),
+    mood: 'nostalgic'
+  },
+  {
+    id: 'shadows-street',
+    title: 'Shadows of the Street',
+    filename: 'Shadows of the Street.mp3',
+    path: '/music/Shadows of the Street.mp3',
+    supabaseUrl: getMusicUrl('Shadows of the Street.mp3'),
+    mood: 'urban'
+  },
+  {
+    id: 'shadows-street-alt',
+    title: 'Shadows of the Street (Alt)',
+    filename: 'Shadows of the Street (1).mp3',
+    path: '/music/Shadows of the Street (1).mp3',
+    supabaseUrl: getMusicUrl('Shadows of the Street (1).mp3'),
+    mood: 'urban'
+  },
+  {
+    id: 'silent-shadows',
+    title: 'Silent Shadows',
+    filename: 'Silent Shadows.mp3',
+    path: '/music/Silent Shadows.mp3',
+    supabaseUrl: getMusicUrl('Silent Shadows.mp3'),
+    mood: 'minimal'
+  },
+  {
+    id: 'silent-shadows-alt',
+    title: 'Silent Shadows (Alt)',
+    filename: 'Silent Shadows (1).mp3',
+    path: '/music/Silent Shadows (1).mp3',
+    supabaseUrl: getMusicUrl('Silent Shadows (1).mp3'),
+    mood: 'minimal'
+  },
+  {
+    id: 'whispering-shadows',
+    title: 'Whispering Shadows',
+    filename: 'Whispering Shadows.mp3',
+    path: '/music/Whispering Shadows.mp3',
+    supabaseUrl: getMusicUrl('Whispering Shadows.mp3'),
+    mood: 'ethereal'
+  },
+  {
+    id: 'whispering-shadows-alt',
+    title: 'Whispering Shadows (Alt)',
+    filename: 'Whispering Shadows (1).mp3',
+    path: '/music/Whispering Shadows (1).mp3',
+    supabaseUrl: getMusicUrl('Whispering Shadows (1).mp3'),
+    mood: 'ethereal'
+  },
+  {
     id: 'whispers-smoke',
     title: 'Whispers in the Smoke',
     filename: 'Whispers in the Smoke.mp3',
     path: '/music/Whispers in the Smoke.mp3',
     supabaseUrl: getMusicUrl('Whispers in the Smoke.mp3'),
-    mood: 'whispered-smoky'
+    mood: 'smoky'
   },
   {
     id: 'whispers-smoke-alt',
@@ -207,7 +359,15 @@ export const musicTracks: MusicTrack[] = [
     filename: 'Whispers in the Smoke (1).mp3',
     path: '/music/Whispers in the Smoke (1).mp3',
     supabaseUrl: getMusicUrl('Whispers in the Smoke (1).mp3'),
-    mood: 'whispered-smoky'
+    mood: 'smoky'
+  },
+  {
+    id: 'whispers-wind',
+    title: 'Whispers in the Wind',
+    filename: 'Whispers in the Wind.mp3',
+    path: '/music/Whispers in the Wind.mp3',
+    supabaseUrl: getMusicUrl('Whispers in the Wind.mp3'),
+    mood: 'airy'
   }
 ];
 

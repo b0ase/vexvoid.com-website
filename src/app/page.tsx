@@ -1,5 +1,5 @@
 import Hero from './components/Hero'
-import ConceptArtGallery from './components/ConceptArtGallery'
+import VisualGallery from './components/ConceptArtGallery'
 import MusicPlayer from './components/MusicPlayer'
 
 export default function Home() {
@@ -11,7 +11,7 @@ export default function Home() {
       <MusicPlayer />
 
       {/* Visual Art Section */}
-      <ConceptArtGallery />
+      <VisualGallery />
 
       {/* Projects Section */}
       <section id="projects" className="py-24 px-4 bg-cyber-black border-t border-cyber-gray">
