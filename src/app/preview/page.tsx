@@ -1,8 +1,16 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { 
+  getConceptArtImages, 
+  getLandscapeImages, 
+  getPortraitImages, 
+  getVideoJamImages,
+  getAllCloudImages 
+} from '../lib/supabaseImages'
+import Image from 'next/image'
 
-// Available video clips - using Supabase cloud storage
+// Available video clips - using Supabase cloud storage (updated list)
 const SUPABASE_URL = 'https://bgotvvrslolholxgcivz.supabase.co'
 const getVideoUrl = (filename: string) => `${SUPABASE_URL}/storage/v1/object/public/videos/vex_video_jam_01/${filename}`
 
@@ -14,13 +22,13 @@ const videoClips = [
   },
   {
     id: 'train-rush-2',
-    path: getVideoUrl('A_train_rushes_past_while_urban_ (1).mp4'),
-    title: 'Train Rush Alt'
+    path: getVideoUrl('A_train_rushes_past_while_urban_ (2).mp4'),
+    title: 'Train Rush 2'
   },
   {
-    id: 'rain-streets',
-    path: getVideoUrl('Heavy_rain_pelts_the_ground__str.mp4'),
-    title: 'Rain Streets'
+    id: 'train-rush-3',
+    path: getVideoUrl('A_train_rushes_past_while_urban_ (3).mp4'),
+    title: 'Train Rush 3'
   },
   {
     id: 'footsteps',
@@ -43,99 +51,382 @@ const videoClips = [
     title: 'Professional Mode Alt'
   },
   {
-    id: 'professional-3',
-    path: getVideoUrl('Professional_Mode_Generated_Video (2).mp4'),
-    title: 'Professional Mode 2'
+    id: 'standard-1',
+    path: getVideoUrl('Standard_Mode_Generated_Video (1).mp4'),
+    title: 'Standard Mode'
   }
 ]
 
+// Get all images for backdrop and overlays - over 100 images total!
+const conceptArtImages = getConceptArtImages()
+const landscapeImages = getLandscapeImages()
+const portraitImages = getPortraitImages()
+const videoJamImages = getVideoJamImages()
+const allImages = getAllCloudImages()
+
+// Logo images - focus on concept art for logo corner
+const logoImages = conceptArtImages.slice(0, 15)
+
 export default function VideoPreviewPage() {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
+  const [nextVideoIndex, setNextVideoIndex] = useState(1)
   const [isPlaying, setIsPlaying] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const [currentOverlayIndex, setCurrentOverlayIndex] = useState(0)
+  const [progress, setProgress] = useState(0)
+  const [backdropIndex] = useState(Math.floor(Math.random() * allImages.length))
+  const [isProjectionMode, setIsProjectionMode] = useState(true) // Start in projection mode (music player hidden)
+  const [logoIndex, setLogoIndex] = useState(0)
+  const [videoStartTime, setVideoStartTime] = useState(Date.now()) // Track when video started
+  const [floatingElements] = useState(() => 
+    Array.from({ length: 15 }, (_, i) => ({
+      id: i,
+      image: allImages[Math.floor(Math.random() * allImages.length)],
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: 12 + Math.random() * 20, // 12px to 32px
+      opacity: 0.05 + Math.random() * 0.15, // 5% to 20%
+      rotation: Math.random() * 360,
+      speed: 0.1 + Math.random() * 0.3, // Slow movement
+      direction: Math.random() * Math.PI * 2
+    }))
+  )
+  
+  const currentVideoRef = useRef<HTMLVideoElement>(null)
+  const nextVideoRef = useRef<HTMLVideoElement>(null)
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
   const currentVideo = videoClips[currentVideoIndex]
+  const nextVideo = videoClips[nextVideoIndex]
 
-  // Set video volume and auto-start
+  // Auto-start and setup videos
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.volume = 0.2 // Keep video audio low
+    if (currentVideoRef.current) {
+      currentVideoRef.current.volume = 0.2 // Keep video audio very low
+      currentVideoRef.current.playbackRate = 0.4 // Much slower video playback
+      currentVideoRef.current.play().then(() => {
+        setIsPlaying(true)
+        setVideoStartTime(Date.now()) // Reset timer when video starts playing
+      }).catch(() => {
+        console.log('Autoplay blocked - click to play')
+      })
     }
     
-    const timer = setTimeout(() => {
-      if (videoRef.current) {
-        videoRef.current.play().then(() => {
-          setIsPlaying(true)
-        }).catch(() => {
-          console.log('Autoplay blocked - click to play')
-        })
-      }
-    }, 1000)
-
-    return () => clearTimeout(timer)
+    // Preload next video
+    if (nextVideoRef.current) {
+      nextVideoRef.current.volume = 0.2
+      nextVideoRef.current.playbackRate = 0.4 // Much slower video playback
+      nextVideoRef.current.load()
+    }
   }, [currentVideoIndex])
 
-  // Handle video end - go to next video
-  const handleVideoEnd = () => {
+  // Cycle overlay images every 12 seconds (much slower)
+  useEffect(() => {
+    const overlayInterval = setInterval(() => {
+      setCurrentOverlayIndex(prev => (prev + 1) % allImages.length)
+    }, 12000)
+    
+    return () => clearInterval(overlayInterval)
+  }, [])
+
+  // Cycle logo corner every 8 seconds (slower)
+  useEffect(() => {
+    const logoInterval = setInterval(() => {
+      setLogoIndex(prev => (prev + 1) % logoImages.length)
+    }, 8000)
+    
+    return () => clearInterval(logoInterval)
+  }, [])
+
+  // Animate floating elements
+  useEffect(() => {
+    const animationInterval = setInterval(() => {
+      floatingElements.forEach(element => {
+        element.x += Math.cos(element.direction) * element.speed * 0.3 // Much slower movement
+        element.y += Math.sin(element.direction) * element.speed * 0.3
+        
+        // Wrap around screen
+        if (element.x > 100) element.x = -5
+        if (element.x < -5) element.x = 100
+        if (element.y > 100) element.y = -5
+        if (element.y < -5) element.y = 100
+        
+        // Very rarely change direction
+        if (Math.random() < 0.005) {
+          element.direction = Math.random() * Math.PI * 2
+        }
+      })
+    }, 500) // Much slower animation updates
+    
+    return () => clearInterval(animationInterval)
+  }, [])
+
+  // Handle video ended with crossfade to next
+  const handleVideoEnded = () => {
+    if (isTransitioning) return
+    
+    // Ensure minimum viewing time of 30 seconds (at 0.4x speed = 12 seconds real time)
+    const minViewingTime = 30000 // 30 seconds
+    const timeElapsed = Date.now() - videoStartTime
+    
+    if (timeElapsed < minViewingTime) {
+      // Restart the current video if minimum time hasn't passed
+      if (currentVideoRef.current) {
+        currentVideoRef.current.currentTime = 0
+        currentVideoRef.current.play()
+      }
+      return
+    }
+    
+    setIsTransitioning(true)
     const nextIndex = (currentVideoIndex + 1) % videoClips.length
-    setCurrentVideoIndex(nextIndex)
+    const nextNextIndex = (nextIndex + 1) % videoClips.length
+    
+    // Start next video and fade
+    if (nextVideoRef.current) {
+      nextVideoRef.current.playbackRate = 0.4 // Ensure very slow playback
+      nextVideoRef.current.play()
+    }
+    
+    // Update indices after fade
+    setTimeout(() => {
+      setCurrentVideoIndex(nextIndex)
+      setNextVideoIndex(nextNextIndex)
+      setIsTransitioning(false)
+      setProgress(0)
+      setVideoStartTime(Date.now()) // Reset timer for new video
+    }, 8000) // Much longer 8 second crossfade
   }
 
   // Play/pause handler
   const handlePlayPause = () => {
-    if (!videoRef.current) return
+    if (!currentVideoRef.current) return
 
     if (isPlaying) {
-      videoRef.current.pause()
+      currentVideoRef.current.pause()
+      if (nextVideoRef.current) nextVideoRef.current.pause()
       setIsPlaying(false)
     } else {
-      videoRef.current.play().then(() => {
+      currentVideoRef.current.play().then(() => {
         setIsPlaying(true)
       })
     }
   }
 
-  return (
-    <div className="min-h-screen bg-black text-white relative">
-      {/* Simple Video Player */}
-      <video
-        ref={videoRef}
-        key={currentVideo.id}
-        className="w-full h-screen object-cover"
-        muted={false}
-        onEnded={handleVideoEnd}
-        onClick={handlePlayPause}
-      >
-        <source src={currentVideo.path} type="video/mp4" />
-      </video>
+  // Track progress
+  const handleTimeUpdate = () => {
+    if (currentVideoRef.current) {
+      const progress = (currentVideoRef.current.currentTime / currentVideoRef.current.duration) * 100
+      setProgress(progress)
+    }
+  }
 
-      {/* Simple Info Overlay */}
-      <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-sm px-4 py-2 rounded">
-        <div className="text-sm text-cyan-400">NOW PLAYING</div>
-        <div className="text-lg font-bold">{currentVideo.title}</div>
-        <div className="text-sm text-white/70">
-          {currentVideoIndex + 1} of {videoClips.length}
+  // Handle projection mode - hide music player
+  useEffect(() => {
+    if (isProjectionMode) {
+      document.body.classList.add('projection-mode')
+    } else {
+      document.body.classList.remove('projection-mode')
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove('projection-mode')
+    }
+  }, [isProjectionMode])
+
+  return (
+    <div className="min-h-screen bg-black text-white relative overflow-hidden flex items-center justify-center">
+      {/* Centered Video Container - Smaller for Higher Resolution Feel */}
+      <div className="relative w-[85vw] h-[85vh] overflow-hidden rounded-lg border border-white/10">
+        {/* Concept Art Backdrop - Always Visible Behind Videos */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={allImages[backdropIndex]?.url || conceptArtImages[0]?.url}
+            alt="VexVoid Backdrop"
+            fill
+            className="object-cover opacity-25 blur-lg"
+            priority
+          />
+          <div className="absolute inset-0 bg-black/60" />
+        </div>
+
+        {/* Video Layer 1 - Current Video (Slowed & Dark) */}
+        <video
+          ref={currentVideoRef}
+          key={`current-${currentVideo.id}`}
+          className={`absolute inset-0 w-full h-full object-cover z-10 transition-all duration-8000 filter brightness-[0.4] contrast-125 saturate-75 ${
+            isTransitioning ? 'opacity-0 blur-md' : 'opacity-70'
+          }`}
+          muted={false}
+          onEnded={handleVideoEnded}
+          onTimeUpdate={handleTimeUpdate}
+          onClick={handlePlayPause}
+          style={{ 
+            mixBlendMode: 'normal'
+          }}
+        >
+          <source src={currentVideo.path} type="video/mp4" />
+        </video>
+
+        {/* Video Layer 2 - Next Video (for crossfading, also slowed & dark) */}
+        <video
+          ref={nextVideoRef}
+          key={`next-${nextVideo.id}`}
+          className={`absolute inset-0 w-full h-full object-cover z-20 transition-all duration-8000 filter brightness-[0.4] contrast-125 saturate-75 ${
+            isTransitioning ? 'opacity-70 blur-md' : 'opacity-0'
+          }`}
+          muted={false}
+          onClick={handlePlayPause}
+          style={{ 
+            mixBlendMode: 'normal'
+          }}
+        >
+          <source src={nextVideo.path} type="video/mp4" />
+        </video>
+
+        {/* Fragmented Video Overlays - Cut-up Effect */}
+        <div className="absolute inset-0 z-15 pointer-events-none">
+          {/* Top Fragment */}
+          <div className="absolute top-0 right-0 w-1/3 h-1/4 overflow-hidden opacity-20">
+            <video
+              className="w-full h-full object-cover filter brightness-[0.2] blur-[2px]"
+              muted
+              autoPlay
+              loop
+              style={{ transform: 'scale(1.5) rotate(2deg)', mixBlendMode: 'screen' }}
+            >
+              <source src={currentVideo.path} type="video/mp4" />
+            </video>
+          </div>
+          
+          {/* Bottom Left Fragment */}
+          <div className="absolute bottom-10 left-0 w-1/4 h-1/3 overflow-hidden opacity-15">
+            <video
+              className="w-full h-full object-cover filter brightness-[0.25] blur-[1px]"
+              muted
+              autoPlay
+              loop
+              style={{ transform: 'scale(1.8) rotate(-3deg)', mixBlendMode: 'overlay' }}
+            >
+              <source src={nextVideo.path} type="video/mp4" />
+            </video>
+          </div>
+          
+          {/* Center Right Fragment */}
+          <div className="absolute top-1/2 right-8 w-1/5 h-1/4 overflow-hidden opacity-10 transform -translate-y-1/2">
+            <video
+              className="w-full h-full object-cover filter brightness-[0.15] blur-[3px]"
+              muted
+              autoPlay
+              loop
+              style={{ transform: 'scale(2) rotate(5deg)', mixBlendMode: 'soft-light' }}
+            >
+              <source src={currentVideo.path} type="video/mp4" />
+            </video>
+          </div>
+        </div>
+
+        {/* Dynamic Floating Art Elements - All Image Types, Moving Slowly */}
+        <div className="absolute inset-0 z-30 pointer-events-none">
+          {/* Large Background Layer - Much Dimmer */}
+          <div className="absolute inset-0 opacity-5 transition-opacity duration-5000">
+            <Image
+              src={allImages[(currentOverlayIndex + 4) % allImages.length].url}
+              alt="Art Background"
+              fill
+              className="object-cover blur-[4px] mix-blend-soft-light"
+            />
+          </div>
+          
+          {/* Logo Corner - Top Right, Cycling Through Concept Art */}
+          <div className="absolute top-4 right-4 w-32 h-32 opacity-20 transition-all duration-4000 transform rotate-2 z-40">
+            <Image
+              src={logoImages[logoIndex].url}
+              alt="VexVoid Logo"
+              fill
+              className="object-cover rounded-xl blur-[0.5px] mix-blend-screen border border-white/10"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/20 rounded-xl" />
+          </div>
+          
+          {/* Dynamic Floating Elements - Different Sizes, Moving Around */}
+          {floatingElements.map((element, index) => {
+            const blendModes = ['screen', 'overlay', 'soft-light', 'multiply', 'difference', 'color-dodge', 'luminosity', 'hard-light', 'color-burn']
+            const blendMode = blendModes[index % blendModes.length]
+            
+            return (
+              <div
+                key={element.id}
+                className="absolute transition-all duration-1000 ease-linear"
+                style={{
+                  left: `${element.x}%`,
+                  top: `${element.y}%`,
+                  width: `${element.size}px`,
+                  height: `${element.size}px`,
+                  opacity: element.opacity,
+                  transform: `rotate(${element.rotation}deg)`,
+                  zIndex: 30 + (index % 5)
+                }}
+              >
+                <Image
+                  src={element.image.url}
+                  alt="Floating Art"
+                  fill
+                  className={`object-cover rounded-lg blur-[0.5px]`}
+                  style={{ mixBlendMode: blendMode as any }}
+                />
+              </div>
+            )
+          })}
+          
+          {/* Static Corner Elements for Depth */}
+          <div className="absolute top-8 left-8 w-24 h-24 opacity-15 transition-all duration-4000 transform rotate-2">
+            <Image
+              src={landscapeImages[currentOverlayIndex % landscapeImages.length].url}
+              alt="Landscape Art"
+              fill
+              className="object-cover rounded-lg blur-[0.5px] mix-blend-screen"
+            />
+          </div>
+          
+          <div className="absolute bottom-12 left-12 w-28 h-28 opacity-18 transition-all duration-4000 transform rotate-1">
+            <Image
+              src={portraitImages[currentOverlayIndex % portraitImages.length].url}
+              alt="Portrait Art"
+              fill
+              className="object-cover rounded-xl blur-[0.5px] mix-blend-soft-light"
+            />
+          </div>
+          
+          <div className="absolute bottom-8 right-8 w-20 h-20 opacity-12 transition-all duration-4000 transform -rotate-3">
+            <Image
+              src={videoJamImages[currentOverlayIndex % videoJamImages.length].url}
+              alt="Video Jam Art"
+              fill
+              className="object-cover rounded-lg blur-[1px] mix-blend-overlay"
+            />
+          </div>
         </div>
       </div>
-
-      {/* Simple Play/Pause Button */}
-      {!isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <button
-            onClick={handlePlayPause}
-            className="bg-cyan-400 hover:bg-cyan-300 text-black rounded-full w-16 h-16 flex items-center justify-center text-2xl"
-          >
-            ▶
-          </button>
-        </div>
-      )}
-
-      {/* Progress Bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
-        <div 
-          className="h-full bg-cyan-400 transition-all duration-300"
-          style={{ width: `${((currentVideoIndex + 1) / videoClips.length) * 100}%` }}
-        />
+      
+      {/* Control Buttons - Outside Video Frame, Bottom Left */}
+      <div className="absolute bottom-8 left-8 z-50 flex items-center gap-3">
+        {/* Play/Pause Button */}
+        <button
+          onClick={handlePlayPause}
+          className="bg-black hover:bg-gray-900 text-white rounded-full w-12 h-12 flex items-center justify-center text-lg transition-all duration-200 border border-white/20"
+        >
+          {isPlaying ? '⏸' : '▶'}
+        </button>
+        
+        {/* Projection Mode Button */}
+        <button
+          onClick={() => setIsProjectionMode(!isProjectionMode)}
+          className="bg-black hover:bg-gray-900 text-white rounded-full w-12 h-12 flex items-center justify-center text-lg transition-all duration-200 border border-white/20"
+          title={isProjectionMode ? 'Exit Projection Mode' : 'Enter Projection Mode'}
+        >
+          📽️
+        </button>
       </div>
     </div>
   )

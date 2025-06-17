@@ -108,4 +108,9 @@ body {
 
 .text-\[10px\] {
   font-size: 10px;
+}
+
+/* Projection Mode - Hide Music Player */
+.projection-mode .fixed.top-4.right-4.z-50 {
+  display: none !important;
 } 
