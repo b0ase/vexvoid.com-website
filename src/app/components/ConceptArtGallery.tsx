@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { 
   conceptArtImages, 
-  streetArtImages, 
+  allStreetArt, 
   landscapeImages, 
   portraitImages,
   totalImageCount,
@@ -75,7 +75,7 @@ const getCuratedConceptArt = () => {
 
 const getCuratedStreetArt = () => {
   // Mix of graffiti and street photos - pick every 8th to get variety
-  return streetArtImages.filter((_, idx) => idx % 8 === 0 || idx < 6).slice(0, 12)
+  return allStreetArt.filter((_, idx) => idx % 8 === 0 || idx < 6).slice(0, 16)
 }
 
 const getCuratedLandscapes = () => {
@@ -102,7 +102,7 @@ const getCuratedPortraits = () => {
 }
 
 export default function VisualGallery() {
-  const [activeTab, setActiveTab] = useState<VisualCategory>('concept')
+  const [activeTab, setActiveTab] = useState<VisualCategory>('street')
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   // Auto-rotate images every 4 seconds
