@@ -77,13 +77,15 @@ export default function VideoPreviewPage() {
   const currentVideo = videoClips[currentVideoIndex]
   const nextVideo = videoClips[nextVideoIndex]
 
-  // Set video volumes to be soft under the music
+  // Set video volumes and preload next video
   useEffect(() => {
     if (currentVideoRef.current) {
       currentVideoRef.current.volume = 0.15
+      currentVideoRef.current.load() // Ensure video is loaded
     }
     if (nextVideoRef.current) {
       nextVideoRef.current.volume = 0.15
+      nextVideoRef.current.load() // Preload next video
     }
   }, [currentVideoIndex, nextVideoIndex])
 
@@ -152,40 +154,50 @@ export default function VideoPreviewPage() {
     if (!currentVid || !nextVid) return
 
     const handleVideoEnd = () => {
-      // Start next video immediately when current one ends
-      nextVid.currentTime = 0
-      nextVid.play()
+      console.log(`Video ${currentVideoIndex} ended, switching to ${nextVideoIndex}`)
       
-      // Crossfade animation
+      // Prepare next video
+      nextVid.currentTime = 0
       nextVid.style.opacity = '0'
       nextVid.style.transition = 'opacity 1s ease-in-out'
       
-      // Fade in next video
-      setTimeout(() => {
-        nextVid.style.opacity = '1'
-        currentVid.style.opacity = '0'
-      }, 50)
-      
-      // Switch videos after fade completes
-      setTimeout(() => {
-        // Move to next video in the continuous loop
-        const newCurrentIndex = nextVideoIndex
-        const newNextIndex = (nextVideoIndex + 1) % videoClips.length
+      // Start next video
+      nextVid.play().then(() => {
+        console.log(`Next video ${nextVideoIndex} started playing`)
         
-        setCurrentVideoIndex(newCurrentIndex)
-        setNextVideoIndex(newNextIndex)
+        // Crossfade
+        setTimeout(() => {
+          nextVid.style.opacity = '1'
+          currentVid.style.opacity = '0'
+        }, 50)
         
-        // Reset opacity
-        currentVid.style.opacity = '1'
-        nextVid.style.opacity = '0'
-        currentVid.style.transition = 'none'
-        nextVid.style.transition = 'none'
-      }, 1000)
+        // Switch video indices after fade
+        setTimeout(() => {
+          const newCurrentIndex = nextVideoIndex
+          const newNextIndex = (nextVideoIndex + 1) % videoClips.length
+          
+          console.log(`Switching indices: current ${newCurrentIndex}, next ${newNextIndex}`)
+          
+          setCurrentVideoIndex(newCurrentIndex)
+          setNextVideoIndex(newNextIndex)
+          
+          // Reset styles
+          currentVid.style.opacity = '1'
+          nextVid.style.opacity = '0'
+          currentVid.style.transition = 'none'
+          nextVid.style.transition = 'none'
+        }, 1000)
+      }).catch(error => {
+        console.error('Failed to play next video:', error)
+      })
     }
 
-    // Listen for video end to trigger next video
+    // Listen for video end
     currentVid.addEventListener('ended', handleVideoEnd)
-    return () => currentVid.removeEventListener('ended', handleVideoEnd)
+    
+    return () => {
+      currentVid.removeEventListener('ended', handleVideoEnd)
+    }
   }, [currentVideoIndex, nextVideoIndex])
 
   // Play/pause handler
@@ -237,11 +249,14 @@ export default function VideoPreviewPage() {
           muted={false}
           loop={false}
           playsInline
+          preload="auto"
           style={{ 
             opacity: 1,
             zIndex: 1
           }}
           onClick={handleVideoClick}
+          onLoadedData={() => console.log(`Current video ${currentVideoIndex} loaded`)}
+          onEnded={() => console.log(`Current video ${currentVideoIndex} ended event`)}
         >
           <source src={currentVideo.path} type="video/mp4" />
         </video>
@@ -254,10 +269,12 @@ export default function VideoPreviewPage() {
           muted={false}
           loop={false}
           playsInline
+          preload="auto"
           style={{ 
             opacity: 0,
             zIndex: 2
           }}
+          onLoadedData={() => console.log(`Next video ${nextVideoIndex} loaded`)}
         >
           <source src={nextVideo.path} type="video/mp4" />
         </video>
