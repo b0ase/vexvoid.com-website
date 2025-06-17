@@ -8,6 +8,8 @@ import {
   getVideoJamImages,
   getAllCloudImages 
 } from '../lib/supabaseImages'
+import { generativeAlgorithms } from '../lib/generativeAlgorithms'
+import { applyGlitchEffect, getRandomGlitchEffect, applyMultipleGlitchEffects } from '../lib/glitchEffects'
 import Image from 'next/image'
 
 // Available video clips - using Supabase cloud storage (updated list)
@@ -77,6 +79,13 @@ export default function VideoPreviewPage() {
   const [isProjectionMode, setIsProjectionMode] = useState(true) // Start in projection mode (music player hidden)
   const [logoIndex, setLogoIndex] = useState(0)
   const [videoStartTime, setVideoStartTime] = useState(Date.now()) // Track when video started
+  const [currentAlgorithmIndex, setCurrentAlgorithmIndex] = useState(0)
+  const [isGlitching, setIsGlitching] = useState(false)
+  const [p5Time, setP5Time] = useState(0)
+  const [videoStartOffset] = useState(() => 
+    // Random start points for each video (10-60 seconds in)
+    videoClips.map(() => Math.random() * 50 + 10)
+  )
   const [floatingElements] = useState(() => 
     Array.from({ length: 15 }, (_, i) => ({
       id: i,
@@ -93,6 +102,7 @@ export default function VideoPreviewPage() {
   
   const currentVideoRef = useRef<HTMLVideoElement>(null)
   const nextVideoRef = useRef<HTMLVideoElement>(null)
+  const p5CanvasRef = useRef<HTMLCanvasElement>(null)
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   const currentVideo = videoClips[currentVideoIndex]
@@ -103,6 +113,11 @@ export default function VideoPreviewPage() {
     if (currentVideoRef.current) {
       currentVideoRef.current.volume = 0.2 // Keep video audio very low
       currentVideoRef.current.playbackRate = 0.4 // Much slower video playback
+      
+      // Set random start point for variety
+      const startPoint = videoStartOffset[currentVideoIndex]
+      currentVideoRef.current.currentTime = startPoint
+      
       currentVideoRef.current.play().then(() => {
         setIsPlaying(true)
         setVideoStartTime(Date.now()) // Reset timer when video starts playing
@@ -111,10 +126,12 @@ export default function VideoPreviewPage() {
       })
     }
     
-    // Preload next video
+    // Preload next video with its start point
     if (nextVideoRef.current) {
       nextVideoRef.current.volume = 0.2
       nextVideoRef.current.playbackRate = 0.4 // Much slower video playback
+      const nextStartPoint = videoStartOffset[nextVideoIndex]
+      nextVideoRef.current.currentTime = nextStartPoint
       nextVideoRef.current.load()
     }
   }, [currentVideoIndex])
@@ -135,6 +152,40 @@ export default function VideoPreviewPage() {
     }, 8000)
     
     return () => clearInterval(logoInterval)
+  }, [])
+
+  // P5.js Animation System
+  useEffect(() => {
+    const p5Interval = setInterval(() => {
+      setP5Time(prev => prev + 0.02) // Slow time progression
+    }, 50)
+    
+    return () => clearInterval(p5Interval)
+  }, [])
+
+  // Cycle through generative algorithms every 15 seconds
+  useEffect(() => {
+    const algorithmInterval = setInterval(() => {
+      setCurrentAlgorithmIndex(prev => (prev + 1) % generativeAlgorithms.length)
+      
+      // Trigger glitch effect during algorithm transitions
+      setIsGlitching(true)
+      setTimeout(() => setIsGlitching(false), 1000)
+    }, 15000)
+    
+    return () => clearInterval(algorithmInterval)
+  }, [])
+
+  // Random glitch effects
+  useEffect(() => {
+    const glitchInterval = setInterval(() => {
+      if (Math.random() < 0.1) { // 10% chance every 5 seconds
+        setIsGlitching(true)
+        setTimeout(() => setIsGlitching(false), 200 + Math.random() * 800)
+      }
+    }, 5000)
+    
+    return () => clearInterval(glitchInterval)
   }, [])
 
   // Animate floating elements
@@ -160,6 +211,73 @@ export default function VideoPreviewPage() {
     return () => clearInterval(animationInterval)
   }, [])
 
+  // P5.js Canvas Rendering
+  useEffect(() => {
+    const canvas = p5CanvasRef.current
+    if (!canvas) return
+
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    // Set canvas size to match video container
+    canvas.width = 400
+    canvas.height = 300
+
+    const algorithm = generativeAlgorithms[currentAlgorithmIndex]
+    const renderP5 = () => {
+      // Clear with transparent background
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      
+      // Apply advanced glitch effects
+      if (isGlitching) {
+        applyMultipleGlitchEffects(ctx, canvas.width, canvas.height, p5Time, 2)
+      }
+
+      // Render generative algorithm
+      ctx.strokeStyle = `rgba(255, 255, 255, ${isGlitching ? 0.8 : 0.3})`
+      ctx.lineWidth = isGlitching ? 2 : 0.5
+      
+      // Simplified implementation of the spiral wave pattern
+      const centerX = canvas.width / 2
+      const centerY = canvas.height / 2
+      const scale = 0.5
+      
+      ctx.beginPath()
+      for (let i = 0; i < 2000; i++) {
+        const x = i % 200
+        const y = Math.floor(i / 43)
+        
+        // Simplified version of the algorithm
+        const k = 4 * Math.cos(x / 29)
+        const e = y / 8 - 13
+        const d = Math.sqrt(k * k + e * e)
+        const q = 3 * Math.sin(k * 2) + 0.3 / (k + 0.1) + Math.sin(y / 25) * k * (9 + 4 * Math.sin(e * 9 - d * 3 + p5Time * 2))
+        const c = d - p5Time
+        
+        const px = (q + 30 * Math.cos(c)) * scale + centerX
+        const py = (q * Math.sin(c) + d * 39 - 220) * scale + centerY
+        
+        if (i === 0) {
+          ctx.moveTo(px, py)
+        } else {
+          ctx.lineTo(px, py)
+        }
+        
+        // Add glitch artifacts
+        if (isGlitching && Math.random() < 0.01) {
+          ctx.stroke()
+          ctx.beginPath()
+          ctx.moveTo(px + Math.random() * 20 - 10, py + Math.random() * 20 - 10)
+        }
+      }
+      ctx.stroke()
+      
+      requestAnimationFrame(renderP5)
+    }
+
+    renderP5()
+  }, [currentAlgorithmIndex, isGlitching, p5Time])
+
   // Handle video ended with crossfade to next
   const handleVideoEnded = () => {
     if (isTransitioning) return
@@ -181,9 +299,14 @@ export default function VideoPreviewPage() {
     const nextIndex = (currentVideoIndex + 1) % videoClips.length
     const nextNextIndex = (nextIndex + 1) % videoClips.length
     
+    // Trigger glitch effect during video transition
+    setIsGlitching(true)
+    setTimeout(() => setIsGlitching(false), 2000)
+    
     // Start next video and fade
     if (nextVideoRef.current) {
       nextVideoRef.current.playbackRate = 0.4 // Ensure very slow playback
+      nextVideoRef.current.currentTime = videoStartOffset[nextIndex] // Set random start point
       nextVideoRef.current.play()
     }
     
@@ -256,13 +379,14 @@ export default function VideoPreviewPage() {
           key={`current-${currentVideo.id}`}
           className={`absolute inset-0 w-full h-full object-cover z-10 transition-all duration-8000 filter brightness-[0.4] contrast-125 saturate-75 ${
             isTransitioning ? 'opacity-0 blur-md' : 'opacity-70'
-          }`}
+          } ${isGlitching ? 'hue-rotate-180 saturate-200' : ''}`}
           muted={false}
           onEnded={handleVideoEnded}
           onTimeUpdate={handleTimeUpdate}
           onClick={handlePlayPause}
           style={{ 
-            mixBlendMode: 'normal'
+            mixBlendMode: 'normal',
+            transform: isGlitching ? `translate(${Math.random() * 4 - 2}px, ${Math.random() * 4 - 2}px)` : 'none'
           }}
         >
           <source src={currentVideo.path} type="video/mp4" />
@@ -274,11 +398,12 @@ export default function VideoPreviewPage() {
           key={`next-${nextVideo.id}`}
           className={`absolute inset-0 w-full h-full object-cover z-20 transition-all duration-8000 filter brightness-[0.4] contrast-125 saturate-75 ${
             isTransitioning ? 'opacity-70 blur-md' : 'opacity-0'
-          }`}
+          } ${isGlitching ? 'hue-rotate-90 saturate-150' : ''}`}
           muted={false}
           onClick={handlePlayPause}
           style={{ 
-            mixBlendMode: 'normal'
+            mixBlendMode: 'normal',
+            transform: isGlitching ? `translate(${Math.random() * 4 - 2}px, ${Math.random() * 4 - 2}px)` : 'none'
           }}
         >
           <source src={nextVideo.path} type="video/mp4" />
@@ -407,6 +532,18 @@ export default function VideoPreviewPage() {
             />
           </div>
         </div>
+
+        {/* P5.js Generative Animation Overlay */}
+        <canvas
+          ref={p5CanvasRef}
+          className={`absolute inset-0 w-full h-full object-cover z-25 pointer-events-none transition-opacity duration-1000 ${
+            isGlitching ? 'opacity-80' : 'opacity-40'
+          }`}
+          style={{ 
+            mixBlendMode: isGlitching ? 'difference' : 'screen',
+            transform: isGlitching ? `scale(${1 + Math.random() * 0.1})` : 'scale(1)'
+          }}
+        />
       </div>
       
       {/* Control Buttons - Outside Video Frame, Bottom Left */}
