@@ -12,12 +12,33 @@ perchance_password.txt
 .DS_Store
 *.log
 
-# Audio files - too large for git
+# Large media files - stored in Supabase buckets instead
 public/music/
+public/videos/
+public/generated/
 *.mp3
 *.wav
 *.m4a
 *.flac
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+
+# Large image collections - use cloud storage
+public/images/VexVoid_graf_train_jam/
+public/images/v3x_vide0_Jam_01/
+
+# Generated/temporary files
+*.zip
+*.bundle
+temp/
+tmp/
+uploads/
 
 # Submodules
 v3x-video/
+
+# Vercel
+.vercel
