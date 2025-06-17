@@ -2,15 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { 
-  conceptArtImages, 
-  allStreetArt, 
-  landscapeImages, 
-  portraitImages,
-  totalImageCount,
-  streetArtCount,
-  landscapeCount,
-  portraitCount
-} from '../lib/images'
+  getConceptArtImages,
+  getAllStreetArtImages,
+  getLandscapeImages,
+  getPortraitImages
+} from '../lib/supabaseImages'
 
 type VisualCategory = 'concept' | 'street' | 'landscape' | 'portrait' | 'animated'
 
@@ -26,25 +22,25 @@ const visualTabs: VisualTab[] = [
     id: 'concept',
     label: 'CONCEPT ART',
     description: 'Digital concept art exploring the V3XV0ID aesthetic',
-    count: totalImageCount
+    count: getConceptArtImages().length
   },
   {
     id: 'street',
     label: 'STREET ART',
     description: 'Graffiti, train jams, and urban exploration photography',
-    count: streetArtCount
+    count: getAllStreetArtImages().length
   },
   {
     id: 'landscape',
     label: 'LANDSCAPES',
     description: 'Atmospheric landscapes and environmental scenes',
-    count: landscapeCount
+    count: getLandscapeImages().length
   },
   {
     id: 'portrait',
     label: 'PORTRAITS',
     description: 'Character studies and portrait photography',
-    count: portraitCount
+    count: getPortraitImages().length
   },
   {
     id: 'animated',
@@ -56,49 +52,52 @@ const visualTabs: VisualTab[] = [
 
 // Curated selections - pick diverse, representative images
 const getCuratedConceptArt = () => {
+  const conceptArt = getConceptArtImages()
   // Pick 12 diverse images from different sets
   return [
-    conceptArtImages[0], // Set 1
-    conceptArtImages[2],
-    conceptArtImages[5],
-    conceptArtImages[8], // Set 2 
-    conceptArtImages[11],
-    conceptArtImages[15],
-    conceptArtImages[18], // Set 3
-    conceptArtImages[22],
-    conceptArtImages[28],
-    conceptArtImages[32],
-    conceptArtImages[30],
-    conceptArtImages[25]
+    conceptArt[0], // Set 1
+    conceptArt[2],
+    conceptArt[5],
+    conceptArt[8], // Set 2 
+    conceptArt[11],
+    conceptArt[15],
+    conceptArt[18], // Set 3
+    conceptArt[22],
+    conceptArt[28],
+    conceptArt[32],
+    conceptArt[30],
+    conceptArt[25]
   ].filter(Boolean)
 }
 
 const getCuratedStreetArt = () => {
+  const streetArt = getAllStreetArtImages()
   // Mix of graffiti and street photos - pick every 8th to get variety
-  return allStreetArt.filter((_, idx) => idx % 8 === 0 || idx < 6).slice(0, 16)
+  return streetArt.filter((_, idx) => idx % 8 === 0 || idx < 6).slice(0, 16)
 }
 
 const getCuratedLandscapes = () => {
+  const landscapes = getLandscapeImages()
   // Pick 12 diverse landscapes from the 19 available - every other one plus some extras
   return [
-    landscapeImages[0],  // download.jpg
-    landscapeImages[2],  // download-2.jpg
-    landscapeImages[4],  // download-4.jpg
-    landscapeImages[6],  // download-6.jpg
-    landscapeImages[8],  // download-8.jpg
-    landscapeImages[10], // download-10.jpg
-    landscapeImages[12], // download-12.jpg
-    landscapeImages[14], // download-14.jpg
-    landscapeImages[16], // download-16.jpg
-    landscapeImages[18], // download-18.jpg
-    landscapeImages[1],  // download-1.jpg
-    landscapeImages[7]   // download-7.jpg
+    landscapes[0],  // download.jpg
+    landscapes[2],  // download-2.jpg
+    landscapes[4],  // download-4.jpg
+    landscapes[6],  // download-6.jpg
+    landscapes[8],  // download-8.jpg
+    landscapes[10], // download-10.jpg
+    landscapes[12], // download-12.jpg
+    landscapes[14], // download-14.jpg
+    landscapes[16], // download-16.jpg
+    landscapes[18], // download-18.jpg
+    landscapes[1],  // download-1.jpg
+    landscapes[7]   // download-7.jpg
   ].filter(Boolean)
 }
 
 const getCuratedPortraits = () => {
-  // All portraits since there are only 5
-  return portraitImages
+  // All portraits since there are only 4
+  return getPortraitImages()
 }
 
 export default function VisualGallery() {
@@ -153,13 +152,13 @@ export default function VisualGallery() {
           <div className={`${getAspectRatio()} max-w-4xl mx-auto relative overflow-hidden cyber-card`}>
             {collection.map((img, idx) => (
               <div
-                key={img.path}
+                key={img.url}
                 className={`absolute inset-0 transition-opacity duration-1000 ${
                   idx === currentImageIndex ? 'opacity-100' : 'opacity-0'
                 }`}
               >
                 <img
-                  src={img.path}
+                  src={img.url}
                   alt={`${activeTab} ${idx + 1}`}
                   className="w-full h-full object-cover filter grayscale"
                 />
