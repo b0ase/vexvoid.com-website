@@ -96,23 +96,27 @@ export const applyGlitchEffect = (
   }
 }
 
-// RGB Channel Separation
+// RGB Channel Separation - Subtle Black and White
 const applyRGBSeparation = (ctx: CanvasRenderingContext2D, width: number, height: number, intensity: number) => {
-  const offset = intensity * 10
+  const offset = intensity * 3 // Much smaller offset for subtlety
   
-  // Red channel
+  // Very subtle monochrome separation
   ctx.save()
   ctx.globalCompositeOperation = 'screen'
-  ctx.fillStyle = `rgba(255, 0, 0, ${intensity * 0.3})`
+  
+  // Light gray channel - very subtle
+  ctx.fillStyle = `rgba(255, 255, 255, ${intensity * 0.1})`
   ctx.fillRect(-offset, 0, width, height)
   
-  // Green channel
-  ctx.fillStyle = `rgba(0, 255, 0, ${intensity * 0.3})`
+  // Dark gray channel - very subtle
+  ctx.fillStyle = `rgba(0, 0, 0, ${intensity * 0.15})`
   ctx.fillRect(offset * 0.5, 0, width, height)
   
-  // Blue channel
-  ctx.fillStyle = `rgba(0, 0, 255, ${intensity * 0.3})`
-  ctx.fillRect(offset, 0, width, height)
+  // Rare tiny color hint - only 2% chance
+  if (Math.random() < 0.02) {
+    ctx.fillStyle = `rgba(255, 0, 0, ${intensity * 0.05})`
+    ctx.fillRect(offset, 0, width, height)
+  }
   ctx.restore()
 }
 
@@ -158,19 +162,26 @@ const applyPixelSort = (ctx: CanvasRenderingContext2D, width: number, height: nu
   ctx.putImageData(imageData, 0, 0)
 }
 
-// Data Corruption
+// Data Corruption - Very subtle black and white blocks
 const applyDataCorruption = (ctx: CanvasRenderingContext2D, width: number, height: number, intensity: number) => {
-  const corruptionBlocks = Math.floor(intensity * 50)
+  const corruptionBlocks = Math.floor(intensity * 15) // Much fewer blocks
   
   for (let i = 0; i < corruptionBlocks; i++) {
     const x = Math.random() * width
     const y = Math.random() * height
-    const w = Math.random() * 100 * intensity
-    const h = Math.random() * 20 * intensity
+    const w = Math.random() * 20 * intensity // Much smaller blocks
+    const h = Math.random() * 3 * intensity // Thin lines
     
     ctx.save()
     ctx.globalCompositeOperation = 'difference'
-    ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 50%)`
+    
+    // 95% black and white, 5% subtle color
+    if (Math.random() < 0.95) {
+      ctx.fillStyle = Math.random() < 0.5 ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.2)'
+    } else {
+      // Very subtle color corruption
+      ctx.fillStyle = `rgba(255, 0, 0, 0.1)`
+    }
     ctx.fillRect(x, y, w, h)
     ctx.restore()
   }
@@ -224,25 +235,34 @@ const applyChromaticAberration = (ctx: CanvasRenderingContext2D, width: number, 
   ctx.putImageData(newImageData, 0, 0)
 }
 
-// Digital Noise
+// Digital Noise - Very subtle black and white pixels
 const applyDigitalNoise = (ctx: CanvasRenderingContext2D, width: number, height: number, intensity: number) => {
   const noiseData = ctx.createImageData(width, height)
   const data = noiseData.data
   
   for (let i = 0; i < data.length; i += 4) {
-    if (Math.random() < intensity * 0.1) {
-      const noise = Math.random() * 255
-      data[i] = noise     // Red
-      data[i + 1] = noise // Green
-      data[i + 2] = noise // Blue
-      data[i + 3] = 255   // Alpha
+    if (Math.random() < intensity * 0.05) { // Much less noise
+      // 98% black and white noise
+      if (Math.random() < 0.98) {
+        const noise = Math.random() < 0.5 ? 0 : 255
+        data[i] = noise     // Red
+        data[i + 1] = noise // Green
+        data[i + 2] = noise // Blue
+        data[i + 3] = 80    // Low alpha for subtlety
+      } else {
+        // Very rare, very subtle color
+        data[i] = 255
+        data[i + 1] = 0
+        data[i + 2] = 0
+        data[i + 3] = 30
+      }
     } else {
       data[i + 3] = 0 // Transparent
     }
   }
   
   ctx.save()
-  ctx.globalCompositeOperation = 'screen'
+  ctx.globalCompositeOperation = 'overlay'
   ctx.putImageData(noiseData, 0, 0)
   ctx.restore()
 }

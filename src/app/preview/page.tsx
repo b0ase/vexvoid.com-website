@@ -10,6 +10,7 @@ import {
 } from '../lib/supabaseImages'
 import { generativeAlgorithms } from '../lib/generativeAlgorithms'
 import { applyGlitchEffect, getRandomGlitchEffect, applyMultipleGlitchEffects } from '../lib/glitchEffects'
+import { useMusicPlayer } from '../lib/musicPlayerContext'
 import Image from 'next/image'
 
 // Available video clips - using Supabase cloud storage (updated list)
@@ -59,37 +60,42 @@ const videoClips = [
   }
 ]
 
-// Get all images for backdrop and overlays - over 100 images total!
-const conceptArtImages = getConceptArtImages()
-const landscapeImages = getLandscapeImages()
-const portraitImages = getPortraitImages()
-const videoJamImages = getVideoJamImages()
-const allImages = getAllCloudImages()
-
-// Logo images - focus on concept art for logo corner
-const logoImages = conceptArtImages.slice(0, 15)
-
 export default function VideoPreviewPage() {
+  // Music player context
+  const { isGlobalPlayerVisible, setIsGlobalPlayerVisible } = useMusicPlayer()
+  
+  // Initialize image arrays safely
+  const [conceptArtImages] = useState(() => getConceptArtImages())
+  const [landscapeImages] = useState(() => getLandscapeImages())
+  const [portraitImages] = useState(() => getPortraitImages())
+  const [videoJamImages] = useState(() => getVideoJamImages())
+  const [allImages] = useState(() => getAllCloudImages())
+  const [logoImages] = useState(() => getConceptArtImages().slice(0, 15))
+
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
   const [nextVideoIndex, setNextVideoIndex] = useState(1)
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentOverlayIndex, setCurrentOverlayIndex] = useState(0)
   const [progress, setProgress] = useState(0)
-  const [backdropIndex] = useState(Math.floor(Math.random() * allImages.length))
-  const [isProjectionMode, setIsProjectionMode] = useState(true) // Start in projection mode (music player hidden)
+  const [backdropIndex] = useState(() => Math.floor(Math.random() * Math.max(1, getAllCloudImages().length)))
+  const [isProjectionMode, setIsProjectionMode] = useState(!isGlobalPlayerVisible) // Sync with music player visibility
   const [logoIndex, setLogoIndex] = useState(0)
   const [videoStartTime, setVideoStartTime] = useState(Date.now()) // Track when video started
   const [currentAlgorithmIndex, setCurrentAlgorithmIndex] = useState(0)
   const [isGlitching, setIsGlitching] = useState(false)
   const [p5Time, setP5Time] = useState(0)
+  const [beatCounter, setBeatCounter] = useState(0)
+  const [lastBeatTime, setLastBeatTime] = useState(0)
+  const [glitchIntensity, setGlitchIntensity] = useState(0.5)
   const [videoStartOffset] = useState(() => 
     // Random start points for each video (10-60 seconds in)
     videoClips.map(() => Math.random() * 50 + 10)
   )
-  const [floatingElements] = useState(() => 
-    Array.from({ length: 15 }, (_, i) => ({
+  const [floatingElements] = useState(() => {
+    const images = getAllCloudImages()
+    return Array.from({ length: 15 }, (_, i) => ({
       id: i,
-      image: allImages[Math.floor(Math.random() * allImages.length)],
+      image: images[Math.floor(Math.random() * Math.max(1, images.length))],
       x: Math.random() * 100,
       y: Math.random() * 100,
       size: 12 + Math.random() * 20, // 12px to 32px
@@ -98,7 +104,7 @@ export default function VideoPreviewPage() {
       speed: 0.1 + Math.random() * 0.3, // Slow movement
       direction: Math.random() * Math.PI * 2
     }))
-  )
+  })
   
   const currentVideoRef = useRef<HTMLVideoElement>(null)
   const nextVideoRef = useRef<HTMLVideoElement>(null)
@@ -154,38 +160,63 @@ export default function VideoPreviewPage() {
     return () => clearInterval(logoInterval)
   }, [])
 
-  // P5.js Animation System
+  // P5.js Animation System - Faster updates
   useEffect(() => {
     const p5Interval = setInterval(() => {
-      setP5Time(prev => prev + 0.02) // Slow time progression
-    }, 50)
+      setP5Time(prev => prev + 0.05) // Faster time progression
+    }, 30) // Faster updates (30ms instead of 50ms)
     
     return () => clearInterval(p5Interval)
   }, [])
 
-  // Cycle through generative algorithms every 15 seconds
+  // Simulated Beat Detection - Creates rhythm for glitch effects
+  useEffect(() => {
+    const beatInterval = setInterval(() => {
+      setBeatCounter(prev => prev + 1)
+      setLastBeatTime(Date.now())
+      
+      // Much less frequent glitching - only 20% chance to sync with beat
+      const shouldGlitch = Math.random() < 0.2
+      if (shouldGlitch) {
+        setIsGlitching(true)
+        setGlitchIntensity(0.05 + Math.random() * 0.1) // Very low intensity (0.05-0.15)
+        
+        // Very short, subtle glitches
+        const glitchDuration = 30 + Math.random() * 70 // 30-100ms
+        setTimeout(() => setIsGlitching(false), glitchDuration)
+      }
+    }, 800 + Math.random() * 600) // Slower, more irregular timing
+    
+    return () => clearInterval(beatInterval)
+  }, [])
+
+  // Cycle through generative algorithms
   useEffect(() => {
     const algorithmInterval = setInterval(() => {
       setCurrentAlgorithmIndex(prev => (prev + 1) % generativeAlgorithms.length)
       
-      // Trigger glitch effect during algorithm transitions
+      // Subtle glitch effect during algorithm transitions
       setIsGlitching(true)
-      setTimeout(() => setIsGlitching(false), 1000)
-    }, 15000)
+      setGlitchIntensity(0.1 + Math.random() * 0.1) // Low intensity
+      setTimeout(() => setIsGlitching(false), 150) // Short duration
+    }, 20000) // Slower algorithm changes
     
     return () => clearInterval(algorithmInterval)
   }, [])
 
-  // Random glitch effects
+  // Reduce random glitch bursts
   useEffect(() => {
-    const glitchInterval = setInterval(() => {
-      if (Math.random() < 0.1) { // 10% chance every 5 seconds
+    const glitchBurstInterval = setInterval(() => {
+      if (Math.random() < 0.03) { // Only 3% chance every 5 seconds
         setIsGlitching(true)
-        setTimeout(() => setIsGlitching(false), 200 + Math.random() * 800)
+        setGlitchIntensity(0.05 + Math.random() * 0.1) // Very low intensity
+        
+        // Very quick, subtle burst
+        setTimeout(() => setIsGlitching(false), 20 + Math.random() * 40)
       }
-    }, 5000)
+    }, 5000) // Less frequent
     
-    return () => clearInterval(glitchInterval)
+    return () => clearInterval(glitchBurstInterval)
   }, [])
 
   // Animate floating elements
@@ -228,34 +259,50 @@ export default function VideoPreviewPage() {
       // Clear with transparent background
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       
-      // Apply advanced glitch effects
+      // Apply advanced glitch effects with dynamic intensity
       if (isGlitching) {
-        applyMultipleGlitchEffects(ctx, canvas.width, canvas.height, p5Time, 2)
+        // Use multiple effects with current intensity
+        const currentIntensity = glitchIntensity * (0.8 + Math.random() * 0.4)
+        applyMultipleGlitchEffects(ctx, canvas.width, canvas.height, p5Time, Math.floor(currentIntensity * 3) + 1)
       }
 
-      // Render generative algorithm
-      ctx.strokeStyle = `rgba(255, 255, 255, ${isGlitching ? 0.8 : 0.3})`
-      ctx.lineWidth = isGlitching ? 2 : 0.5
+      // Render generative algorithm - Black and White focused
+      const baseOpacity = isGlitching ? 0.9 : 0.4
+      const strokeOpacity = baseOpacity * (0.7 + Math.random() * 0.3)
+      ctx.strokeStyle = `rgba(255, 255, 255, ${strokeOpacity})`
+      ctx.lineWidth = isGlitching ? 1.5 + glitchIntensity : 0.5
+      
+      // Add occasional black strokes for contrast
+      if (Math.random() < 0.3) {
+        ctx.strokeStyle = `rgba(0, 0, 0, ${strokeOpacity * 0.8})`
+      }
       
       // Simplified implementation of the spiral wave pattern
       const centerX = canvas.width / 2
       const centerY = canvas.height / 2
-      const scale = 0.5
+      const scale = isGlitching ? 0.6 + glitchIntensity * 0.3 : 0.5
+      const timeMultiplier = isGlitching ? 3 : 1
       
       ctx.beginPath()
-      for (let i = 0; i < 2000; i++) {
+      for (let i = 0; i < (isGlitching ? 3000 : 2000); i++) {
         const x = i % 200
         const y = Math.floor(i / 43)
         
-        // Simplified version of the algorithm
-        const k = 4 * Math.cos(x / 29)
+        // Enhanced algorithm with glitch variations
+        const k = 4 * Math.cos(x / 29) * (isGlitching ? 1 + Math.sin(p5Time * 10) * 0.3 : 1)
         const e = y / 8 - 13
         const d = Math.sqrt(k * k + e * e)
-        const q = 3 * Math.sin(k * 2) + 0.3 / (k + 0.1) + Math.sin(y / 25) * k * (9 + 4 * Math.sin(e * 9 - d * 3 + p5Time * 2))
-        const c = d - p5Time
+        const q = 3 * Math.sin(k * 2) + 0.3 / (k + 0.1) + Math.sin(y / 25) * k * (9 + 4 * Math.sin(e * 9 - d * 3 + p5Time * 2 * timeMultiplier))
+        const c = d - p5Time * timeMultiplier
         
-        const px = (q + 30 * Math.cos(c)) * scale + centerX
-        const py = (q * Math.sin(c) + d * 39 - 220) * scale + centerY
+        let px = (q + 30 * Math.cos(c)) * scale + centerX
+        let py = (q * Math.sin(c) + d * 39 - 220) * scale + centerY
+        
+        // Add glitch distortion
+        if (isGlitching) {
+          px += (Math.random() - 0.5) * glitchIntensity * 20
+          py += (Math.random() - 0.5) * glitchIntensity * 20
+        }
         
         if (i === 0) {
           ctx.moveTo(px, py)
@@ -263,11 +310,15 @@ export default function VideoPreviewPage() {
           ctx.lineTo(px, py)
         }
         
-        // Add glitch artifacts
-        if (isGlitching && Math.random() < 0.01) {
+        // Add aggressive glitch breaks
+        if (isGlitching && Math.random() < 0.02) {
           ctx.stroke()
           ctx.beginPath()
-          ctx.moveTo(px + Math.random() * 20 - 10, py + Math.random() * 20 - 10)
+          // Jump to random position
+          ctx.moveTo(
+            px + (Math.random() - 0.5) * 50, 
+            py + (Math.random() - 0.5) * 50
+          )
         }
       }
       ctx.stroke()
@@ -276,7 +327,7 @@ export default function VideoPreviewPage() {
     }
 
     renderP5()
-  }, [currentAlgorithmIndex, isGlitching, p5Time])
+  }, [currentAlgorithmIndex, isGlitching, p5Time, glitchIntensity])
 
   // Handle video ended with crossfade to next
   const handleVideoEnded = () => {
@@ -363,13 +414,15 @@ export default function VideoPreviewPage() {
       <div className="relative w-[85vw] h-[85vh] overflow-hidden rounded-lg border border-white/10">
         {/* Concept Art Backdrop - Always Visible Behind Videos */}
         <div className="absolute inset-0 z-0">
-          <Image
-            src={allImages[backdropIndex]?.url || conceptArtImages[0]?.url}
-            alt="VexVoid Backdrop"
-            fill
-            className="object-cover opacity-25 blur-lg"
-            priority
-          />
+          {allImages[backdropIndex] && (
+            <Image
+              src={allImages[backdropIndex].url}
+              alt="VexVoid Backdrop"
+              fill
+              className="object-cover opacity-25 blur-lg"
+              priority
+            />
+          )}
           <div className="absolute inset-0 bg-black/60" />
         </div>
 
@@ -455,22 +508,26 @@ export default function VideoPreviewPage() {
         <div className="absolute inset-0 z-30 pointer-events-none">
           {/* Large Background Layer - Much Dimmer */}
           <div className="absolute inset-0 opacity-5 transition-opacity duration-5000">
-            <Image
-              src={allImages[(currentOverlayIndex + 4) % allImages.length].url}
-              alt="Art Background"
-              fill
-              className="object-cover blur-[4px] mix-blend-soft-light"
-            />
+            {allImages[(currentOverlayIndex + 4) % allImages.length] && (
+              <Image
+                src={allImages[(currentOverlayIndex + 4) % allImages.length].url}
+                alt="Art Background"
+                fill
+                className="object-cover blur-[4px] mix-blend-soft-light"
+              />
+            )}
           </div>
           
           {/* Logo Corner - Top Right, Cycling Through Concept Art */}
           <div className="absolute top-4 right-4 w-32 h-32 opacity-20 transition-all duration-4000 transform rotate-2 z-40">
-            <Image
-              src={logoImages[logoIndex].url}
-              alt="VexVoid Logo"
-              fill
-              className="object-cover rounded-xl blur-[0.5px] mix-blend-screen border border-white/10"
-            />
+            {logoImages[logoIndex] && (
+              <Image
+                src={logoImages[logoIndex].url}
+                alt="VexVoid Logo"
+                fill
+                className="object-cover rounded-xl blur-[0.5px] mix-blend-screen border border-white/10"
+              />
+            )}
             <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/20 rounded-xl" />
           </div>
           
@@ -493,43 +550,51 @@ export default function VideoPreviewPage() {
                   zIndex: 30 + (index % 5)
                 }}
               >
-                <Image
-                  src={element.image.url}
-                  alt="Floating Art"
-                  fill
-                  className={`object-cover rounded-lg blur-[0.5px]`}
-                  style={{ mixBlendMode: blendMode as any }}
-                />
+                {element.image && (
+                  <Image
+                    src={element.image.url}
+                    alt="Floating Art"
+                    fill
+                    className={`object-cover rounded-lg blur-[0.5px]`}
+                    style={{ mixBlendMode: blendMode as any }}
+                  />
+                )}
               </div>
             )
           })}
           
           {/* Static Corner Elements for Depth */}
           <div className="absolute top-8 left-8 w-24 h-24 opacity-15 transition-all duration-4000 transform rotate-2">
-            <Image
-              src={landscapeImages[currentOverlayIndex % landscapeImages.length].url}
-              alt="Landscape Art"
-              fill
-              className="object-cover rounded-lg blur-[0.5px] mix-blend-screen"
-            />
+            {landscapeImages[currentOverlayIndex % landscapeImages.length] && (
+              <Image
+                src={landscapeImages[currentOverlayIndex % landscapeImages.length].url}
+                alt="Landscape Art"
+                fill
+                className="object-cover rounded-lg blur-[0.5px] mix-blend-screen"
+              />
+            )}
           </div>
           
           <div className="absolute bottom-12 left-12 w-28 h-28 opacity-18 transition-all duration-4000 transform rotate-1">
-            <Image
-              src={portraitImages[currentOverlayIndex % portraitImages.length].url}
-              alt="Portrait Art"
-              fill
-              className="object-cover rounded-xl blur-[0.5px] mix-blend-soft-light"
-            />
+            {portraitImages[currentOverlayIndex % portraitImages.length] && (
+              <Image
+                src={portraitImages[currentOverlayIndex % portraitImages.length].url}
+                alt="Portrait Art"
+                fill
+                className="object-cover rounded-xl blur-[0.5px] mix-blend-soft-light"
+              />
+            )}
           </div>
           
           <div className="absolute bottom-8 right-8 w-20 h-20 opacity-12 transition-all duration-4000 transform -rotate-3">
-            <Image
-              src={videoJamImages[currentOverlayIndex % videoJamImages.length].url}
-              alt="Video Jam Art"
-              fill
-              className="object-cover rounded-lg blur-[1px] mix-blend-overlay"
-            />
+            {videoJamImages[currentOverlayIndex % videoJamImages.length] && (
+              <Image
+                src={videoJamImages[currentOverlayIndex % videoJamImages.length].url}
+                alt="Video Jam Art"
+                fill
+                className="object-cover rounded-lg blur-[1px] mix-blend-overlay"
+              />
+            )}
           </div>
         </div>
 
@@ -537,11 +602,11 @@ export default function VideoPreviewPage() {
         <canvas
           ref={p5CanvasRef}
           className={`absolute inset-0 w-full h-full object-cover z-25 pointer-events-none transition-opacity duration-1000 ${
-            isGlitching ? 'opacity-80' : 'opacity-40'
+            isGlitching ? 'opacity-20' : 'opacity-10'
           }`}
           style={{ 
             mixBlendMode: isGlitching ? 'difference' : 'screen',
-            transform: isGlitching ? `scale(${1 + Math.random() * 0.1})` : 'scale(1)'
+            transform: isGlitching ? `scale(${1 + Math.random() * 0.05})` : 'scale(1)'
           }}
         />
       </div>
@@ -558,8 +623,16 @@ export default function VideoPreviewPage() {
         
         {/* Projection Mode Button */}
         <button
-          onClick={() => setIsProjectionMode(!isProjectionMode)}
-          className="bg-black hover:bg-gray-900 text-white rounded-full w-12 h-12 flex items-center justify-center text-lg transition-all duration-200 border border-white/20"
+          onClick={() => {
+            const newProjectionMode = !isProjectionMode
+            setIsProjectionMode(newProjectionMode)
+            setIsGlobalPlayerVisible(!newProjectionMode) // Hide music player in projection mode
+          }}
+          className={`rounded-full w-12 h-12 flex items-center justify-center text-lg transition-all duration-200 border border-white/20 ${
+            isProjectionMode 
+              ? 'bg-white text-black hover:bg-gray-100' 
+              : 'bg-black text-white hover:bg-gray-900'
+          }`}
           title={isProjectionMode ? 'Exit Projection Mode' : 'Enter Projection Mode'}
         >
           📽️
