@@ -1,7 +1,7 @@
 // Cloud-based image configuration for V3XV0ID visual content
 // All images are now stored in Supabase buckets instead of local files
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://bgotvvrslolholxgcivz.supabase.co'
 const IMAGES_BUCKET = 'images'
 
 export interface CloudImage {
