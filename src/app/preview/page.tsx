@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { musicTracks } from '../lib/musicLibrary'
+import { useMusicPlayer } from '../lib/musicPlayerContext'
 
 // Available video clips for mixing - using Supabase cloud storage (now in subfolder)
 const SUPABASE_URL = 'https://bgotvvrslolholxgcivz.supabase.co'
@@ -59,11 +60,13 @@ const videoClips = [
 ]
 
 export default function VideoPreviewPage() {
+  const { hideGlobalPlayer, showGlobalPlayer } = useMusicPlayer()
   const [selectedTrack, setSelectedTrack] = useState(musicTracks[0])
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
   const [nextVideoIndex, setNextVideoIndex] = useState(1)
   const [isPlaying, setIsPlaying] = useState(false)
   const [showControls, setShowControls] = useState(true)
+  const [hasStarted, setHasStarted] = useState(false)
   
   const currentVideoRef = useRef<HTMLVideoElement>(null)
   const nextVideoRef = useRef<HTMLVideoElement>(null)
@@ -83,6 +86,42 @@ export default function VideoPreviewPage() {
       nextVideoRef.current.volume = 0.15
     }
   }, [currentVideoIndex, nextVideoIndex])
+
+  // Auto-start the preview after component mounts
+  useEffect(() => {
+    const startPreview = () => {
+      const currentVid = currentVideoRef.current
+      const audio = audioRef.current
+      
+      if (currentVid && audio && !hasStarted) {
+        // Small delay to ensure everything is loaded
+        setTimeout(() => {
+          currentVid.play().then(() => {
+            audio.play().then(() => {
+              setIsPlaying(true)
+              setHasStarted(true)
+            }).catch(() => {
+              // Audio autoplay blocked - user will need to click
+              console.log('Audio autoplay blocked - user interaction required')
+            })
+          }).catch(() => {
+            // Video autoplay blocked
+            console.log('Video autoplay blocked - user interaction required')
+          })
+        }, 1000)
+      }
+    }
+
+    startPreview()
+  }, [hasStarted])
+
+  // Hide global music player when preview loads, show when leaving
+  useEffect(() => {
+    hideGlobalPlayer()
+    return () => {
+      showGlobalPlayer()
+    }
+  }, [hideGlobalPlayer, showGlobalPlayer])
 
   // Auto-hide controls after 3 seconds of no mouse movement
   useEffect(() => {
@@ -105,7 +144,7 @@ export default function VideoPreviewPage() {
     }
   }, [])
 
-  // Handle video transitions with crossfade
+  // Handle video transitions with crossfade - continuous loop
   useEffect(() => {
     const currentVid = currentVideoRef.current
     const nextVid = nextVideoRef.current
@@ -113,22 +152,7 @@ export default function VideoPreviewPage() {
     if (!currentVid || !nextVid) return
 
     const handleVideoEnd = () => {
-      // Start crossfade 1 second before current video ends
-      const fadeStartTime = Math.max(0, currentVid.duration - 1)
-      
-      const checkForFade = () => {
-        if (currentVid.currentTime >= fadeStartTime) {
-          startCrossfade()
-        } else {
-          requestAnimationFrame(checkForFade)
-        }
-      }
-      
-      checkForFade()
-    }
-
-    const startCrossfade = () => {
-      // Start next video
+      // Start next video immediately when current one ends
       nextVid.currentTime = 0
       nextVid.play()
       
@@ -144,7 +168,7 @@ export default function VideoPreviewPage() {
       
       // Switch videos after fade completes
       setTimeout(() => {
-        // Swap the video references
+        // Move to next video in the continuous loop
         const newCurrentIndex = nextVideoIndex
         const newNextIndex = (nextVideoIndex + 1) % videoClips.length
         
@@ -159,8 +183,9 @@ export default function VideoPreviewPage() {
       }, 1000)
     }
 
-    currentVid.addEventListener('timeupdate', handleVideoEnd)
-    return () => currentVid.removeEventListener('timeupdate', handleVideoEnd)
+    // Listen for video end to trigger next video
+    currentVid.addEventListener('ended', handleVideoEnd)
+    return () => currentVid.removeEventListener('ended', handleVideoEnd)
   }, [currentVideoIndex, nextVideoIndex])
 
   // Play/pause handler
@@ -184,10 +209,14 @@ export default function VideoPreviewPage() {
   // Track selection handler
   const handleTrackChange = (track: typeof musicTracks[0]) => {
     setSelectedTrack(track)
-    setIsPlaying(false)
-    if (audioRef.current) {
-      audioRef.current.pause()
-      audioRef.current.currentTime = 0
+    // Don't pause - just switch tracks seamlessly
+    if (audioRef.current && isPlaying) {
+      // Keep playing the new track
+      setTimeout(() => {
+        if (audioRef.current) {
+          audioRef.current.play()
+        }
+      }, 100)
     }
   }
 
@@ -265,19 +294,30 @@ export default function VideoPreviewPage() {
           </div>
         </div>
 
-        {/* Center Play/Pause Button */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <button
-            onClick={handlePlayPause}
-            className="bg-black/60 backdrop-blur-sm hover:bg-black/80 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl transition-all pointer-events-auto"
-          >
-            {isPlaying ? '⏸' : '▶'}
-          </button>
-        </div>
 
-        {/* Bottom Track Selector */}
+
+        {/* Bottom Controls */}
         <div className="absolute bottom-4 left-4 right-4 pointer-events-auto">
           <div className="bg-black/60 backdrop-blur-sm rounded p-4">
+            {/* Play/Pause Control */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handlePlayPause}
+                  className="bg-cyan-400 hover:bg-cyan-300 text-black rounded-full w-10 h-10 flex items-center justify-center text-lg transition-all"
+                >
+                  {isPlaying ? '⏸' : '▶'}
+                </button>
+                <div className="text-sm">
+                  <div className="text-cyan-400 font-mono">PREVIEW CONTROLS</div>
+                  <div className="text-white/70 text-xs">
+                    {isPlaying ? 'Playing continuous loop' : 'Paused'}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Track Selector */}
             <div className="text-sm font-mono text-cyan-400 mb-2">SELECT TRACK</div>
             <div className="flex gap-2 overflow-x-auto">
               {musicTracks.slice(0, 6).map((track) => (
