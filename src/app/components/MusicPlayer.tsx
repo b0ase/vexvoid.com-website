@@ -28,9 +28,13 @@ export default function MusicPlayer() {
   }
 
   return (
-    <div className="fixed top-4 right-4 z-50">
-      {/* Compact Player Box - Medium Size */}
-      <div className="bg-black/95 border border-white p-3 text-white lo-fi-text w-72">
+    <div className="fixed z-50 
+                    top-4 right-4 
+                    md:top-4 md:right-4 
+                    max-md:top-4 max-md:left-1/2 max-md:-translate-x-1/2">
+      {/* Compact Player Box - Medium Size, Responsive Width */}
+      <div className="bg-black/95 border border-white p-3 text-white lo-fi-text 
+                      w-72 max-md:w-80 max-md:max-w-[90vw]">
         {/* Header */}
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
