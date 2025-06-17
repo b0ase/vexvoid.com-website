@@ -102,11 +102,7 @@ export default function Hero() {
           V3XV0ID
         </h1>
         
-        <div className="w-16 h-px bg-white mx-auto mb-2"></div>
-        
-        <p className="text-base md:text-lg text-white mb-6 lo-fi-text">
-          DIGITAL MUSICIAN & HACKER
-        </p>
+        <div className="w-16 h-px bg-white mx-auto mb-6"></div>
         
         <div className="flex justify-center gap-2 text-xs md:text-sm flex-wrap mb-4">
           <a href="#audio" className="bg-white text-black px-3 py-1.5 lo-fi-text hover:bg-gray-200 transition-colors">AUDIO</a>
