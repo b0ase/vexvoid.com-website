@@ -36,6 +36,7 @@ public/images/v3x_vide0_Jam_01/
 temp/
 tmp/
 uploads/
+*matrixRain*.json
 
 # Submodules
 v3x-video/
