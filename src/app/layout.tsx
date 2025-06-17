@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import MusicPlayer from './components/MusicPlayer'
-import { MusicPlayerProvider } from './lib/musicPlayerContext'
 
 export const metadata: Metadata = {
   title: 'v3xv0id - Digital Music & Visual Art',
@@ -16,10 +15,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-retro bg-cyber-black text-cyber-white">
-        <MusicPlayerProvider>
-          {children}
-          <MusicPlayer />
-        </MusicPlayerProvider>
+        {children}
+        <MusicPlayer />
       </body>
     </html>
   )

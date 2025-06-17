@@ -3,10 +3,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { musicTracks } from '../lib/musicLibrary'
 import { getMusicUrl } from '../lib/supabase'
-import { useMusicPlayer } from '../lib/musicPlayerContext'
 
 export default function MusicPlayer() {
-  const { isGlobalPlayerVisible } = useMusicPlayer()
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTrack, setCurrentTrack] = useState(0)
   const [showPlaylist, setShowPlaylist] = useState(false)
@@ -221,11 +219,6 @@ export default function MusicPlayer() {
   }
 
   const currentTrackTitle = musicTracks[currentTrack]?.title || 'Loading...'
-
-  // Don't render if globally hidden
-  if (!isGlobalPlayerVisible) {
-    return null
-  }
 
   return (
     <div className="fixed top-4 right-4 z-50">
