@@ -197,7 +197,7 @@ export default function VisualGallery() {
         }`}>
           {collection.map((img, idx) => (
             <button
-              key={img.path}
+              key={img.url}
               onClick={() => setCurrentImageIndex(idx)}
               className={`cyber-card overflow-hidden group cursor-pointer relative transition-all duration-300 ${
                 activeTab === 'portrait' ? 'aspect-[3/4]' : 
@@ -206,7 +206,7 @@ export default function VisualGallery() {
               } ${idx === currentImageIndex ? 'ring-2 ring-cyber-white' : ''}`}
             >
               <img
-                src={img.path}
+                src={img.url}
                 alt={`${activeTab} thumbnail ${idx + 1}`}
                 className="object-cover w-full h-full filter grayscale group-hover:grayscale-0 transition-all duration-300"
               />
@@ -225,10 +225,10 @@ export default function VisualGallery() {
               </div>
               <div>
                 <div className="text-2xl font-mono cyber-text">
-                  {activeTab === 'concept' ? totalImageCount :
-                   activeTab === 'street' ? streetArtCount :
-                   activeTab === 'landscape' ? landscapeCount :
-                   activeTab === 'portrait' ? portraitCount : 0}
+                  {activeTab === 'concept' ? getConceptArtImages().length :
+                   activeTab === 'street' ? getAllStreetArtImages().length :
+                   activeTab === 'landscape' ? getLandscapeImages().length :
+                   activeTab === 'portrait' ? getPortraitImages().length : 0}
                 </div>
                 <div className="text-xs text-cyber-accent lo-fi-text">TOTAL COLLECTION</div>
               </div>
