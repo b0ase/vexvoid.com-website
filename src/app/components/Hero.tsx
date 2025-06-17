@@ -2,17 +2,17 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { getAllImagePaths, conceptArtImages } from '../lib/images'
+import { getAllCloudImages, getConceptArtImages } from '../lib/supabaseImages'
 import SocialLinks from './SocialLinks'
 import Link from 'next/link'
 
 // Use all available images for backgrounds
-const allImages = getAllImagePaths()
-const backgroundImages = allImages
+const allImages = getAllCloudImages()
+const backgroundImages = allImages.map(img => img.url)
 
 // Get random selection for floating elements
 const floatingImages = allImages.slice(0, 16)
-const cornerImages = conceptArtImages.slice(0, 4)
+const cornerImages = getConceptArtImages().slice(0, 4)
 
 export default function Hero() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -51,7 +51,7 @@ export default function Hero() {
       <div className="absolute inset-0 pointer-events-none">
         {floatingImages.slice(0, 12).map((img, index) => (
           <div
-            key={`floating-${img}`}
+            key={`floating-${img.url}`}
             className="absolute opacity-30 border border-white/20"
             style={{
               width: `${80 + (index % 3) * 40}px`,
@@ -62,7 +62,7 @@ export default function Hero() {
             }}
           >
             <Image
-              src={img}
+              src={img.url}
               alt=""
               fill
               className="object-cover filter grayscale"
@@ -75,7 +75,7 @@ export default function Hero() {
       <div className="absolute inset-0 pointer-events-none">
         {floatingImages.slice(12, 16).map((img, index) => (
           <div
-            key={`extra-${img}`}
+            key={`extra-${img.url}`}
             className="absolute opacity-20 border border-white/10"
             style={{
               width: `${60 + (index % 2) * 30}px`,
@@ -86,7 +86,7 @@ export default function Hero() {
             }}
           >
             <Image
-              src={img}
+              src={img.url}
               alt=""
               fill
               className="object-cover filter grayscale brightness-50"
@@ -122,7 +122,7 @@ export default function Hero() {
       {/* Corner Images */}
       <div className="absolute top-4 left-4 w-16 h-16 opacity-40">
         <Image
-          src={cornerImages[0].path}
+          src={cornerImages[0].url}
           alt=""
           fill
           className="object-cover filter grayscale border border-white/30"
@@ -130,7 +130,7 @@ export default function Hero() {
       </div>
       <div className="absolute top-4 right-4 w-16 h-16 opacity-40">
         <Image
-          src={cornerImages[1].path}
+          src={cornerImages[1].url}
           alt=""
           fill
           className="object-cover filter grayscale border border-white/30"
@@ -138,7 +138,7 @@ export default function Hero() {
       </div>
       <div className="absolute bottom-4 left-4 w-16 h-16 opacity-40">
         <Image
-          src={cornerImages[2].path}
+          src={cornerImages[2].url}
           alt=""
           fill
           className="object-cover filter grayscale border border-white/30"
@@ -146,7 +146,7 @@ export default function Hero() {
       </div>
       <div className="absolute bottom-4 right-4 w-16 h-16 opacity-40">
         <Image
-          src={cornerImages[3].path}
+          src={cornerImages[3].url}
           alt=""
           fill
           className="object-cover filter grayscale border border-white/30"

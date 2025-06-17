@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { 
-  conceptArtImages,
-  streetArtImages,
-  landscapeImages,
-  portraitImages
-} from '../lib/images'
+  getConceptArtImages,
+  getAllStreetArtImages,
+  getLandscapeImages,
+  getPortraitImages
+} from '../lib/supabaseImages'
 
 type VisualCategory = 'concept' | 'street' | 'landscape' | 'portrait' | 'animated'
 
@@ -22,25 +22,25 @@ const visualTabs: VisualTab[] = [
     id: 'concept',
     label: 'CONCEPT ART',
     description: 'Digital concept art exploring the V3XV0ID aesthetic',
-    count: conceptArtImages.length
+    count: getConceptArtImages().length
   },
   {
     id: 'street',
     label: 'STREET ART',
     description: 'Graffiti, train jams, and urban exploration photography',
-    count: streetArtImages.length
+    count: getAllStreetArtImages().length
   },
   {
     id: 'landscape',
     label: 'LANDSCAPES',
     description: 'Atmospheric landscapes and environmental scenes',
-    count: landscapeImages.length
+    count: getLandscapeImages().length
   },
   {
     id: 'portrait',
     label: 'PORTRAITS',
     description: 'Character studies and portrait photography',
-    count: portraitImages.length
+    count: getPortraitImages().length
   },
   {
     id: 'animated',
@@ -53,22 +53,22 @@ const visualTabs: VisualTab[] = [
 // Curated selections - pick diverse, representative images
 const getCuratedConceptArt = () => {
   // Pick 12 diverse images from concept art
-  return conceptArtImages.slice(0, 12)
+  return getConceptArtImages().slice(0, 12)
 }
 
 const getCuratedStreetArt = () => {
   // Mix of graffiti and street photos - pick every 8th to get variety
-  return streetArtImages.filter((_: any, idx: number) => idx % 8 === 0 || idx < 6).slice(0, 16)
+  return getAllStreetArtImages().filter((_: any, idx: number) => idx % 8 === 0 || idx < 6).slice(0, 16)
 }
 
 const getCuratedLandscapes = () => {
   // Pick 12 diverse landscapes
-  return landscapeImages.slice(0, 12)
+  return getLandscapeImages().slice(0, 12)
 }
 
 const getCuratedPortraits = () => {
   // All portraits since there are only 4
-  return portraitImages
+  return getPortraitImages()
 }
 
 export default function VisualGallery() {
@@ -123,13 +123,13 @@ export default function VisualGallery() {
           <div className={`${getAspectRatio()} max-w-4xl mx-auto relative overflow-hidden cyber-card`}>
             {collection.map((img, idx) => (
               <div
-                key={img.path}
+                key={img.url}
                 className={`absolute inset-0 transition-opacity duration-1000 ${
                   idx === currentImageIndex ? 'opacity-100' : 'opacity-0'
                 }`}
               >
                 <img
-                  src={img.path}
+                  src={img.url}
                   alt={`${activeTab} ${idx + 1}`}
                   className="w-full h-full object-cover filter grayscale"
                 />

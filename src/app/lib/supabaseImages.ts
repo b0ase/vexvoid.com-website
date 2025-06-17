@@ -2,7 +2,7 @@
 // All images are now stored in Supabase buckets instead of local files
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://bgotvvrslolholxgcivz.supabase.co'
-const IMAGES_BUCKET = 'images'
+const IMAGES_BUCKET = 'v3xv0id-images'
 
 export interface CloudImage {
   url: string
