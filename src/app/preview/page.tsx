@@ -120,6 +120,11 @@ export default function VideoPreviewPage() {
       currentVideoRef.current.volume = 0 // Mute video completely to avoid scary slowed audio
       currentVideoRef.current.playbackRate = 0.4 // Much slower video playback
       
+      // Mobile-specific audio interference prevention
+      currentVideoRef.current.setAttribute('playsinline', 'true')
+      currentVideoRef.current.setAttribute('webkit-playsinline', 'true')
+      currentVideoRef.current.muted = true // Double ensure muting
+      
       // Set random start point for variety
       const startPoint = videoStartOffset[currentVideoIndex]
       currentVideoRef.current.currentTime = startPoint
@@ -145,6 +150,12 @@ export default function VideoPreviewPage() {
     if (nextVideoRef.current) {
       nextVideoRef.current.volume = 0 // Mute completely
       nextVideoRef.current.playbackRate = 0.4 // Much slower video playback
+      
+      // Mobile-specific audio interference prevention
+      nextVideoRef.current.setAttribute('playsinline', 'true')
+      nextVideoRef.current.setAttribute('webkit-playsinline', 'true')
+      nextVideoRef.current.muted = true // Double ensure muting
+      
       const nextStartPoint = videoStartOffset[nextVideoIndex]
       nextVideoRef.current.currentTime = nextStartPoint
       nextVideoRef.current.load()
@@ -459,6 +470,8 @@ export default function VideoPreviewPage() {
             isTransitioning ? 'opacity-0 blur-md' : 'opacity-70'
           } ${isGlitching ? 'hue-rotate-180 saturate-200' : ''}`}
           muted={true}
+          playsInline={true}
+          webkit-playsinline="true"
           onEnded={handleVideoEnded}
           onTimeUpdate={handleTimeUpdate}
           onClick={handlePlayPause}
@@ -478,6 +491,8 @@ export default function VideoPreviewPage() {
             isTransitioning ? 'opacity-70 blur-md' : 'opacity-0'
           } ${isGlitching ? 'hue-rotate-90 saturate-150' : ''}`}
           muted={true}
+          playsInline={true}
+          webkit-playsinline="true"
           onClick={handlePlayPause}
           style={{ 
             mixBlendMode: 'normal',
@@ -493,7 +508,9 @@ export default function VideoPreviewPage() {
           <div className="absolute top-0 right-0 w-1/3 h-1/4 overflow-hidden opacity-20">
             <video
               className="w-full h-full object-cover filter brightness-[0.2] blur-[2px]"
-              muted
+              muted={true}
+              playsInline={true}
+              webkit-playsinline="true"
               autoPlay
               loop
               style={{ transform: 'scale(1.5) rotate(2deg)', mixBlendMode: 'screen' }}
@@ -506,7 +523,9 @@ export default function VideoPreviewPage() {
           <div className="absolute bottom-10 left-0 w-1/4 h-1/3 overflow-hidden opacity-15">
             <video
               className="w-full h-full object-cover filter brightness-[0.25] blur-[1px]"
-              muted
+              muted={true}
+              playsInline={true}
+              webkit-playsinline="true"
               autoPlay
               loop
               style={{ transform: 'scale(1.8) rotate(-3deg)', mixBlendMode: 'overlay' }}
@@ -519,7 +538,9 @@ export default function VideoPreviewPage() {
           <div className="absolute top-1/2 right-8 w-1/5 h-1/4 overflow-hidden opacity-10 transform -translate-y-1/2">
             <video
               className="w-full h-full object-cover filter brightness-[0.15] blur-[3px]"
-              muted
+              muted={true}
+              playsInline={true}
+              webkit-playsinline="true"
               autoPlay
               loop
               style={{ transform: 'scale(2) rotate(5deg)', mixBlendMode: 'soft-light' }}

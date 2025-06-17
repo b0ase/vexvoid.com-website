@@ -55,6 +55,9 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
     const randomIndex = Math.floor(Math.random() * musicTracks.length)
     setCurrentTrack(randomIndex)
     
+    // Detect mobile device
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    
     // Multiple autoplay strategies
     const attemptAutoplay = async () => {
       if (!audioRef.current) return
@@ -99,25 +102,56 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
             document.removeEventListener('scroll', handleFirstInteraction)
             document.removeEventListener('keydown', handleFirstInteraction)
             document.removeEventListener('touchstart', handleFirstInteraction)
+            document.removeEventListener('touchmove', handleFirstInteraction)
+            document.removeEventListener('touchend', handleFirstInteraction)
           } catch (error) {
             console.log('Interaction-triggered autoplay failed:', error)
           }
         }
       }
       
-      // Add interaction listeners
+      // Add interaction listeners (more aggressive on mobile)
       document.addEventListener('click', handleFirstInteraction, { once: false })
       document.addEventListener('scroll', handleFirstInteraction, { once: false })
       document.addEventListener('keydown', handleFirstInteraction, { once: false })
       document.addEventListener('touchstart', handleFirstInteraction, { once: false })
       
-      // Cleanup listeners after 10 seconds
+      if (isMobile) {
+        // Additional mobile-specific listeners
+        document.addEventListener('touchmove', handleFirstInteraction, { once: false })
+        document.addEventListener('touchend', handleFirstInteraction, { once: false })
+        document.addEventListener('gesturestart', handleFirstInteraction, { once: false })
+        document.addEventListener('gesturechange', handleFirstInteraction, { once: false })
+        document.addEventListener('gestureend', handleFirstInteraction, { once: false })
+        
+        // Try more frequently on mobile
+        const mobileRetryInterval = setInterval(async () => {
+          if (audioRef.current && !isPlaying && !hasUserInteracted) {
+            try {
+              await audioRef.current.play()
+              setIsPlaying(true)
+              setHasUserInteracted(true)
+              console.log('Mobile retry autoplay successful')
+              clearInterval(mobileRetryInterval)
+            } catch (error) {
+              // Silent fail, will keep trying
+            }
+          }
+        }, 2000)
+        
+        // Stop trying after 30 seconds
+        setTimeout(() => clearInterval(mobileRetryInterval), 30000)
+      }
+      
+      // Cleanup listeners after 15 seconds (longer for mobile)
       setTimeout(() => {
         document.removeEventListener('click', handleFirstInteraction)
         document.removeEventListener('scroll', handleFirstInteraction)
         document.removeEventListener('keydown', handleFirstInteraction)
         document.removeEventListener('touchstart', handleFirstInteraction)
-      }, 10000)
+        document.removeEventListener('touchmove', handleFirstInteraction)
+        document.removeEventListener('touchend', handleFirstInteraction)
+      }, 15000)
     }
 
     // Start autoplay attempts after audio is loaded
