@@ -3,53 +3,56 @@
 import { useState, useRef, useEffect } from 'react'
 import { musicTracks } from '../lib/musicLibrary'
 
-// Available video clips for mixing
+// Available video clips for mixing - using Supabase cloud storage
+const SUPABASE_URL = 'https://bgotvvrslolholxgcivz.supabase.co'
+const getVideoUrl = (filename: string) => `${SUPABASE_URL}/storage/v1/object/public/videos/${filename}`
+
 const videoClips = [
   {
     id: 'train-rush-1',
-    path: '/videos/vex_video_jam_01/A_train_rushes_past_while_urban_.mp4',
+    path: getVideoUrl('A_train_rushes_past_while_urban_.mp4'),
     title: 'Train Rush',
     mood: 'urban-energy'
   },
   {
     id: 'train-rush-2',
-    path: '/videos/vex_video_jam_01/A_train_rushes_past_while_urban_ (1).mp4',
+    path: getVideoUrl('A_train_rushes_past_while_urban_ (1).mp4'),
     title: 'Train Rush Alt',
     mood: 'urban-energy'
   },
   {
     id: 'rain-streets',
-    path: '/videos/vex_video_jam_01/Heavy_rain_pelts_the_ground__str.mp4',
+    path: getVideoUrl('Heavy_rain_pelts_the_ground__str.mp4'),
     title: 'Rain on Streets',
     mood: 'atmospheric'
   },
   {
     id: 'footsteps',
-    path: '/videos/vex_video_jam_01/Footsteps_echo_on_the_graffitied.mp4',
+    path: getVideoUrl('Footsteps_echo_on_the_graffitied.mp4'),
     title: 'Footsteps Echo',
     mood: 'mysterious'
   },
   {
     id: 'extended',
-    path: '/videos/vex_video_jam_01/Extended_Video.mp4',
+    path: getVideoUrl('Extended_Video.mp4'),
     title: 'Extended Scene',
     mood: 'cinematic'
   },
   {
     id: 'professional-1',
-    path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video.mp4',
+    path: getVideoUrl('Professional_Mode_Generated_Video.mp4'),
     title: 'Professional Mode',
     mood: 'polished'
   },
   {
     id: 'professional-2',
-    path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (1).mp4',
+    path: getVideoUrl('Professional_Mode_Generated_Video (1).mp4'),
     title: 'Professional Mode Alt',
     mood: 'polished'
   },
   {
     id: 'professional-3',
-    path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (2).mp4',
+    path: getVideoUrl('Professional_Mode_Generated_Video (2).mp4'),
     title: 'Professional Mode 2',
     mood: 'polished'
   }
