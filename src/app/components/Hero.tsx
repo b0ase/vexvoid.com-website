@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { conceptArtImages, getRandomImages, getAllImagePaths } from '../lib/images'
 import SocialLinks from './SocialLinks'
+import Link from 'next/link'
 
 // Use all available images for backgrounds
 const backgroundImages = getAllImagePaths()
@@ -108,8 +109,8 @@ export default function Hero() {
           <a href="#audio" className="bg-white text-black px-3 py-1.5 lo-fi-text hover:bg-gray-200 transition-colors">AUDIO</a>
           <a href="#visual" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">VISUAL</a>
           <a href="/studio" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">STUDIO</a>
+          <a href="/story" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">STORY</a>
           <a href="/token" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">$V3X</a>
-          <a href="#projects" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">PROJ</a>
         </div>
 
         {/* Social Links - Under buttons */}

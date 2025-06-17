@@ -30,6 +30,9 @@ const nextConfig = {
       },
     ]
   },
+  experimental: {
+    // appDir is now the default in Next.js 14
+  },
 }
 
 module.exports = nextConfig 

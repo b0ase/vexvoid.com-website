@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { google } from 'googleapis'
 import { cookies } from 'next/headers'
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const { code } = await request.json()
