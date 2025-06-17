@@ -169,7 +169,7 @@ export default function MobilePreviewPage() {
 
   return (
     <div 
-      className="relative w-full h-screen bg-black overflow-hidden"
+      className="relative w-full h-screen bg-black overflow-hidden mobile-preview-page"
       onClick={handleUserInteraction}
       onTouchStart={handleUserInteraction}
     >

@@ -13,6 +13,27 @@ export default function MobileLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <style>{`
+          /* Hide any music player components on mobile page */
+          .mobile-preview-page ~ *,
+          .mobile-preview-page + *,
+          body:has(.mobile-preview-page) > *:not(.mobile-preview-page) {
+            display: none !important;
+          }
+          
+          /* Additional selectors to hide music players */
+          [class*="music"],
+          [class*="player"],
+          [data-component="music"],
+          [data-component="player"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+          }
+        `}</style>
+      </head>
       <body className="font-retro bg-cyber-black text-cyber-white">
         {children}
       </body>
