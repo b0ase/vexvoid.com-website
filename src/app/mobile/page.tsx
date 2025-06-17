@@ -98,6 +98,31 @@ export default function MobilePreviewPage() {
     }
   }, [currentVideoIndex, nextVideoIndex])
 
+  // Global event listeners for user interaction
+  useEffect(() => {
+    const handleGlobalInteraction = (e: Event) => {
+      if (!hasUserInteracted || !isPlaying) {
+        console.log('Global interaction detected:', e.type)
+        handleUserInteraction(e)
+      }
+    }
+
+    // Add multiple event listeners
+    document.addEventListener('click', handleGlobalInteraction)
+    document.addEventListener('touchstart', handleGlobalInteraction)
+    document.addEventListener('touchend', handleGlobalInteraction)
+    document.addEventListener('mousedown', handleGlobalInteraction)
+    document.addEventListener('pointerdown', handleGlobalInteraction)
+
+    return () => {
+      document.removeEventListener('click', handleGlobalInteraction)
+      document.removeEventListener('touchstart', handleGlobalInteraction)
+      document.removeEventListener('touchend', handleGlobalInteraction)
+      document.removeEventListener('mousedown', handleGlobalInteraction)
+      document.removeEventListener('pointerdown', handleGlobalInteraction)
+    }
+  }, [hasUserInteracted, isPlaying, currentVideoIndex])
+
   // Video transition logic
   useEffect(() => {
     const timer = setInterval(() => {
@@ -154,32 +179,44 @@ export default function MobilePreviewPage() {
   }
 
   // Try to play on any user interaction
-  const handleUserInteraction = () => {
+  const handleUserInteraction = (e: any) => {
+    e.preventDefault()
+    console.log('User interaction detected:', e.type)
+    
     if (!hasUserInteracted || !isPlaying) {
+      console.log('Attempting to start video - hasUserInteracted:', hasUserInteracted, 'isPlaying:', isPlaying)
+      
       if (currentVideoRef.current) {
         // Reset video time to ensure it starts from the right point
         const startPoint = videoStartOffset[currentVideoIndex]
         currentVideoRef.current.currentTime = startPoint
         
+        console.log('Calling play() on video...')
         currentVideoRef.current.play().then(() => {
           setIsPlaying(true)
           setHasUserInteracted(true)
           setVideoStartTime(Date.now())
-          console.log('Video started via user interaction')
+          console.log('Video started successfully via user interaction')
         }).catch((error) => {
           console.log('Play failed even with user interaction:', error)
           // Try again after a short delay
           setTimeout(() => {
             if (currentVideoRef.current) {
+              console.log('Retrying video play...')
               currentVideoRef.current.play().then(() => {
                 setIsPlaying(true)
                 setHasUserInteracted(true)
                 setVideoStartTime(Date.now())
-              }).catch(console.log)
+                console.log('Video started on retry')
+              }).catch((retryError) => {
+                console.log('Retry also failed:', retryError)
+              })
             }
           }, 100)
         })
       }
+    } else {
+      console.log('Video already playing and user has interacted')
     }
   }
 
@@ -196,6 +233,10 @@ export default function MobilePreviewPage() {
       className="relative w-full h-screen bg-black overflow-hidden mobile-preview-page"
       onClick={handleUserInteraction}
       onTouchStart={handleUserInteraction}
+      onTouchEnd={handleUserInteraction}
+      onMouseDown={handleUserInteraction}
+      onPointerDown={handleUserInteraction}
+      style={{ touchAction: 'manipulation' }}
     >
       {/* Concept Art Backdrop */}
       {conceptArtImages[backdropIndex] && (
