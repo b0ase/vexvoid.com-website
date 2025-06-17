@@ -10,13 +10,73 @@ export default function MusicPlayer() {
   const [showPlaylist, setShowPlaylist] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [autoPlay, setAutoPlay] = useState(true)
+  const [hasUserInteracted, setHasUserInteracted] = useState(false)
+  const [retryCount, setRetryCount] = useState(0)
+  const [connectionStatus, setConnectionStatus] = useState<'good' | 'poor' | 'failed'>('good')
   const audioRef = useRef<HTMLAudioElement>(null)
 
-  // Initialize with random track
+  // Initialize with random track and attempt autoplay
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * musicTracks.length)
     setCurrentTrack(randomIndex)
+    
+    // Try to autoplay after a short delay (browsers require user interaction first)
+    const autoplayTimer = setTimeout(() => {
+      if (audioRef.current && !hasUserInteracted) {
+        audioRef.current.play().then(() => {
+          setIsPlaying(true)
+          setHasUserInteracted(true)
+        }).catch((error) => {
+          console.log('Autoplay blocked by browser:', error)
+          // Autoplay blocked - this is normal, user needs to click play
+        })
+      }
+    }, 1000)
+
+    return () => clearTimeout(autoplayTimer)
   }, [])
+
+  // Add connection monitoring and retry mechanism
+  useEffect(() => {
+    const monitorConnection = setInterval(() => {
+      if (audioRef.current && isPlaying) {
+        // Check if audio is stalled
+        if (audioRef.current.readyState < 2) {
+          console.log('Audio connection seems stalled, attempting reload...')
+          handleConnectionIssue()
+        }
+      }
+    }, 30000) // Check every 30 seconds
+
+    return () => clearInterval(monitorConnection)
+  }, [isPlaying])
+
+  const handleConnectionIssue = () => {
+    setConnectionStatus('poor')
+    
+    if (retryCount < 3) {
+      console.log(`Retrying connection (attempt ${retryCount + 1})`)
+      setRetryCount(prev => prev + 1)
+      if (audioRef.current) {
+        audioRef.current.load()
+        if (isPlaying) {
+          setTimeout(() => {
+            audioRef.current?.play().then(() => {
+              setConnectionStatus('good')
+            }).catch(console.error)
+          }, 1000)
+        }
+      }
+    } else {
+      console.log('Max retries reached, switching to fallback')
+      setConnectionStatus('failed')
+      // Try next track as a recovery mechanism
+      nextTrack()
+      setRetryCount(0)
+      // Reset connection status after trying next track
+      setTimeout(() => setConnectionStatus('good'), 2000)
+    }
+  }
 
   // Get current track URL dynamically
   const getCurrentTrackUrl = () => {
@@ -37,6 +97,7 @@ export default function MusicPlayer() {
   const togglePlay = async () => {
     if (!audioRef.current) return
     setIsLoading(true)
+    setHasUserInteracted(true)
 
     if (isPlaying) {
       audioRef.current.pause()
@@ -47,9 +108,12 @@ export default function MusicPlayer() {
         await audioRef.current.play()
         setIsPlaying(true)
         setIsLoading(false)
+        setRetryCount(0) // Reset retry count on successful play
       } catch (error) {
         console.error('Play failed:', error)
         setIsLoading(false)
+        // Try to recover from play failure
+        handleConnectionIssue()
       }
     }
   }
@@ -123,15 +187,34 @@ export default function MusicPlayer() {
 
   const handleError = (e: any) => {
     console.error('Audio error:', e)
+    setIsLoading(false)
+    
     // Try fallback to local file if Supabase fails
-    if (audioRef.current && audioRef.current.src.includes('supabase')) {
+    if (audioRef.current && audioRef.current.src.includes('supabase') && retryCount < 2) {
       const track = musicTracks[currentTrack]
       console.log('Trying fallback to local file:', track.path)
       audioRef.current.src = track.path
       audioRef.current.load()
+      setRetryCount(prev => prev + 1)
+      
+      if (isPlaying) {
+        setTimeout(() => {
+          audioRef.current?.play().catch(() => {
+            // If local fallback also fails, try next track
+            console.log('Local fallback failed, trying next track')
+            nextTrack()
+          })
+        }, 500)
+      }
     } else {
-      setIsLoading(false)
-      setIsPlaying(false)
+      // If all else fails, try next track
+      console.log('All recovery attempts failed, trying next track')
+      if (autoPlay && musicTracks.length > 1) {
+        nextTrack()
+      } else {
+        setIsPlaying(false)
+      }
+      setRetryCount(0)
     }
   }
 
@@ -145,14 +228,26 @@ export default function MusicPlayer() {
         onLoadedData={handleLoadedData}
         onLoadStart={handleLoadStart}
         onError={handleError}
+        onCanPlay={() => setConnectionStatus('good')}
+        onWaiting={() => setConnectionStatus('poor')}
+        onStalled={() => handleConnectionIssue()}
+        onSuspend={() => setConnectionStatus('poor')}
         preload="metadata"
+        crossOrigin="anonymous"
       />
       
       {/* Compact Player Box - Medium Size */}
       <div className="bg-black/95 border border-white p-3 text-white lo-fi-text w-72">
         {/* Header */}
         <div className="flex items-center justify-between mb-2">
-          <div className="text-[10px] font-bold">V3XV0ID MUSIC</div>
+          <div className="flex items-center gap-2">
+            <div className="text-[10px] font-bold">V3XV0ID MUSIC</div>
+            <div className={`w-2 h-2 rounded-full ${
+              connectionStatus === 'good' ? 'bg-green-400' :
+              connectionStatus === 'poor' ? 'bg-yellow-400 animate-pulse' :
+              'bg-red-400 animate-pulse'
+            }`} title={`Connection: ${connectionStatus}`} />
+          </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setAutoPlay(!autoPlay)}
@@ -178,7 +273,7 @@ export default function MusicPlayer() {
         {/* Now Playing */}
         <div className="mb-2">
           <div className="text-[10px] text-white/60 mb-1">
-            {isPlaying ? 'NOW PLAYING:' : 'PAUSED:'}
+            {isPlaying ? 'NOW PLAYING:' : (!hasUserInteracted ? 'CLICK ▶ TO START:' : 'PAUSED:')}
           </div>
           <div className="text-xs font-medium truncate" title={currentTrackTitle}>
             {currentTrackTitle}

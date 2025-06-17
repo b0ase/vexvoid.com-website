@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { 
-  getConceptArtImages,
-  getAllStreetArtImages,
-  getLandscapeImages,
-  getPortraitImages
-} from '../lib/supabaseImages'
+  conceptArtImages,
+  streetArtImages,
+  landscapeImages,
+  portraitImages
+} from '../lib/images'
 
 type VisualCategory = 'concept' | 'street' | 'landscape' | 'portrait' | 'animated'
 
@@ -22,25 +22,25 @@ const visualTabs: VisualTab[] = [
     id: 'concept',
     label: 'CONCEPT ART',
     description: 'Digital concept art exploring the V3XV0ID aesthetic',
-    count: getConceptArtImages().length
+    count: conceptArtImages.length
   },
   {
     id: 'street',
     label: 'STREET ART',
     description: 'Graffiti, train jams, and urban exploration photography',
-    count: getAllStreetArtImages().length
+    count: streetArtImages.length
   },
   {
     id: 'landscape',
     label: 'LANDSCAPES',
     description: 'Atmospheric landscapes and environmental scenes',
-    count: getLandscapeImages().length
+    count: landscapeImages.length
   },
   {
     id: 'portrait',
     label: 'PORTRAITS',
     description: 'Character studies and portrait photography',
-    count: getPortraitImages().length
+    count: portraitImages.length
   },
   {
     id: 'animated',
@@ -52,52 +52,23 @@ const visualTabs: VisualTab[] = [
 
 // Curated selections - pick diverse, representative images
 const getCuratedConceptArt = () => {
-  const conceptArt = getConceptArtImages()
-  // Pick 12 diverse images from different sets
-  return [
-    conceptArt[0], // Set 1
-    conceptArt[2],
-    conceptArt[5],
-    conceptArt[8], // Set 2 
-    conceptArt[11],
-    conceptArt[15],
-    conceptArt[18], // Set 3
-    conceptArt[22],
-    conceptArt[28],
-    conceptArt[32],
-    conceptArt[30],
-    conceptArt[25]
-  ].filter(Boolean)
+  // Pick 12 diverse images from concept art
+  return conceptArtImages.slice(0, 12)
 }
 
 const getCuratedStreetArt = () => {
-  const streetArt = getAllStreetArtImages()
   // Mix of graffiti and street photos - pick every 8th to get variety
-  return streetArt.filter((_, idx) => idx % 8 === 0 || idx < 6).slice(0, 16)
+  return streetArtImages.filter((_: any, idx: number) => idx % 8 === 0 || idx < 6).slice(0, 16)
 }
 
 const getCuratedLandscapes = () => {
-  const landscapes = getLandscapeImages()
-  // Pick 12 diverse landscapes from the 19 available - every other one plus some extras
-  return [
-    landscapes[0],  // download.jpg
-    landscapes[2],  // download-2.jpg
-    landscapes[4],  // download-4.jpg
-    landscapes[6],  // download-6.jpg
-    landscapes[8],  // download-8.jpg
-    landscapes[10], // download-10.jpg
-    landscapes[12], // download-12.jpg
-    landscapes[14], // download-14.jpg
-    landscapes[16], // download-16.jpg
-    landscapes[18], // download-18.jpg
-    landscapes[1],  // download-1.jpg
-    landscapes[7]   // download-7.jpg
-  ].filter(Boolean)
+  // Pick 12 diverse landscapes
+  return landscapeImages.slice(0, 12)
 }
 
 const getCuratedPortraits = () => {
   // All portraits since there are only 4
-  return getPortraitImages()
+  return portraitImages
 }
 
 export default function VisualGallery() {
@@ -152,13 +123,13 @@ export default function VisualGallery() {
           <div className={`${getAspectRatio()} max-w-4xl mx-auto relative overflow-hidden cyber-card`}>
             {collection.map((img, idx) => (
               <div
-                key={img.url}
+                key={img.path}
                 className={`absolute inset-0 transition-opacity duration-1000 ${
                   idx === currentImageIndex ? 'opacity-100' : 'opacity-0'
                 }`}
               >
                 <img
-                  src={img.url}
+                  src={img.path}
                   alt={`${activeTab} ${idx + 1}`}
                   className="w-full h-full object-cover filter grayscale"
                 />
