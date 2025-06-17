@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { musicTracks } from '../lib/musicLibrary'
 import { useMusicPlayer } from '../lib/musicPlayerContext'
+import { getConceptArtImages, getAllCloudImages } from '../lib/supabaseImages'
+import Image from 'next/image'
 
 // Available video clips for mixing - using Supabase cloud storage (now in subfolder)
 const SUPABASE_URL = 'https://bgotvvrslolholxgcivz.supabase.co'
@@ -59,6 +61,10 @@ const videoClips = [
   }
 ]
 
+// Get concept art for overlay effects
+const conceptArtImages = getConceptArtImages()
+const floatingImages = getAllCloudImages().slice(0, 12)
+
 export default function VideoPreviewPage() {
   const { hideGlobalPlayer, showGlobalPlayer } = useMusicPlayer()
   const [selectedTrack, setSelectedTrack] = useState(musicTracks[0])
@@ -67,6 +73,8 @@ export default function VideoPreviewPage() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [showControls, setShowControls] = useState(true)
   const [hasStarted, setHasStarted] = useState(false)
+  const [currentOverlayIndex, setCurrentOverlayIndex] = useState(0)
+  const [showVideoOverlay, setShowVideoOverlay] = useState(true)
   
   const currentVideoRef = useRef<HTMLVideoElement>(null)
   const nextVideoRef = useRef<HTMLVideoElement>(null)
@@ -124,6 +132,17 @@ export default function VideoPreviewPage() {
       showGlobalPlayer()
     }
   }, [hideGlobalPlayer, showGlobalPlayer])
+
+  // Cycle through concept art overlays
+  useEffect(() => {
+    if (!isPlaying) return
+    
+    const interval = setInterval(() => {
+      setCurrentOverlayIndex((prev) => (prev + 1) % conceptArtImages.length)
+    }, 4000) // Change overlay every 4 seconds
+
+    return () => clearInterval(interval)
+  }, [isPlaying])
 
   // Auto-hide controls after 3 seconds of no mouse movement
   useEffect(() => {
@@ -239,9 +258,9 @@ export default function VideoPreviewPage() {
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Video Players - Current and Next for crossfading */}
+      {/* Video Players - Layered for rich visual effect */}
       <div className="absolute inset-0">
-        {/* Current Video */}
+        {/* Primary Video Layer */}
         <video
           ref={currentVideoRef}
           key={`current-${currentVideo.id}`}
@@ -261,7 +280,7 @@ export default function VideoPreviewPage() {
           <source src={currentVideo.path} type="video/mp4" />
         </video>
 
-        {/* Next Video (for crossfade) */}
+        {/* Secondary Video Layer (for crossfade) */}
         <video
           ref={nextVideoRef}
           key={`next-${nextVideo.id}`}
@@ -278,7 +297,73 @@ export default function VideoPreviewPage() {
         >
           <source src={nextVideo.path} type="video/mp4" />
         </video>
+
+        {/* Video Overlay Layer - Third video with blend mode */}
+        {showVideoOverlay && (
+          <video
+            key={`overlay-${videoClips[(currentVideoIndex + 2) % videoClips.length].id}`}
+            className="absolute inset-0 w-full h-full object-cover mix-blend-overlay"
+            muted={true}
+            loop={false}
+            playsInline
+            autoPlay
+            style={{ 
+              opacity: 0.3,
+              zIndex: 3,
+              filter: 'grayscale(100%) contrast(150%)'
+            }}
+          >
+            <source src={videoClips[(currentVideoIndex + 2) % videoClips.length].path} type="video/mp4" />
+          </video>
+        )}
       </div>
+
+      {/* Concept Art Overlay - Fading like Hero page */}
+      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 4 }}>
+        {conceptArtImages.map((img, index) => (
+          <div
+            key={img.url}
+            className={`absolute inset-0 transition-opacity duration-[2000ms] ${
+              index === currentOverlayIndex ? 'opacity-20' : 'opacity-0'
+            }`}
+          >
+            <Image
+              src={img.url}
+              alt=""
+              fill
+              className="object-cover filter grayscale contrast-150 brightness-75 mix-blend-overlay"
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Floating Concept Art Elements */}
+      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }}>
+        {floatingImages.slice(0, 8).map((img, index) => (
+          <div
+            key={`floating-${img.url}`}
+            className="absolute opacity-15 border border-white/10"
+            style={{
+              width: `${60 + (index % 3) * 30}px`,
+              height: `${60 + (index % 3) * 30}px`,
+              left: `${5 + (index % 4) * 20}%`,
+              top: `${10 + (index % 3) * 20}%`,
+              transform: `rotate(${(index % 2) * 15 - 7.5}deg)`,
+              zIndex: 5
+            }}
+          >
+            <Image
+              src={img.url}
+              alt=""
+              fill
+              className="object-cover filter grayscale brightness-50"
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Dark Overlay for readability */}
+      <div className="absolute inset-0 bg-black/30" style={{ zIndex: 6 }}></div>
 
       {/* Audio Player */}
       <audio
@@ -292,7 +377,7 @@ export default function VideoPreviewPage() {
         className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${
           showControls ? 'opacity-100' : 'opacity-0'
         }`}
-        style={{ zIndex: 10 }}
+        style={{ zIndex: 20 }}
       >
         {/* Top Info Bar */}
         <div className="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-auto">
@@ -331,6 +416,20 @@ export default function VideoPreviewPage() {
                     {isPlaying ? 'Playing continuous loop' : 'Paused'}
                   </div>
                 </div>
+              </div>
+              
+              {/* Visual Effects Toggle */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowVideoOverlay(!showVideoOverlay)}
+                  className={`px-3 py-1 text-xs rounded transition-colors ${
+                    showVideoOverlay
+                      ? 'bg-cyan-400 text-black'
+                      : 'bg-white/20 text-white hover:bg-white/30'
+                  }`}
+                >
+                  VIDEO LAYER
+                </button>
               </div>
             </div>
             
