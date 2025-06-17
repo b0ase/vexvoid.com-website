@@ -3,9 +3,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { musicTracks } from '../lib/musicLibrary'
 
-// Available video clips for mixing - using Supabase cloud storage
+// Available video clips for mixing - using Supabase cloud storage (now in subfolder)
 const SUPABASE_URL = 'https://bgotvvrslolholxgcivz.supabase.co'
-const getVideoUrl = (filename: string) => `${SUPABASE_URL}/storage/v1/object/public/videos/${filename}`
+const getVideoUrl = (filename: string) => `${SUPABASE_URL}/storage/v1/object/public/videos/vex_video_jam_01/${filename}`
 
 const videoClips = [
   {
