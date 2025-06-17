@@ -214,6 +214,17 @@ export const getRandomPortraits = (count: number): CloudImage[] => {
   return getRandomImages(getPortraitImages(), count)
 }
 
+// Get all cloud images combined
+export const getAllCloudImages = (): CloudImage[] => {
+  return [
+    ...getConceptArtImages(),
+    ...getStreetArtImages(),
+    ...getVideoJamImages(),
+    ...getLandscapeImages(),
+    ...getPortraitImages()
+  ]
+}
+
 // Asset counts
 export const conceptArtCount = 35  // 8 + 9 + 18
 export const streetArtCount = 99   // 68 + 31 (graffiti + video jam)
