@@ -3,8 +3,8 @@ import './globals.css'
 import MusicPlayer from './components/MusicPlayer'
 
 export const metadata: Metadata = {
-  title: 'V3XV0ID - Digital Musician & Hacker',
-  description: 'Experimental electronic music and digital art by V3XV0ID',
+  title: 'v3xv0id - Digital Music & Visual Art',
+  description: 'Experimental electronic music, visual art, and creative technology by v3xv0id',
 }
 
 export default function RootLayout({

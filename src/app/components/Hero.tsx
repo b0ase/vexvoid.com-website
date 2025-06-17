@@ -99,7 +99,7 @@ export default function Hero() {
       {/* Main Content - Medium Size */}
       <div className="text-center z-10 px-4">
         <h1 className="text-xl md:text-2xl cyber-text mb-2 font-bold">
-          V3XV0ID
+          v3xv0id
         </h1>
         
         <div className="w-16 h-px bg-white mx-auto mb-6"></div>

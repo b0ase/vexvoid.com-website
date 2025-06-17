@@ -63,11 +63,11 @@ export default function Home() {
             <p>
               V3XV0ID operates at the nexus of music, technology, and digital art. Through experimental electronic 
               compositions, security research, and generative visual work, I explore the liminal spaces where 
-              human creativity intersects with machine logic.
+              human creativity intersects with digital systems.
             </p>
             <p>
               Each project represents an investigation into digital mediums—from the manipulation of sound waves 
-              to the architecture of secure systems, from algorithmic art generation to the aesthetic philosophy 
+              to the architecture of secure systems, from procedural art generation to the aesthetic philosophy 
               of cyber culture. The work challenges conventional boundaries between artist and technologist, 
               creator and researcher.
             </p>

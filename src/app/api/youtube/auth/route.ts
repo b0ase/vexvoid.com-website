@@ -1,50 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { YouTubeUploader } from '../../../lib/youtubeApi';
+import { google } from 'googleapis';
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('Environment variables check:', {
-      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID ? 'Set' : 'Missing',
-      GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ? 'Set' : 'Missing',
-      YOUTUBE_CLIENT_ID: process.env.YOUTUBE_CLIENT_ID ? 'Set' : 'Missing',
-      YOUTUBE_CLIENT_SECRET: process.env.YOUTUBE_CLIENT_SECRET ? 'Set' : 'Missing',
-      YOUTUBE_REDIRECT_URI: process.env.YOUTUBE_REDIRECT_URI || 'Not set'
-    });
+    // Support both naming conventions
+    const clientId = process.env.GOOGLE_CLIENT_ID || process.env.YOUTUBE_CLIENT_ID;
+    const clientSecret = process.env.GOOGLE_CLIENT_SECRET || process.env.YOUTUBE_CLIENT_SECRET;
+    const redirectUri = process.env.YOUTUBE_REDIRECT_URI || `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/youtube/callback`;
 
-    const uploader = new YouTubeUploader();
-    const authUrl = uploader.getAuthUrl();
-    
-    console.log('Generated auth URL:', authUrl);
-    
-    return NextResponse.json({ authUrl });
-  } catch (error) {
-    console.error('Auth URL generation error:', error);
-    return NextResponse.json(
-      { error: `Failed to generate auth URL: ${error}` },
-      { status: 500 }
-    );
-  }
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    const { code } = await request.json();
-    
-    if (!code) {
+    if (!clientId || !clientSecret) {
       return NextResponse.json(
-        { error: 'Authorization code is required' },
-        { status: 400 }
+        { 
+          error: 'YouTube API credentials not configured',
+          details: 'Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables'
+        },
+        { status: 500 }
       );
     }
-    
-    const uploader = new YouTubeUploader();
-    await uploader.setCredentials(code);
-    
-    return NextResponse.json({ success: true });
+
+    const oauth2Client = new google.auth.OAuth2(
+      clientId,
+      clientSecret,
+      redirectUri
+    );
+
+    const scopes = [
+      'https://www.googleapis.com/auth/youtube.upload',
+      'https://www.googleapis.com/auth/youtube'
+    ];
+
+    const authUrl = oauth2Client.generateAuthUrl({
+      access_type: 'offline',
+      scope: scopes,
+      prompt: 'consent'
+    });
+
+    return NextResponse.json({ authUrl });
   } catch (error) {
-    console.error('Token exchange error:', error);
+    console.error('YouTube auth error:', error);
     return NextResponse.json(
-      { error: 'Failed to exchange authorization code' },
+      { error: 'Failed to generate auth URL' },
       { status: 500 }
     );
   }

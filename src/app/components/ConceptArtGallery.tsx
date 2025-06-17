@@ -25,7 +25,7 @@ const visualTabs: VisualTab[] = [
   {
     id: 'concept',
     label: 'CONCEPT ART',
-    description: 'AI-generated concept art exploring the V3XV0ID aesthetic',
+    description: 'Digital concept art exploring the V3XV0ID aesthetic',
     count: totalImageCount
   },
   {
@@ -136,11 +136,21 @@ export default function VisualGallery() {
     const collection = getCurrentCollection()
     if (collection.length === 0) return null
 
+    // Determine aspect ratio based on active tab
+    const getAspectRatio = () => {
+      switch (activeTab) {
+        case 'portrait': return 'aspect-[3/4]' // Portrait aspect ratio
+        case 'landscape': return 'aspect-video' // Landscape aspect ratio
+        case 'street': return 'aspect-video' // Most street art is landscape
+        default: return 'aspect-square' // Square for concept art
+      }
+    }
+
     return (
       <>
         {/* Main rotating display */}
         <div className="relative mb-12">
-          <div className="aspect-video max-w-4xl mx-auto relative overflow-hidden cyber-card">
+          <div className={`${getAspectRatio()} max-w-4xl mx-auto relative overflow-hidden cyber-card`}>
             {collection.map((img, idx) => (
               <div
                 key={img.path}
@@ -183,14 +193,18 @@ export default function VisualGallery() {
         </div>
 
         {/* Thumbnail grid - smaller selection */}
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-4 max-w-4xl mx-auto">
+        <div className={`grid gap-4 max-w-4xl mx-auto ${
+          activeTab === 'portrait' ? 'grid-cols-4 md:grid-cols-8' : 'grid-cols-3 md:grid-cols-6'
+        }`}>
           {collection.map((img, idx) => (
             <button
               key={img.path}
               onClick={() => setCurrentImageIndex(idx)}
-              className={`cyber-card overflow-hidden group cursor-pointer relative aspect-square transition-all duration-300 ${
-                idx === currentImageIndex ? 'ring-2 ring-cyber-white' : ''
-              }`}
+              className={`cyber-card overflow-hidden group cursor-pointer relative transition-all duration-300 ${
+                activeTab === 'portrait' ? 'aspect-[3/4]' : 
+                activeTab === 'landscape' ? 'aspect-video' :
+                activeTab === 'street' ? 'aspect-video' : 'aspect-square'
+              } ${idx === currentImageIndex ? 'ring-2 ring-cyber-white' : ''}`}
             >
               <img
                 src={img.path}
