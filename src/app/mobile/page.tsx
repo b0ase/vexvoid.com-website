@@ -58,43 +58,61 @@ export default function MobilePreviewPage() {
     }
   }, [])
 
-  // Auto-start and setup videos
+  // Auto-play logic when video loads
   useEffect(() => {
     if (currentVideoRef.current) {
-      currentVideoRef.current.volume = 0 // Completely muted
-      currentVideoRef.current.playbackRate = 0.6 // Slower playback for mobile
-      
-      // Mobile-specific attributes
-      currentVideoRef.current.setAttribute('playsinline', 'true')
-      currentVideoRef.current.setAttribute('webkit-playsinline', 'true')
-      currentVideoRef.current.muted = true
-      
-      // Set random start point
+      const video = currentVideoRef.current
       const startPoint = videoStartOffset[currentVideoIndex]
-      currentVideoRef.current.currentTime = startPoint
       
-      // Try auto-play video
-      currentVideoRef.current.play().then(() => {
-        setIsPlaying(true)
-        setHasUserInteracted(true)
-        setVideoStartTime(Date.now())
-        console.log('Autoplay successful')
-      }).catch((error) => {
-        console.log('Autoplay blocked - waiting for user interaction:', error)
-        setIsPlaying(false)
-        setHasUserInteracted(false)
-      })
-    }
-    
-    // Preload next video
-    if (nextVideoRef.current) {
-      nextVideoRef.current.volume = 0
-      nextVideoRef.current.playbackRate = 0.6
-      nextVideoRef.current.setAttribute('playsinline', 'true')
-      nextVideoRef.current.setAttribute('webkit-playsinline', 'true')
-      nextVideoRef.current.muted = true
-      const nextStartPoint = videoStartOffset[nextVideoIndex]
-      nextVideoRef.current.currentTime = nextStartPoint
+      console.log('Setting up video:', currentVideoIndex, 'start point:', startPoint)
+      
+      // Set initial properties
+      video.currentTime = startPoint
+      video.muted = true // Always start muted for autoplay
+      video.volume = 0
+      video.playbackRate = 0.6
+      
+      // Add mobile-specific attributes
+      video.setAttribute('webkit-playsinline', 'true')
+      video.setAttribute('playsinline', 'true')
+      video.setAttribute('muted', 'true')
+      video.setAttribute('autoplay', 'true')
+      
+      // Try multiple autoplay strategies
+      const tryAutoplay = async () => {
+        try {
+          console.log('Attempting autoplay...')
+          await video.play()
+          setIsPlaying(true)
+          setVideoStartTime(Date.now())
+          console.log('Autoplay successful')
+        } catch (error) {
+          console.log('Autoplay failed, will require user interaction:', error)
+          setIsPlaying(false)
+          setHasUserInteracted(false)
+          
+          // For iOS, try a different approach
+          if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+            console.log('iOS detected, trying iOS-specific autoplay')
+            video.load() // Reload the video
+            setTimeout(async () => {
+              try {
+                video.currentTime = startPoint
+                await video.play()
+                setIsPlaying(true)
+                setVideoStartTime(Date.now())
+                console.log('iOS autoplay successful on retry')
+              } catch (iosError) {
+                console.log('iOS autoplay also failed:', iosError)
+              }
+            }, 100)
+          }
+        }
+      }
+      
+      // Try autoplay immediately and after a short delay
+      tryAutoplay()
+      setTimeout(tryAutoplay, 500)
     }
   }, [currentVideoIndex, nextVideoIndex])
 
@@ -114,12 +132,27 @@ export default function MobilePreviewPage() {
     document.addEventListener('mousedown', handleGlobalInteraction)
     document.addEventListener('pointerdown', handleGlobalInteraction)
 
+    // iOS Safari specific: try autoplay on page visibility change
+    const handleVisibilityChange = () => {
+      if (!document.hidden && !hasUserInteracted && !isPlaying) {
+        console.log('Page became visible, trying autoplay...')
+        setTimeout(() => {
+          if (currentVideoRef.current) {
+            currentVideoRef.current.play().catch(console.log)
+          }
+        }, 100)
+      }
+    }
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
     return () => {
       document.removeEventListener('click', handleGlobalInteraction)
       document.removeEventListener('touchstart', handleGlobalInteraction)
       document.removeEventListener('touchend', handleGlobalInteraction)
       document.removeEventListener('mousedown', handleGlobalInteraction)
       document.removeEventListener('pointerdown', handleGlobalInteraction)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [hasUserInteracted, isPlaying, currentVideoIndex])
 
@@ -181,39 +214,57 @@ export default function MobilePreviewPage() {
   // Try to play on any user interaction
   const handleUserInteraction = (e: any) => {
     e.preventDefault()
+    e.stopPropagation()
     console.log('User interaction detected:', e.type)
     
     if (!hasUserInteracted || !isPlaying) {
       console.log('Attempting to start video - hasUserInteracted:', hasUserInteracted, 'isPlaying:', isPlaying)
       
       if (currentVideoRef.current) {
-        // Reset video time to ensure it starts from the right point
+        const video = currentVideoRef.current
         const startPoint = videoStartOffset[currentVideoIndex]
-        currentVideoRef.current.currentTime = startPoint
+        
+        // Force reset video properties for iOS
+        video.muted = true
+        video.volume = 0
+        video.currentTime = startPoint
+        video.playbackRate = 0.6
         
         console.log('Calling play() on video...')
-        currentVideoRef.current.play().then(() => {
-          setIsPlaying(true)
-          setHasUserInteracted(true)
-          setVideoStartTime(Date.now())
-          console.log('Video started successfully via user interaction')
-        }).catch((error) => {
-          console.log('Play failed even with user interaction:', error)
-          // Try again after a short delay
-          setTimeout(() => {
-            if (currentVideoRef.current) {
-              console.log('Retrying video play...')
-              currentVideoRef.current.play().then(() => {
-                setIsPlaying(true)
-                setHasUserInteracted(true)
-                setVideoStartTime(Date.now())
-                console.log('Video started on retry')
-              }).catch((retryError) => {
-                console.log('Retry also failed:', retryError)
-              })
+        
+        // Multiple retry strategy for iOS Safari
+        const playVideo = async (attempt = 1) => {
+          try {
+            await video.play()
+            setIsPlaying(true)
+            setHasUserInteracted(true)
+            setVideoStartTime(Date.now())
+            console.log(`Video started successfully via user interaction (attempt ${attempt})`)
+          } catch (error) {
+            console.log(`Play failed on attempt ${attempt}:`, error)
+            
+            if (attempt < 5) {
+              // Try different approaches on each attempt
+              if (attempt === 2) {
+                video.load() // Reload video
+                video.currentTime = startPoint
+              } else if (attempt === 3) {
+                // Try without setting currentTime first
+                video.currentTime = 0
+              } else if (attempt === 4) {
+                // Force reload from source
+                video.src = currentVideo.path
+                video.load()
+              }
+              
+              setTimeout(() => playVideo(attempt + 1), 100 * attempt)
+            } else {
+              console.log('All play attempts failed')
             }
-          }, 100)
-        })
+          }
+        }
+        
+        playVideo()
       }
     } else {
       console.log('Video already playing and user has interacted')
@@ -261,8 +312,11 @@ export default function MobilePreviewPage() {
             isTransitioning ? 'opacity-0 blur-md' : 'opacity-70'
           }`}
           muted={true}
+          autoPlay={true}
           playsInline={true}
           webkit-playsinline="true"
+          controls={false}
+          preload="auto"
           onEnded={handleVideoEnded}
           style={{ mixBlendMode: 'normal' }}
         >
@@ -277,8 +331,11 @@ export default function MobilePreviewPage() {
             isTransitioning ? 'opacity-70' : 'opacity-0'
           }`}
           muted={true}
+          autoPlay={true}
           playsInline={true}
           webkit-playsinline="true"
+          controls={false}
+          preload="auto"
           style={{ mixBlendMode: 'normal' }}
         >
           <source src={nextVideo.path} type="video/mp4" />
