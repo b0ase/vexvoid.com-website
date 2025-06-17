@@ -14,6 +14,7 @@ export default function MobilePreviewPage() {
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [videoStartTime, setVideoStartTime] = useState(Date.now())
   const [isPlaying, setIsPlaying] = useState(false)
+  const [hasUserInteracted, setHasUserInteracted] = useState(false)
 
   // Video refs
   const currentVideoRef = useRef<HTMLVideoElement>(null)
@@ -72,12 +73,16 @@ export default function MobilePreviewPage() {
       const startPoint = videoStartOffset[currentVideoIndex]
       currentVideoRef.current.currentTime = startPoint
       
-      // Auto-play video
+      // Try auto-play video
       currentVideoRef.current.play().then(() => {
         setIsPlaying(true)
+        setHasUserInteracted(true)
         setVideoStartTime(Date.now())
-      }).catch(() => {
-        console.log('Autoplay blocked - will try on user interaction')
+        console.log('Autoplay successful')
+      }).catch((error) => {
+        console.log('Autoplay blocked - waiting for user interaction:', error)
+        setIsPlaying(false)
+        setHasUserInteracted(false)
       })
     }
     
@@ -150,12 +155,31 @@ export default function MobilePreviewPage() {
 
   // Try to play on any user interaction
   const handleUserInteraction = () => {
-    if (currentVideoRef.current && !isPlaying) {
-      currentVideoRef.current.play().then(() => {
-        setIsPlaying(true)
-      }).catch(() => {
-        console.log('Play failed')
-      })
+    if (!hasUserInteracted || !isPlaying) {
+      if (currentVideoRef.current) {
+        // Reset video time to ensure it starts from the right point
+        const startPoint = videoStartOffset[currentVideoIndex]
+        currentVideoRef.current.currentTime = startPoint
+        
+        currentVideoRef.current.play().then(() => {
+          setIsPlaying(true)
+          setHasUserInteracted(true)
+          setVideoStartTime(Date.now())
+          console.log('Video started via user interaction')
+        }).catch((error) => {
+          console.log('Play failed even with user interaction:', error)
+          // Try again after a short delay
+          setTimeout(() => {
+            if (currentVideoRef.current) {
+              currentVideoRef.current.play().then(() => {
+                setIsPlaying(true)
+                setHasUserInteracted(true)
+                setVideoStartTime(Date.now())
+              }).catch(console.log)
+            }
+          }, 100)
+        })
+      }
     }
   }
 
@@ -257,7 +281,7 @@ export default function MobilePreviewPage() {
       </div>
 
       {/* Tap to Play Hint (only shows if not playing) */}
-      {!isPlaying && (
+      {(!isPlaying || !hasUserInteracted) && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/20">
           <div className="text-white/80 text-sm font-mono animate-pulse">
             TAP TO PLAY
