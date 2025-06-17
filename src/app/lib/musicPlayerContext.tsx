@@ -55,20 +55,74 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
     const randomIndex = Math.floor(Math.random() * musicTracks.length)
     setCurrentTrack(randomIndex)
     
-    // Try to autoplay after a short delay (browsers require user interaction first)
-    const autoplayTimer = setTimeout(() => {
-      if (audioRef.current && !hasUserInteracted) {
-        audioRef.current.play().then(() => {
-          setIsPlaying(true)
-          setHasUserInteracted(true)
-        }).catch((error) => {
-          console.log('Autoplay blocked by browser:', error)
-          // Autoplay blocked - this is normal, user needs to click play
-        })
+    // Multiple autoplay strategies
+    const attemptAutoplay = async () => {
+      if (!audioRef.current) return
+      
+      try {
+        // Strategy 1: Immediate autoplay attempt
+        await audioRef.current.play()
+        setIsPlaying(true)
+        setHasUserInteracted(true)
+        console.log('Autoplay successful - immediate')
+        return
+      } catch (error) {
+        console.log('Immediate autoplay blocked:', error)
       }
-    }, 1000)
+      
+      // Strategy 2: Try after short delay
+      setTimeout(async () => {
+        if (audioRef.current && !hasUserInteracted) {
+          try {
+            await audioRef.current.play()
+            setIsPlaying(true)
+            setHasUserInteracted(true)
+            console.log('Autoplay successful - delayed')
+            return
+          } catch (error) {
+            console.log('Delayed autoplay blocked:', error)
+          }
+        }
+      }, 1000)
+      
+      // Strategy 3: Try after page interaction (click, scroll, etc)
+      const handleFirstInteraction = async () => {
+        if (audioRef.current && !isPlaying && !hasUserInteracted) {
+          try {
+            await audioRef.current.play()
+            setIsPlaying(true)
+            setHasUserInteracted(true)
+            console.log('Autoplay successful - after interaction')
+            
+            // Remove listeners after successful play
+            document.removeEventListener('click', handleFirstInteraction)
+            document.removeEventListener('scroll', handleFirstInteraction)
+            document.removeEventListener('keydown', handleFirstInteraction)
+            document.removeEventListener('touchstart', handleFirstInteraction)
+          } catch (error) {
+            console.log('Interaction-triggered autoplay failed:', error)
+          }
+        }
+      }
+      
+      // Add interaction listeners
+      document.addEventListener('click', handleFirstInteraction, { once: false })
+      document.addEventListener('scroll', handleFirstInteraction, { once: false })
+      document.addEventListener('keydown', handleFirstInteraction, { once: false })
+      document.addEventListener('touchstart', handleFirstInteraction, { once: false })
+      
+      // Cleanup listeners after 10 seconds
+      setTimeout(() => {
+        document.removeEventListener('click', handleFirstInteraction)
+        document.removeEventListener('scroll', handleFirstInteraction)
+        document.removeEventListener('keydown', handleFirstInteraction)
+        document.removeEventListener('touchstart', handleFirstInteraction)
+      }, 10000)
+    }
 
-    return () => clearTimeout(autoplayTimer)
+    // Start autoplay attempts after audio is loaded
+    const timer = setTimeout(attemptAutoplay, 500)
+    return () => clearTimeout(timer)
   }, [])
 
   // Get current track URL dynamically
@@ -209,6 +263,17 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
 
   const handleLoadedData = () => {
     setIsLoading(false)
+    
+    // Try autoplay when audio is loaded and ready
+    if (!hasUserInteracted && !isPlaying && audioRef.current) {
+      audioRef.current.play().then(() => {
+        setIsPlaying(true)
+        setHasUserInteracted(true)
+        console.log('Autoplay successful - on loaded data')
+      }).catch(() => {
+        console.log('Autoplay blocked - on loaded data')
+      })
+    }
   }
 
   const handleLoadStart = () => {
