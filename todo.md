@@ -31,6 +31,8 @@ feedback
 ### **🌐 Core Website Features**
 - [ ] **Social media integration** - link GitHub, YouTube, Twitter/X, Instagram
 
+- [ ] **Make a telegram channel** - create and set up @V3XV0ID Telegram channel
+
 - [ ] **YouTube channel embedding** - display latest videos from @V3xv0id
 
 - [ ] **Store integration** - link to https://www.vexvoid.store/

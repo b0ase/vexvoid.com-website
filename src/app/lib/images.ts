@@ -67,11 +67,9 @@ export const conceptArtImages: ConceptArtImage[] = [
   { path: '/images/VexVoid_concept_art_3/download-17.jpg', filename: 'download-17.jpg', directory: 'VexVoid_concept_art_3' },
 ]
 
-// Street art / graffiti / train jam images (78 images)
+// Street art / graffiti / train jam images (FIXED - removed non-existent files)
 export const streetArtImages: StreetArtImage[] = [
-  // Download series
-  { path: '/images/VexVoid_graf_train_jam/download.jpg', filename: 'download.jpg', directory: 'VexVoid_graf_train_jam' },
-  { path: '/images/VexVoid_graf_train_jam/download-1.jpg', filename: 'download-1.jpg', directory: 'VexVoid_graf_train_jam' },
+  // Download series (only files that actually exist)
   { path: '/images/VexVoid_graf_train_jam/download-2.jpg', filename: 'download-2.jpg', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/download-3.jpg', filename: 'download-3.jpg', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/download-4.jpg', filename: 'download-4.jpg', directory: 'VexVoid_graf_train_jam' },
@@ -101,34 +99,23 @@ export const streetArtImages: StreetArtImage[] = [
   { path: '/images/VexVoid_graf_train_jam/IMG_5442 2.JPG', filename: 'IMG_5442 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5443 2.JPG', filename: 'IMG_5443 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5444 2.JPG', filename: 'IMG_5444 2.JPG', directory: 'VexVoid_graf_train_jam' },
-  { path: '/images/VexVoid_graf_train_jam/IMG_5445 2.JPG', filename: 'IMG_5445 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5446 2.JPG', filename: 'IMG_5446 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5447 2.JPG', filename: 'IMG_5447 2.JPG', directory: 'VexVoid_graf_train_jam' },
-  { path: '/images/VexVoid_graf_train_jam/IMG_5448 2.JPG', filename: 'IMG_5448 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5450 2.JPG', filename: 'IMG_5450 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5451 2.JPG', filename: 'IMG_5451 2.JPG', directory: 'VexVoid_graf_train_jam' },
-  { path: '/images/VexVoid_graf_train_jam/IMG_5452 2.JPG', filename: 'IMG_5452 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5453 2.JPG', filename: 'IMG_5453 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5454 3.JPG', filename: 'IMG_5454 3.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5454 4.JPG', filename: 'IMG_5454 4.JPG', directory: 'VexVoid_graf_train_jam' },
-  { path: '/images/VexVoid_graf_train_jam/IMG_5455 2.JPG', filename: 'IMG_5455 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5456 2.JPG', filename: 'IMG_5456 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5457 2.JPG', filename: 'IMG_5457 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5458 2.JPG', filename: 'IMG_5458 2.JPG', directory: 'VexVoid_graf_train_jam' },
-  { path: '/images/VexVoid_graf_train_jam/IMG_5459 2.JPG', filename: 'IMG_5459 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5460 2.JPG', filename: 'IMG_5460 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5461 2.JPG', filename: 'IMG_5461 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5463 2.JPG', filename: 'IMG_5463 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5464 2.JPG', filename: 'IMG_5464 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5465 2.JPG', filename: 'IMG_5465 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5466 2.JPG', filename: 'IMG_5466 2.JPG', directory: 'VexVoid_graf_train_jam' },
-  { path: '/images/VexVoid_graf_train_jam/IMG_5467 2.JPG', filename: 'IMG_5467 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5468 2.JPG', filename: 'IMG_5468 2.JPG', directory: 'VexVoid_graf_train_jam' },
-  { path: '/images/VexVoid_graf_train_jam/IMG_5469 2.JPG', filename: 'IMG_5469 2.JPG', directory: 'VexVoid_graf_train_jam' },
-  { path: '/images/VexVoid_graf_train_jam/IMG_5470 2.JPG', filename: 'IMG_5470 2.JPG', directory: 'VexVoid_graf_train_jam' },
-  { path: '/images/VexVoid_graf_train_jam/IMG_5471 2.JPG', filename: 'IMG_5471 2.JPG', directory: 'VexVoid_graf_train_jam' },
-  { path: '/images/VexVoid_graf_train_jam/IMG_5472 2.JPG', filename: 'IMG_5472 2.JPG', directory: 'VexVoid_graf_train_jam' },
-  { path: '/images/VexVoid_graf_train_jam/IMG_5473 2.JPG', filename: 'IMG_5473 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5474 2.JPG', filename: 'IMG_5474 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5475 2.JPG', filename: 'IMG_5475 2.JPG', directory: 'VexVoid_graf_train_jam' },
   { path: '/images/VexVoid_graf_train_jam/IMG_5476 2.JPG', filename: 'IMG_5476 2.JPG', directory: 'VexVoid_graf_train_jam' },
@@ -181,11 +168,10 @@ export const landscapeImages: LandscapeImage[] = [
   { path: '/images/VexVoid_Landscape/download-18.jpg', filename: 'download-18.jpg', directory: 'VexVoid_Landscape' },
 ]
 
-// Portrait images (5 images)
+// Portrait images (FIXED - only files that actually exist)
 export const portraitImages: PortraitImage[] = [
   { path: '/images/VexVoid_Portrait/download-6.jpg', filename: 'download-6.jpg', directory: 'VexVoid_Portrait' },
   { path: '/images/VexVoid_Portrait/download-7.jpg', filename: 'download-7.jpg', directory: 'VexVoid_Portrait' },
-  { path: '/images/VexVoid_Portrait/download-8.jpg', filename: 'download-8.jpg', directory: 'VexVoid_Portrait' },
   { path: '/images/VexVoid_Portrait/download-9.jpg', filename: 'download-9.jpg', directory: 'VexVoid_Portrait' },
   { path: '/images/VexVoid_Portrait/download-10.jpg', filename: 'download-10.jpg', directory: 'VexVoid_Portrait' },
 ]
@@ -219,12 +205,11 @@ export const getAllImagePaths = (): string[] => {
 }
 
 export const getImageForBackground = (index: number): string => {
-  return allImages[index % allImages.length].path
+  return allImages[index % allImages.length]?.path || '/images/VexVoid_concept_art/download.jpg'
 }
 
-// Collection counts
+// Count exports for gallery display
 export const totalImageCount = conceptArtImages.length
 export const streetArtCount = streetArtImages.length
 export const landscapeCount = landscapeImages.length
-export const portraitCount = portraitImages.length
-export const totalAllImages = allImages.length 
+export const portraitCount = portraitImages.length 
