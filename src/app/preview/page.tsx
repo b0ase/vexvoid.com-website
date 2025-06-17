@@ -117,30 +117,55 @@ export default function VideoPreviewPage() {
   // Auto-start and setup videos
   useEffect(() => {
     if (currentVideoRef.current) {
-      currentVideoRef.current.volume = 0.2 // Keep video audio very low
+      currentVideoRef.current.volume = 0 // Mute video completely to avoid scary slowed audio
       currentVideoRef.current.playbackRate = 0.4 // Much slower video playback
       
       // Set random start point for variety
       const startPoint = videoStartOffset[currentVideoIndex]
       currentVideoRef.current.currentTime = startPoint
       
+      // Auto-play video on load
       currentVideoRef.current.play().then(() => {
         setIsPlaying(true)
         setVideoStartTime(Date.now()) // Reset timer when video starts playing
       }).catch(() => {
-        console.log('Autoplay blocked - click to play')
+        console.log('Autoplay blocked - will try again on user interaction')
+        // Try to play again after a short delay
+        setTimeout(() => {
+          if (currentVideoRef.current) {
+            currentVideoRef.current.play().catch(() => {
+              console.log('Second autoplay attempt failed')
+            })
+          }
+        }, 1000)
       })
     }
     
     // Preload next video with its start point
     if (nextVideoRef.current) {
-      nextVideoRef.current.volume = 0.2
+      nextVideoRef.current.volume = 0 // Mute completely
       nextVideoRef.current.playbackRate = 0.4 // Much slower video playback
       const nextStartPoint = videoStartOffset[nextVideoIndex]
       nextVideoRef.current.currentTime = nextStartPoint
       nextVideoRef.current.load()
     }
   }, [currentVideoIndex])
+
+  // Auto-play on component mount
+  useEffect(() => {
+    // Try to auto-play after component mounts
+    const timer = setTimeout(() => {
+      if (currentVideoRef.current && !isPlaying) {
+        currentVideoRef.current.play().then(() => {
+          setIsPlaying(true)
+        }).catch(() => {
+          console.log('Initial autoplay blocked')
+        })
+      }
+    }, 500)
+    
+    return () => clearTimeout(timer)
+  }, [])
 
   // Cycle overlay images every 12 seconds (much slower)
   useEffect(() => {
@@ -371,7 +396,7 @@ export default function VideoPreviewPage() {
     }, 8000) // Much longer 8 second crossfade
   }
 
-  // Play/pause handler
+  // Play/pause handler (kept for click interactions on video)
   const handlePlayPause = () => {
     if (!currentVideoRef.current) return
 
@@ -433,7 +458,7 @@ export default function VideoPreviewPage() {
           className={`absolute inset-0 w-full h-full object-cover z-10 transition-all duration-8000 filter brightness-[0.4] contrast-125 saturate-75 ${
             isTransitioning ? 'opacity-0 blur-md' : 'opacity-70'
           } ${isGlitching ? 'hue-rotate-180 saturate-200' : ''}`}
-          muted={false}
+          muted={true}
           onEnded={handleVideoEnded}
           onTimeUpdate={handleTimeUpdate}
           onClick={handlePlayPause}
@@ -452,7 +477,7 @@ export default function VideoPreviewPage() {
           className={`absolute inset-0 w-full h-full object-cover z-20 transition-all duration-8000 filter brightness-[0.4] contrast-125 saturate-75 ${
             isTransitioning ? 'opacity-70 blur-md' : 'opacity-0'
           } ${isGlitching ? 'hue-rotate-90 saturate-150' : ''}`}
-          muted={false}
+          muted={true}
           onClick={handlePlayPause}
           style={{ 
             mixBlendMode: 'normal',
@@ -613,14 +638,6 @@ export default function VideoPreviewPage() {
       
       {/* Control Buttons - Outside Video Frame, Bottom Left */}
       <div className="absolute bottom-8 left-8 z-50 flex items-center gap-3">
-        {/* Play/Pause Button */}
-        <button
-          onClick={handlePlayPause}
-          className="bg-black hover:bg-gray-900 text-white rounded-full w-12 h-12 flex items-center justify-center text-lg transition-all duration-200 border border-white/20"
-        >
-          {isPlaying ? '⏸' : '▶'}
-        </button>
-        
         {/* Projection Mode Button */}
         <button
           onClick={() => {
