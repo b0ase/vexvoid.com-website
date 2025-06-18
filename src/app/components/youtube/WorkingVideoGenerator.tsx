@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { videoClips } from '../../lib/videos'
 import { conceptArtImages } from '../../lib/images'
 import { musicTracks } from '../../lib/musicLibrary'
@@ -8,6 +8,10 @@ import { musicTracks } from '../../lib/musicLibrary'
 export default function WorkingVideoGenerator() {
   const [videoTitle, setVideoTitle] = useState('V3XV0ID - Cyberpunk Visual Journey | 10 Minute Ambient Music Video')
   const [selectedMusic, setSelectedMusic] = useState<string>('')
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const [generatedVideoUrl, setGeneratedVideoUrl] = useState<string | null>(null)
+  const previewIframeRef = useRef<HTMLIFrameElement>(null)
 
   const getYouTubeMetadata = () => {
     return {
@@ -64,6 +68,128 @@ All content created with AI assistance and human curation`,
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text)
     alert(`${label} copied to clipboard!`)
+  }
+
+  const generateVideo = async () => {
+    setIsGenerating(true)
+    setProgress(0)
+    setGeneratedVideoUrl(null)
+
+    try {
+      // Step 1: Open preview page in hidden iframe to capture content
+      setProgress(10)
+      
+      // Create a new window/tab with the preview page for recording
+      const previewWindow = window.open('/preview', '_blank', 'width=1920,height=1080')
+      
+      if (!previewWindow) {
+        throw new Error('Please allow popups to generate video')
+      }
+
+      // Wait for the preview page to load
+      await new Promise(resolve => setTimeout(resolve, 3000))
+      setProgress(20)
+
+      // Check if browser supports screen capture
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+        throw new Error('Screen recording not supported in this browser. Please use Chrome, Firefox, or Safari.')
+      }
+
+      // Request screen capture of the preview window
+      setProgress(30)
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: {
+          width: 1920,
+          height: 1080,
+          frameRate: 30
+        },
+        audio: true // Capture system audio if available
+      })
+
+      setProgress(40)
+
+      // Set up MediaRecorder for high-quality recording
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: 'video/webm;codecs=vp9,opus',
+        videoBitsPerSecond: 8000000, // 8 Mbps for high quality
+        audioBitsPerSecond: 192000   // 192 kbps audio
+      })
+
+      const chunks: Blob[] = []
+      
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          chunks.push(event.data)
+        }
+      }
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' })
+        const url = URL.createObjectURL(blob)
+        setGeneratedVideoUrl(url)
+        setProgress(100)
+        setIsGenerating(false)
+        
+        // Close the preview window
+        if (previewWindow) {
+          previewWindow.close()
+        }
+      }
+
+      // Start recording
+      mediaRecorder.start()
+      setProgress(50)
+
+      // Record for 10 minutes (600 seconds)
+      const recordingDuration = 600000 // 10 minutes in milliseconds
+      
+      // Update progress during recording
+      const progressInterval = setInterval(() => {
+        setProgress(prev => {
+          const newProgress = prev + (50 / (recordingDuration / 1000)) // Increment based on time
+          return Math.min(newProgress, 95)
+        })
+      }, 1000)
+
+      // Stop recording after 10 minutes
+      setTimeout(() => {
+        clearInterval(progressInterval)
+        mediaRecorder.stop()
+        stream.getTracks().forEach(track => track.stop())
+        setProgress(95)
+      }, recordingDuration)
+
+      // Show instructions to user
+      alert(`
+🎬 Recording Started!
+
+Instructions:
+1. A new tab opened with the V3XV0ID preview
+2. Select that tab when prompted for screen sharing
+3. The recording will automatically stop after 10 minutes
+4. Keep the preview tab active and visible during recording
+5. Don't minimize or switch away from the preview tab
+
+Recording will complete automatically in 10 minutes...
+      `)
+
+    } catch (error) {
+      console.error('Video generation failed:', error)
+      alert(`Video generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      setIsGenerating(false)
+      setProgress(0)
+    }
+  }
+
+  const downloadVideo = () => {
+    if (generatedVideoUrl) {
+      const a = document.createElement('a')
+      a.href = generatedVideoUrl
+      a.download = `${videoTitle.replace(/[^a-zA-Z0-9]/g, '_')}.webm`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+    }
   }
 
   const generateVideoScript = () => {
@@ -166,6 +292,81 @@ ${videoClips.slice(0, 10).map((clip, index) =>
                 ))}
               </select>
             </div>
+          </div>
+        </div>
+
+        {/* Video Generation */}
+        <div className="bg-gradient-to-r from-purple-900/40 to-cyan-900/40 rounded-lg p-6 mb-8 border border-purple-500/30">
+          <h2 className="text-2xl font-semibold mb-6 text-purple-400">🎬 Generate 10-Minute Video</h2>
+          
+          <div className="space-y-6">
+            <div className="bg-gray-800/50 rounded-lg p-4">
+              <h3 className="text-lg font-semibold mb-3 text-cyan-400">How it works:</h3>
+              <ol className="list-decimal list-inside space-y-2 text-sm">
+                <li>Click "Generate Video" to open the beautiful preview page</li>
+                <li>Select the preview tab when prompted for screen sharing</li>
+                <li>The system will record exactly what you see for 10 minutes</li>
+                <li>Download the finished video file for YouTube upload</li>
+              </ol>
+            </div>
+
+            {!isGenerating && !generatedVideoUrl && (
+              <button
+                onClick={generateVideo}
+                className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105"
+              >
+                🎬 Generate 10-Minute Video
+              </button>
+            )}
+
+            {isGenerating && (
+              <div className="space-y-4">
+                <div className="w-full bg-gray-700 rounded-full h-4">
+                  <div 
+                    className="bg-gradient-to-r from-purple-500 to-cyan-500 h-4 rounded-full transition-all duration-500"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
+                <p className="text-center text-cyan-400">
+                  {progress < 30 ? 'Setting up recording...' :
+                   progress < 50 ? 'Starting capture...' :
+                   progress < 95 ? 'Recording in progress...' :
+                   'Finalizing video...'}
+                </p>
+                <p className="text-center text-sm text-gray-400">
+                  {progress}% complete
+                </p>
+              </div>
+            )}
+
+            {generatedVideoUrl && (
+              <div className="space-y-4">
+                <div className="bg-green-900/30 border border-green-500/50 rounded-lg p-4">
+                  <h3 className="text-green-400 font-semibold mb-2">✅ Video Generated Successfully!</h3>
+                  <p className="text-sm text-gray-300">
+                    Your 10-minute V3XV0ID video is ready for download and YouTube upload.
+                  </p>
+                </div>
+                
+                <div className="flex gap-4">
+                  <button
+                    onClick={downloadVideo}
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                  >
+                    📥 Download Video
+                  </button>
+                  <button
+                    onClick={() => {
+                      setGeneratedVideoUrl(null)
+                      setProgress(0)
+                    }}
+                    className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                  >
+                    🔄 Generate New
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
