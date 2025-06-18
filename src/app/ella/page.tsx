@@ -139,9 +139,9 @@ export default function EllaPage() {
         {/* Header */}
         <header className="p-8 flex justify-between items-start">
           <div className="space-y-2">
-            <h1 className="text-4xl md:text-6xl font-light tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-cyan-200">
-              ELLA
-            </h1>
+                         <h1 className="text-4xl md:text-6xl font-light tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-cyan-200">
+               ella
+             </h1>
             <p className="text-sm text-gray-400 font-mono">
               v3xv0id visual experience
             </p>
