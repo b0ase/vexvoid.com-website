@@ -1,11 +1,11 @@
-import VideoHero from '../components/VideoHero'
+import ImmersiveVideoHero from '../components/ImmersiveVideoHero'
 import VisualGallery from '../components/ConceptArtGallery'
 import MusicPlayer from '../components/MusicPlayer'
 
 export default function LandingAlt() {
   return (
     <main className="min-h-screen bg-cyber-black">
-      <VideoHero />
+      <ImmersiveVideoHero />
       
       {/* Music Section */}
       <MusicPlayer />
