@@ -1,5 +1,5 @@
-import TenMinuteVideoGenerator from '../components/youtube/TenMinuteVideoGenerator'
+import WorkingVideoGenerator from '../components/youtube/WorkingVideoGenerator'
 
 export default function YouTubeGeneratorPage() {
-  return <TenMinuteVideoGenerator />
+  return <WorkingVideoGenerator />
 } 

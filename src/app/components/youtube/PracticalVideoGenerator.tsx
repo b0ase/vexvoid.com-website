@@ -5,9 +5,10 @@ import { videoClips } from '../../lib/videos'
 import { conceptArtImages } from '../../lib/images'
 import { musicTracks } from '../../lib/musicLibrary'
 
-export default function WorkingVideoGenerator() {
-  const [videoTitle, setVideoTitle] = useState('V3XV0ID - Cyberpunk Visual Journey | 10 Minute Ambient Music Video')
+export default function PracticalVideoGenerator() {
+  const [selectedVideos, setSelectedVideos] = useState<string[]>([])
   const [selectedMusic, setSelectedMusic] = useState<string>('')
+  const [videoTitle, setVideoTitle] = useState('V3XV0ID - Cyberpunk Visual Journey | 10 Minute Ambient Music Video')
 
   const getYouTubeMetadata = () => {
     return {
@@ -67,7 +68,8 @@ All content created with AI assistance and human curation`,
   }
 
   const generateVideoScript = () => {
-    const script = `# V3XV0ID 10-Minute Music Video Production Script
+    const script = `
+# V3XV0ID 10-Minute Music Video Production Script
 
 ## Video Specifications
 - Duration: 10:00 minutes (600 seconds)
@@ -82,14 +84,15 @@ All content created with AI assistance and human curation`,
 - Music Tracks: ${musicTracks.length} tracks
 
 ## Production Timeline
-${videoClips.slice(0, 10).map((clip, index) => 
-  `Segment ${index + 1}: ${clip.filename.substring(0, 50)}... (${clip.type})
+
+### Segment Structure (40 segments total):
+${videoClips.map((clip, index) => 
+  `Segment ${index + 1}: ${clip.filename} (${clip.type})
   - Duration: 15 seconds
   - Start Time: ${(index * 15).toFixed(1)}s
-  - Transition: 2-second crossfade`
+  - Transition: 2-second crossfade
+  - Random Start Point: ${Math.floor(Math.random() * 30)}s into source video`
 ).join('\n')}
-
-[... continues for all ${videoClips.length} clips]
 
 ## Post-Production Effects
 1. Color Grading: Brightness 0.7, Contrast 1.2, Saturation 0.9
@@ -107,7 +110,8 @@ ${videoClips.slice(0, 10).map((clip, index) =>
 - Codec: H.264
 - Bitrate: 8-12 Mbps (high quality)
 - Audio: 192 kbps AAC
-- Color Profile: Rec.709`
+- Color Profile: Rec.709
+`
     return script
   }
 
@@ -199,7 +203,7 @@ ${videoClips.slice(0, 10).map((clip, index) =>
             <div>
               <h3 className="text-lg font-semibold mb-3 text-yellow-300">Step-by-Step:</h3>
               <ol className="list-decimal list-inside space-y-1 text-sm">
-                <li>Import all {videoClips.length} video clips</li>
+                <li>Import all ${videoClips.length} video clips</li>
                 <li>Create 15-second segments from each clip</li>
                 <li>Add 2-second crossfade transitions</li>
                 <li>Layer concept art as floating overlays</li>
