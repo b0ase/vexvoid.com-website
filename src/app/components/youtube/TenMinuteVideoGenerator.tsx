@@ -396,7 +396,7 @@ V3XV0ID © 2024 - Original Digital Art & Music Experience`,
         {musicTracks.length > 0 && (
           <audio 
             ref={audioRef} 
-            src={musicTracks[0].url} 
+            src={musicTracks[0].supabaseUrl} 
             style={{ display: 'none' }}
           />
         )}
