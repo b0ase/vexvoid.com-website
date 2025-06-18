@@ -201,7 +201,7 @@ async function uploadToSupabase(track: SunoResponse, title: string, series: stri
     const fileName = `${series}/${title.replace(/\s+/g, '_').toLowerCase()}.mp3`;
     
     const { data, error } = await supabase.storage
-      .from('music')
+      .from('v3xv0id-music')
       .upload(fileName, audioBuffer, {
         contentType: 'audio/mpeg',
         upsert: true

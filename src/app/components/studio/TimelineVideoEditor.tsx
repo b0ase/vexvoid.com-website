@@ -110,14 +110,14 @@ export default function TimelineVideoEditor() {
       
       // Load from images bucket
       const { data: imageFiles } = await supabase.storage
-        .from('images')
+        .from('v3xv0id-images')
         .list('', { limit: 100 })
       
       if (imageFiles) {
         for (const file of imageFiles) {
           if (file.name && !file.name.includes('.emptyFolderPlaceholder')) {
             const { data: urlData } = supabase.storage
-              .from('images')
+              .from('v3xv0id-images')
               .getPublicUrl(file.name)
             
             assets.push({
@@ -134,14 +134,14 @@ export default function TimelineVideoEditor() {
       
       // Load from videos bucket
       const { data: videoFiles } = await supabase.storage
-        .from('videos')
+        .from('v3xv0id-videos')
         .list('', { limit: 100 })
       
       if (videoFiles) {
         for (const file of videoFiles) {
           if (file.name && !file.name.includes('.emptyFolderPlaceholder')) {
             const { data: urlData } = supabase.storage
-              .from('videos')
+              .from('v3xv0id-videos')
               .getPublicUrl(file.name)
             
             assets.push({
@@ -149,7 +149,7 @@ export default function TimelineVideoEditor() {
               name: file.name,
               type: 'video',
               url: urlData.publicUrl,
-              bucket: 'videos',
+              bucket: 'v3xv0id-videos',
               duration: 30, // Default, would need metadata
               size: file.metadata?.size
             })

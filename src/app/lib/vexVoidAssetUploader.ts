@@ -41,7 +41,7 @@ export class VexVoidAssetUploader {
     {
       name: 'VexVoid Concept Art',
       localPath: '/images/VexVoid_concept_art',
-      bucket: 'images',
+      bucket: 'v3xv0id-images',
       folder: 'concept_art',
       aesthetic: 'neon_noir' as const,
       mood: 'dark' as const,
@@ -50,7 +50,7 @@ export class VexVoidAssetUploader {
     {
       name: 'VexVoid Concept Art 2',
       localPath: '/images/VexVoid_concept_art_2',
-      bucket: 'images',
+      bucket: 'v3xv0id-images',
       folder: 'concept_art_2',
       aesthetic: 'urban_decay' as const,
       mood: 'atmospheric' as const,
@@ -59,7 +59,7 @@ export class VexVoidAssetUploader {
     {
       name: 'VexVoid Concept Art 3',
       localPath: '/images/VexVoid_concept_art_3',
-      bucket: 'images',
+      bucket: 'v3xv0id-images',
       folder: 'concept_art_3',
       aesthetic: 'cinematic' as const,
       mood: 'dark' as const,
@@ -68,7 +68,7 @@ export class VexVoidAssetUploader {
     {
       name: 'VexVoid Landscapes',
       localPath: '/images/VexVoid_Landscape',
-      bucket: 'images',
+      bucket: 'v3xv0id-images',
       folder: 'landscapes',
       aesthetic: 'urban_decay' as const,
       mood: 'atmospheric' as const,
@@ -77,7 +77,7 @@ export class VexVoidAssetUploader {
     {
       name: 'VexVoid Portraits',
       localPath: '/images/VexVoid_Portrait',
-      bucket: 'images',
+      bucket: 'v3xv0id-images',
       folder: 'portraits',
       aesthetic: 'neon_noir' as const,
       mood: 'stealthy' as const,
@@ -86,7 +86,7 @@ export class VexVoidAssetUploader {
     {
       name: 'VexVoid Graffiti Train Jam',
       localPath: '/images/VexVoid_graf_train_jam',
-      bucket: 'images',
+      bucket: 'v3xv0id-images',
       folder: 'graffiti_train',
       aesthetic: 'graffiti_culture' as const,
       mood: 'rebellious' as const,
@@ -95,7 +95,7 @@ export class VexVoidAssetUploader {
     {
       name: 'V3X Video Jam 01 Images',
       localPath: '/images/v3x_vide0_Jam_01',
-      bucket: 'images',
+      bucket: 'v3xv0id-images',
       folder: 'video_jam_01',
       aesthetic: 'train_yards' as const,
       mood: 'energetic' as const,
@@ -104,8 +104,8 @@ export class VexVoidAssetUploader {
     {
       name: 'V3X Video Jam 01 Videos',
       localPath: '/videos/vex_video_jam_01',
-      bucket: 'videos',
-      folder: 'video_jam_01',
+      bucket: 'v3xv0id-videos',
+      folder: 'vex_video_jam_01',
       aesthetic: 'cinematic' as const,
       mood: 'atmospheric' as const,
       description: 'Professional and standard video clips with train atmosphere'

@@ -21,50 +21,50 @@ export default function AssetUploader() {
     {
       name: 'VexVoid Concept Art',
       path: '/images/VexVoid_concept_art',
-      bucket: 'images',
+      bucket: 'v3xv0id-images',
       folder: 'concept_art'
     },
     {
       name: 'VexVoid Concept Art 2',
       path: '/images/VexVoid_concept_art_2',
-      bucket: 'images',
+      bucket: 'v3xv0id-images',
       folder: 'concept_art_2'
     },
     {
       name: 'VexVoid Concept Art 3',
       path: '/images/VexVoid_concept_art_3',
-      bucket: 'images',
+      bucket: 'v3xv0id-images',
       folder: 'concept_art_3'
     },
     {
       name: 'VexVoid Landscapes',
       path: '/images/VexVoid_Landscape',
-      bucket: 'images',
+      bucket: 'v3xv0id-images',
       folder: 'landscapes'
     },
     {
       name: 'VexVoid Portraits',
       path: '/images/VexVoid_Portrait',
-      bucket: 'images',
+      bucket: 'v3xv0id-images',
       folder: 'portraits'
     },
     {
       name: 'VexVoid Graffiti Train Jam',
       path: '/images/VexVoid_graf_train_jam',
-      bucket: 'images',
+      bucket: 'v3xv0id-images',
       folder: 'graffiti_train'
     },
     {
       name: 'V3X Video Jam 01 Images',
       path: '/images/v3x_vide0_Jam_01',
-      bucket: 'images',
+      bucket: 'v3xv0id-images',
       folder: 'video_jam_01'
     },
     {
       name: 'V3X Video Jam 01 Videos',
       path: '/videos/vex_video_jam_01',
-      bucket: 'videos',
-      folder: 'video_jam_01'
+      bucket: 'v3xv0id-videos',
+      folder: 'vex_video_jam_01'
     }
   ]
 

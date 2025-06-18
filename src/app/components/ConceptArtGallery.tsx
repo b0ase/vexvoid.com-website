@@ -22,9 +22,9 @@ interface VisualTab {
   count: number
 }
 
-// Available video clips - exact same as preview
+// Available video clips - using v3xv0id-videos bucket
 const SUPABASE_URL = 'https://bgotvvrslolholxgcivz.supabase.co'
-const getVideoUrl = (filename: string) => `${SUPABASE_URL}/storage/v1/object/public/videos/vex_video_jam_01/${filename}`
+const getVideoUrl = (filename: string) => `${SUPABASE_URL}/storage/v1/object/public/v3xv0id-videos/vex_video_jam_01/${filename}`
 
 const videoClips = [
   {

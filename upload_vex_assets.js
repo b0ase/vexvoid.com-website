@@ -25,57 +25,57 @@ const assetCollections = [
   {
     name: '🎨 VexVoid Concept Art',
     localPath: './public/images/VexVoid_concept_art',
-    bucket: 'images',
+    bucket: 'v3xv0id-images',
     folder: 'concept_art',
     aesthetic: 'neon_noir'
   },
   {
     name: '🎨 VexVoid Concept Art 2',
     localPath: './public/images/VexVoid_concept_art_2',
-    bucket: 'images',
+    bucket: 'v3xv0id-images',
     folder: 'concept_art_2',
     aesthetic: 'urban_decay'
   },
   {
     name: '🎨 VexVoid Concept Art 3',
     localPath: './public/images/VexVoid_concept_art_3',
-    bucket: 'images',
+    bucket: 'v3xv0id-images',
     folder: 'concept_art_3',
     aesthetic: 'cinematic'
   },
   {
     name: '🌆 VexVoid Landscapes',
     localPath: './public/images/VexVoid_Landscape',
-    bucket: 'images',
+    bucket: 'v3xv0id-images',
     folder: 'landscapes',
     aesthetic: 'urban_decay'
   },
   {
     name: '👤 VexVoid Portraits',
     localPath: './public/images/VexVoid_Portrait',
-    bucket: 'images',
+    bucket: 'v3xv0id-images',
     folder: 'portraits',
     aesthetic: 'neon_noir'
   },
   {
     name: '🚂 Graffiti Train Jam',
     localPath: './public/images/VexVoid_graf_train_jam',
-    bucket: 'images',
+    bucket: 'v3xv0id-images',
     folder: 'graffiti_train',
     aesthetic: 'graffiti_culture'
   },
   {
     name: '🎬 V3X Video Jam Images',
     localPath: './public/images/v3x_vide0_Jam_01',
-    bucket: 'images',
+    bucket: 'v3xv0id-images',
     folder: 'video_jam_01',
     aesthetic: 'train_yards'
   },
   {
     name: '🎥 V3X Video Jam Videos',
     localPath: './public/videos/vex_video_jam_01',
-    bucket: 'videos',
-    folder: 'video_jam_01',
+    bucket: 'v3xv0id-videos',
+    folder: 'vex_video_jam_01',
     aesthetic: 'cinematic'
   }
 ]
@@ -255,8 +255,8 @@ Uploading graffiti culture assets to Supabase Storage...
 ${totalErrors > 0 ? `⚠️  Errors: ${totalErrors}` : '✅ No errors!'}
 
 🔗 Access your assets at:
-   https://${supabaseUrl.replace('https://', '')}/storage/v1/object/public/images/
-   https://${supabaseUrl.replace('https://', '')}/storage/v1/object/public/videos/
+   https://${supabaseUrl.replace('https://', '')}/storage/v1/object/public/v3xv0id-images/
+   https://${supabaseUrl.replace('https://', '')}/storage/v1/object/public/v3xv0id-videos/
 `)
 
   if (totalErrors === 0) {

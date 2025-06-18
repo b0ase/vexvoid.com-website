@@ -13,9 +13,9 @@ import { applyGlitchEffect, getRandomGlitchEffect, applyMultipleGlitchEffects } 
 import { useMusicPlayer } from '../lib/musicPlayerContext'
 import Image from 'next/image'
 
-// Available video clips - using Supabase cloud storage (updated list)
+// Available video clips - using Supabase v3xv0id-videos bucket
 const SUPABASE_URL = 'https://bgotvvrslolholxgcivz.supabase.co'
-const getVideoUrl = (filename: string) => `${SUPABASE_URL}/storage/v1/object/public/videos/vex_video_jam_01/${filename}`
+const getVideoUrl = (filename: string) => `${SUPABASE_URL}/storage/v1/object/public/v3xv0id-videos/vex_video_jam_01/${filename}`
 
 const videoClips = [
   {
