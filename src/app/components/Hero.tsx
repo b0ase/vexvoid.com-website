@@ -107,10 +107,10 @@ export default function Hero() {
         <div className="w-16 h-px bg-white mx-auto mb-6"></div>
         
         <div className="flex justify-center gap-2 text-xs md:text-sm flex-wrap mb-4">
-          <a href="#audio" className="bg-white text-black px-3 py-1.5 lo-fi-text hover:bg-gray-200 transition-colors">AUDIO</a>
+          <a href="/audio" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">AUDIO</a>
           <a href="#visual" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">VISUAL</a>
           <a href="/studio" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">STUDIO</a>
-          <a href="https://b0ase.github.io/vexvoid-AV-client/" target="_blank" rel="noopener noreferrer" className="bg-cyber-white text-cyber-black px-3 py-1.5 lo-fi-text hover:bg-cyber-accent hover:text-cyber-black transition-colors font-semibold">AV CLIENT</a>
+          <a href="https://b0ase.github.io/vexvoid-AV-client/" target="_blank" rel="noopener noreferrer" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">DOWNLOAD</a>
           <a href="/token" className="border border-white text-white px-3 py-1.5 lo-fi-text hover:bg-white hover:text-black transition-colors">$V3X</a>
         </div>
 
