@@ -1,4 +1,7 @@
 // Centralized video configuration for V3XV0ID video content
+const SUPABASE_URL = 'https://bgotvvrslolholxgcivz.supabase.co'
+const getVideoUrl = (filename: string) => `${SUPABASE_URL}/storage/v1/object/public/v3xv0id-videos/vex_video_jam_01/${filename}`
+
 export interface VideoClip {
   path: string
   filename: string
@@ -9,48 +12,48 @@ export interface VideoClip {
 // All available video clips from vex_video_jam_01
 export const videoClips: VideoClip[] = [
   // Train sequences - urban movement
-  { path: '/videos/vex_video_jam_01/A_train_rushes_past_while_urban_.mp4', filename: 'A_train_rushes_past_while_urban_.mp4', directory: 'vex_video_jam_01', type: 'train' },
-  { path: '/videos/vex_video_jam_01/A_train_rushes_past_while_urban_ (1).mp4', filename: 'A_train_rushes_past_while_urban_ (1).mp4', directory: 'vex_video_jam_01', type: 'train' },
-  { path: '/videos/vex_video_jam_01/A_train_rushes_past_while_urban_ (2).mp4', filename: 'A_train_rushes_past_while_urban_ (2).mp4', directory: 'vex_video_jam_01', type: 'train' },
-  { path: '/videos/vex_video_jam_01/A_train_rushes_past_while_urban_ (3).mp4', filename: 'A_train_rushes_past_while_urban_ (3).mp4', directory: 'vex_video_jam_01', type: 'train' },
-  { path: '/videos/vex_video_jam_01/A_train_rushes_past_while_urban_ (4).mp4', filename: 'A_train_rushes_past_while_urban_ (4).mp4', directory: 'vex_video_jam_01', type: 'train' },
-  { path: '/videos/vex_video_jam_01/A_train_rushes_past_while_urban_ (5).mp4', filename: 'A_train_rushes_past_while_urban_ (5).mp4', directory: 'vex_video_jam_01', type: 'train' },
-  { path: '/videos/vex_video_jam_01/A_train_rushes_past_while_urban_ (6).mp4', filename: 'A_train_rushes_past_while_urban_ (6).mp4', directory: 'vex_video_jam_01', type: 'train' },
-  { path: '/videos/vex_video_jam_01/A_train_rushes_past_while_urban_ (7).mp4', filename: 'A_train_rushes_past_while_urban_ (7).mp4', directory: 'vex_video_jam_01', type: 'train' },
+  { path: getVideoUrl('A_train_rushes_past_while_urban_.mp4'), filename: 'A_train_rushes_past_while_urban_.mp4', directory: 'vex_video_jam_01', type: 'train' },
+  { path: getVideoUrl('A_train_rushes_past_while_urban_ (1).mp4'), filename: 'A_train_rushes_past_while_urban_ (1).mp4', directory: 'vex_video_jam_01', type: 'train' },
+  { path: getVideoUrl('A_train_rushes_past_while_urban_ (2).mp4'), filename: 'A_train_rushes_past_while_urban_ (2).mp4', directory: 'vex_video_jam_01', type: 'train' },
+  { path: getVideoUrl('A_train_rushes_past_while_urban_ (3).mp4'), filename: 'A_train_rushes_past_while_urban_ (3).mp4', directory: 'vex_video_jam_01', type: 'train' },
+  { path: getVideoUrl('A_train_rushes_past_while_urban_ (4).mp4'), filename: 'A_train_rushes_past_while_urban_ (4).mp4', directory: 'vex_video_jam_01', type: 'train' },
+  { path: getVideoUrl('A_train_rushes_past_while_urban_ (5).mp4'), filename: 'A_train_rushes_past_while_urban_ (5).mp4', directory: 'vex_video_jam_01', type: 'train' },
+  { path: getVideoUrl('A_train_rushes_past_while_urban_ (6).mp4'), filename: 'A_train_rushes_past_while_urban_ (6).mp4', directory: 'vex_video_jam_01', type: 'train' },
+  { path: getVideoUrl('A_train_rushes_past_while_urban_ (7).mp4'), filename: 'A_train_rushes_past_while_urban_ (7).mp4', directory: 'vex_video_jam_01', type: 'train' },
   
   // Atmospheric/environmental clips
-  { path: '/videos/vex_video_jam_01/Heavy_rain_pelts_the_ground__str.mp4', filename: 'Heavy_rain_pelts_the_ground__str.mp4', directory: 'vex_video_jam_01', type: 'atmospheric' },
-  { path: '/videos/vex_video_jam_01/Footsteps_echo_on_the_graffitied.mp4', filename: 'Footsteps_echo_on_the_graffitied.mp4', directory: 'vex_video_jam_01', type: 'atmospheric' },
-  { path: '/videos/vex_video_jam_01/Extended_Video.mp4', filename: 'Extended_Video.mp4', directory: 'vex_video_jam_01', type: 'environment' },
+  { path: getVideoUrl('Heavy_rain_pelts_the_ground__str.mp4'), filename: 'Heavy_rain_pelts_the_ground__str.mp4', directory: 'vex_video_jam_01', type: 'atmospheric' },
+  { path: getVideoUrl('Footsteps_echo_on_the_graffitied.mp4'), filename: 'Footsteps_echo_on_the_graffitied.mp4', directory: 'vex_video_jam_01', type: 'atmospheric' },
+  { path: getVideoUrl('Extended_Video.mp4'), filename: 'Extended_Video.mp4', directory: 'vex_video_jam_01', type: 'environment' },
   
   // Professional generated clips
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video.mp4', filename: 'Professional_Mode_Generated_Video.mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (1).mp4', filename: 'Professional_Mode_Generated_Video (1).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (2).mp4', filename: 'Professional_Mode_Generated_Video (2).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (3).mp4', filename: 'Professional_Mode_Generated_Video (3).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (4).mp4', filename: 'Professional_Mode_Generated_Video (4).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (5).mp4', filename: 'Professional_Mode_Generated_Video (5).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (6).mp4', filename: 'Professional_Mode_Generated_Video (6).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (7).mp4', filename: 'Professional_Mode_Generated_Video (7).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (8).mp4', filename: 'Professional_Mode_Generated_Video (8).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (9).mp4', filename: 'Professional_Mode_Generated_Video (9).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (10).mp4', filename: 'Professional_Mode_Generated_Video (10).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (11).mp4', filename: 'Professional_Mode_Generated_Video (11).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (12).mp4', filename: 'Professional_Mode_Generated_Video (12).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (13).mp4', filename: 'Professional_Mode_Generated_Video (13).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (14).mp4', filename: 'Professional_Mode_Generated_Video (14).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (15).mp4', filename: 'Professional_Mode_Generated_Video (15).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Professional_Mode_Generated_Video (16).mp4', filename: 'Professional_Mode_Generated_Video (16).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video.mp4'), filename: 'Professional_Mode_Generated_Video.mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (1).mp4'), filename: 'Professional_Mode_Generated_Video (1).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (2).mp4'), filename: 'Professional_Mode_Generated_Video (2).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (3).mp4'), filename: 'Professional_Mode_Generated_Video (3).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (4).mp4'), filename: 'Professional_Mode_Generated_Video (4).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (5).mp4'), filename: 'Professional_Mode_Generated_Video (5).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (6).mp4'), filename: 'Professional_Mode_Generated_Video (6).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (7).mp4'), filename: 'Professional_Mode_Generated_Video (7).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (8).mp4'), filename: 'Professional_Mode_Generated_Video (8).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (9).mp4'), filename: 'Professional_Mode_Generated_Video (9).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (10).mp4'), filename: 'Professional_Mode_Generated_Video (10).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (11).mp4'), filename: 'Professional_Mode_Generated_Video (11).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (12).mp4'), filename: 'Professional_Mode_Generated_Video (12).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (13).mp4'), filename: 'Professional_Mode_Generated_Video (13).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (14).mp4'), filename: 'Professional_Mode_Generated_Video (14).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (15).mp4'), filename: 'Professional_Mode_Generated_Video (15).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Professional_Mode_Generated_Video (16).mp4'), filename: 'Professional_Mode_Generated_Video (16).mp4', directory: 'vex_video_jam_01', type: 'generated' },
   
   // Standard generated clips
-  { path: '/videos/vex_video_jam_01/Standard_Mode_Generated_Video.mp4', filename: 'Standard_Mode_Generated_Video.mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Standard_Mode_Generated_Video (1).mp4', filename: 'Standard_Mode_Generated_Video (1).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Standard_Mode_Generated_Video (2).mp4', filename: 'Standard_Mode_Generated_Video (2).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Standard_Mode_Generated_Video (3).mp4', filename: 'Standard_Mode_Generated_Video (3).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Standard_Mode_Generated_Video (4).mp4', filename: 'Standard_Mode_Generated_Video (4).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Standard_Mode_Generated_Video (5).mp4', filename: 'Standard_Mode_Generated_Video (5).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Standard_Mode_Generated_Video (6).mp4', filename: 'Standard_Mode_Generated_Video (6).mp4', directory: 'vex_video_jam_01', type: 'generated' },
-  { path: '/videos/vex_video_jam_01/Standard_Mode_Generated_Video (7).mp4', filename: 'Standard_Mode_Generated_Video (7).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Standard_Mode_Generated_Video.mp4'), filename: 'Standard_Mode_Generated_Video.mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Standard_Mode_Generated_Video (1).mp4'), filename: 'Standard_Mode_Generated_Video (1).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Standard_Mode_Generated_Video (2).mp4'), filename: 'Standard_Mode_Generated_Video (2).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Standard_Mode_Generated_Video (3).mp4'), filename: 'Standard_Mode_Generated_Video (3).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Standard_Mode_Generated_Video (4).mp4'), filename: 'Standard_Mode_Generated_Video (4).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Standard_Mode_Generated_Video (5).mp4'), filename: 'Standard_Mode_Generated_Video (5).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Standard_Mode_Generated_Video (6).mp4'), filename: 'Standard_Mode_Generated_Video (6).mp4', directory: 'vex_video_jam_01', type: 'generated' },
+  { path: getVideoUrl('Standard_Mode_Generated_Video (7).mp4'), filename: 'Standard_Mode_Generated_Video (7).mp4', directory: 'vex_video_jam_01', type: 'generated' },
 ]
 
 // Helper functions

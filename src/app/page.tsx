@@ -21,6 +21,19 @@ export default function Home() {
             <div className="w-24 h-px bg-cyber-white mx-auto"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="cyber-card p-8 rounded-none group cursor-pointer bg-cyber-white/5 border border-cyber-white/20">
+              <div className="flex items-center mb-4">
+                <div className="w-2 h-2 bg-cyber-white mr-3"></div>
+                <h3 className="text-xl font-mono cyber-text">AV CLIENT</h3>
+                <span className="ml-2 text-xs bg-cyber-white text-cyber-black px-2 py-1 font-mono">NEW</span>
+              </div>
+              <p className="text-cyber-accent leading-relaxed mb-4">
+                Professional desktop VJ software with dual-palette crossfading, real-time video mixing, and live performance optimization for V3XV0ID visual shows.
+              </p>
+              <a href="https://b0ase.github.io/vexvoid-AV-client/" target="_blank" rel="noopener noreferrer" className="inline-block bg-cyber-white text-cyber-black px-4 py-2 text-sm font-mono hover:bg-cyber-accent transition-colors">
+                DOWNLOAD CLIENT
+              </a>
+            </div>
             <div className="cyber-card p-8 rounded-none group cursor-pointer">
               <div className="flex items-center mb-4">
                 <div className="w-2 h-2 bg-cyber-white mr-3"></div>

@@ -7,53 +7,14 @@ import {
   getAllCloudImages 
 } from '../lib/supabaseImages'
 import { generativeAlgorithms } from '../lib/generativeAlgorithms'
+import { videoClips } from '../lib/videos'
 
-// Available video clips - using v3xv0id-videos bucket
-const SUPABASE_URL = 'https://bgotvvrslolholxgcivz.supabase.co'
-const getVideoUrl = (filename: string) => `${SUPABASE_URL}/storage/v1/object/public/v3xv0id-videos/vex_video_jam_01/${filename}`
-
-const videoClips = [
-  {
-    id: 'train-rush-1',
-    path: getVideoUrl('A_train_rushes_past_while_urban_.mp4'),
-    title: 'Train Rush'
-  },
-  {
-    id: 'train-rush-2',
-    path: getVideoUrl('A_train_rushes_past_while_urban_ (2).mp4'),
-    title: 'Train Rush 2'
-  },
-  {
-    id: 'train-rush-3',
-    path: getVideoUrl('A_train_rushes_past_while_urban_ (3).mp4'),
-    title: 'Train Rush 3'
-  },
-  {
-    id: 'footsteps',
-    path: getVideoUrl('Footsteps_echo_on_the_graffitied.mp4'),
-    title: 'Footsteps Echo'
-  },
-  {
-    id: 'extended',
-    path: getVideoUrl('Extended_Video.mp4'),
-    title: 'Extended Scene'
-  },
-  {
-    id: 'professional-1',
-    path: getVideoUrl('Professional_Mode_Generated_Video.mp4'),
-    title: 'Professional Mode'
-  },
-  {
-    id: 'professional-2',
-    path: getVideoUrl('Professional_Mode_Generated_Video (1).mp4'),
-    title: 'Professional Mode Alt'
-  },
-  {
-    id: 'standard-1',
-    path: getVideoUrl('Standard_Mode_Generated_Video (1).mp4'),
-    title: 'Standard Mode'
-  }
-]
+// Use first 8 videos from the centralized video management
+const heroVideoClips = videoClips.slice(0, 8).map((clip, index) => ({
+  id: `video-${index}`,
+  path: clip.path,
+  title: clip.filename.replace('.mp4', '').replace(/_/g, ' ')
+}))
 
 export default function ImmersiveVideoHero() {
   // Initialize image arrays safely
@@ -70,7 +31,7 @@ export default function ImmersiveVideoHero() {
   const [isGlitching, setIsGlitching] = useState(false)
   const [p5Time, setP5Time] = useState(0)
   const [videoStartOffset] = useState(() => 
-    videoClips.map(() => Math.random() * 50 + 10)
+    heroVideoClips.map(() => Math.random() * 50 + 10)
   )
   const [floatingElements] = useState(() => {
     const images = getAllCloudImages()
@@ -92,8 +53,8 @@ export default function ImmersiveVideoHero() {
   const p5CanvasRef = useRef<HTMLCanvasElement>(null)
   const [isTransitioning, setIsTransitioning] = useState(false)
 
-  const currentVideo = videoClips[currentVideoIndex]
-  const nextVideo = videoClips[nextVideoIndex]
+  const currentVideo = heroVideoClips[currentVideoIndex]
+  const nextVideo = heroVideoClips[nextVideoIndex]
 
   // Auto-start and setup videos
   useEffect(() => {
@@ -251,8 +212,8 @@ export default function ImmersiveVideoHero() {
     
     setIsTransitioning(true)
     
-    const newVideoIndex = (currentVideoIndex + 1) % videoClips.length
-    const newNextIndex = (newVideoIndex + 1) % videoClips.length
+    const newVideoIndex = (currentVideoIndex + 1) % heroVideoClips.length
+    const newNextIndex = (newVideoIndex + 1) % heroVideoClips.length
     
     setCurrentVideoIndex(newVideoIndex)
     setNextVideoIndex(newNextIndex)
@@ -354,7 +315,7 @@ export default function ImmersiveVideoHero() {
           style={{ transform: 'rotate(5deg)' }}
         >
           <video
-            src={videoClips[(currentVideoIndex + 2) % videoClips.length]?.path}
+            src={heroVideoClips[(currentVideoIndex + 2) % heroVideoClips.length]?.path}
             className="w-full h-full object-cover rounded"
             autoPlay
             loop
@@ -367,7 +328,7 @@ export default function ImmersiveVideoHero() {
           style={{ transform: 'rotate(-3deg)' }}
         >
           <video
-            src={videoClips[(currentVideoIndex + 3) % videoClips.length]?.path}
+            src={heroVideoClips[(currentVideoIndex + 3) % heroVideoClips.length]?.path}
             className="w-full h-full object-cover rounded"
             autoPlay
             loop
