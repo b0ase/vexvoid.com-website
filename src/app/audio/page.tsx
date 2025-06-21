@@ -1,12 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { musicTracks, MusicTrack } from '../lib/musicLibrary'
 import { getTracksByMood } from '../lib/musicLibrary'
 import { useMusicPlayer } from '../lib/musicPlayerContext'
 
 export default function AudioPage() {
   const [selectedMood, setSelectedMood] = useState<string>('all')
+  const [copiedTrackId, setCopiedTrackId] = useState<string | null>(null)
+  const router = useRouter()
+  const searchParams = useSearchParams()
   
   // Use the global music player context
   const {
@@ -36,6 +40,34 @@ export default function AudioPage() {
     return musicTracks.findIndex(t => t.id === track.id)
   }
 
+  const handleSelectTrack = (track: MusicTrack) => {
+    const globalIndex = getTrackIndex(track)
+    if (globalIndex !== -1) {
+      selectTrack(globalIndex)
+      router.push(`/audio?track=${track.id}`, { scroll: false })
+    }
+  }
+
+  const copyTrackLink = (trackId: string) => {
+    const url = `${window.location.origin}/audio?track=${trackId}`
+    navigator.clipboard.writeText(url)
+    setCopiedTrackId(trackId)
+    setTimeout(() => setCopiedTrackId(null), 2000)
+  }
+
+  useEffect(() => {
+    const trackIdFromUrl = searchParams.get('track')
+    if (trackIdFromUrl) {
+      const trackToPlay = musicTracks.find(t => t.id === trackIdFromUrl)
+      if (trackToPlay) {
+        const globalIndex = getTrackIndex(trackToPlay)
+        if (globalIndex !== -1 && globalIndex !== currentTrackIndex) {
+          selectTrack(globalIndex)
+        }
+      }
+    }
+  }, [searchParams])
+
   return (
     <div className="min-h-screen bg-cyber-black text-cyber-white">
       {/* Header */}
@@ -46,14 +78,14 @@ export default function AudioPage() {
           </h1>
           <div className="w-32 h-px bg-cyber-white"></div>
           <p className="text-cyber-accent mt-4 font-mono text-sm">
-            Click any track to play through the global music player (top right)
+            Share a direct link to any track or click to play in the global player (top right).
           </p>
         </div>
       </div>
 
       {/* Now Playing Indicator */}
       {currentTrackData && (
-        <div className="bg-cyber-dark/50 border-b border-cyber-gray/50">
+        <div className="bg-cyber-dark/50 border-b border-cyber-gray/50 sticky top-0 z-10">
           <div className="max-w-6xl mx-auto px-4 py-3">
             <div className="flex items-center gap-3 text-sm">
               <div className="flex items-center gap-2">
@@ -104,7 +136,7 @@ export default function AudioPage() {
             return (
               <div
                 key={track.id}
-                onClick={() => selectTrack(globalIndex)}
+                onClick={() => handleSelectTrack(track)}
                 className={`flex items-center justify-between p-4 cursor-pointer transition-colors group ${
                   isCurrentTrack 
                     ? 'bg-cyber-white/10 border-l-4 border-cyber-white' 
@@ -126,17 +158,22 @@ export default function AudioPage() {
                 </div>
                 
                 <div className="flex items-center gap-4">
-                  {isCurrentTrack ? (
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      copyTrackLink(track.id);
+                    }}
+                    className="opacity-0 group-hover:opacity-100 p-2 border border-cyber-white text-cyber-white hover:bg-cyber-white hover:text-cyber-black transition-all text-xs font-mono"
+                  >
+                    {copiedTrackId === track.id ? 'COPIED!' : 'LINK'}
+                  </button>
+                  {isCurrentTrack && (
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-cyber-white animate-pulse"></div>
                       <span className="text-sm font-mono">
                         {isPlaying ? 'PLAYING' : 'PAUSED'}
                       </span>
                     </div>
-                  ) : (
-                    <button className="opacity-0 group-hover:opacity-100 p-2 border border-cyber-white hover:bg-cyber-white hover:text-cyber-black transition-all">
-                      ▶
-                    </button>
                   )}
                 </div>
               </div>
