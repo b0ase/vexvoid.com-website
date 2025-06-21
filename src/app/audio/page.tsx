@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { musicTracks, MusicTrack } from '../lib/musicLibrary'
 import { getTracksByMood } from '../lib/musicLibrary'
 import { useMusicPlayer } from '../lib/musicPlayerContext'
 
-export default function AudioPage() {
+function AudioPlayer() {
   const [selectedMood, setSelectedMood] = useState<string>('all')
   const [copiedTrackId, setCopiedTrackId] = useState<string | null>(null)
   const router = useRouter()
@@ -66,7 +66,7 @@ export default function AudioPage() {
         }
       }
     }
-  }, [searchParams])
+  }, [searchParams, currentTrackIndex, selectTrack])
 
   return (
     <div className="min-h-screen bg-cyber-black text-cyber-white">
@@ -182,5 +182,13 @@ export default function AudioPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function AudioPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-cyber-black text-cyber-white text-center p-24 font-mono">Loading V3XV0ID Discography...</div>}>
+      <AudioPlayer />
+    </Suspense>
   )
 } 
