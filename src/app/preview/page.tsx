@@ -14,8 +14,9 @@ const getPortraitImages = () => portraitImages.map(img => ({ url: img.path, file
 const getAllCloudImages = () => [...getConceptArtImages(), ...getLandscapeImages(), ...getPortraitImages()]
 
 // Available video clips - using Supabase v3xv0id-videos bucket
-const SUPABASE_URL = 'https://bgotvvrslolholxgcivz.supabase.co'
-const getVideoUrl = (filename: string) => `${SUPABASE_URL}/storage/v1/object/public/v3xv0id-videos/vex_video_jam_01/${filename}`
+// Removed Supabase URL - using local images instead
+// Video URLs are not available locally - using placeholder
+const getVideoUrl = (filename: string) => `/videos/${filename}`
 
 const videoClips = [
   {
