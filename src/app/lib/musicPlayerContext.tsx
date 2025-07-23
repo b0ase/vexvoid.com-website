@@ -162,7 +162,9 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
   // Get current track URL dynamically
   const getCurrentTrackUrl = () => {
     const track = musicTracks[currentTrack]
-    return getMusicUrl(track.filename) || track.path
+    // Generate Supabase URL dynamically
+    const supabaseUrl = getMusicUrl(track.filename)
+    return supabaseUrl || track.path
   }
 
   // Update audio source when track changes
