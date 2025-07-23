@@ -164,6 +164,9 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
     const track = musicTracks[currentTrack]
     // Generate Supabase URL dynamically
     const supabaseUrl = getMusicUrl(track.filename)
+    console.log(`Track ${currentTrack}: ${track.title}`)
+    console.log(`Supabase URL: ${supabaseUrl}`)
+    console.log(`Fallback path: ${track.path}`)
     return supabaseUrl || track.path
   }
 
@@ -171,7 +174,9 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (audioRef.current) {
       const newUrl = getCurrentTrackUrl()
+      console.log('=== TRACK CHANGE ===')
       console.log('Loading track:', musicTracks[currentTrack].title, 'from:', newUrl)
+      console.log('Current track index:', currentTrack)
       audioRef.current.src = newUrl
       audioRef.current.load()
     }
@@ -248,8 +253,10 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
   }
 
   const handleTrackEnd = () => {
+    console.log('Track ended, current track:', currentTrack, musicTracks[currentTrack]?.title)
     if (autoPlay) {
       const nextIndex = getRandomTrack()
+      console.log('Next track index:', nextIndex, musicTracks[nextIndex]?.title)
       setCurrentTrack(nextIndex)
       setTimeout(() => {
         if (audioRef.current) {
