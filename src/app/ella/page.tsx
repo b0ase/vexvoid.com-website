@@ -2,7 +2,15 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { getAllCloudImages, getConceptArtImages } from '../lib/supabaseImages'
+import { conceptArtImages, landscapeImages, portraitImages } from '../lib/images'
+import { generativeAlgorithms } from '../lib/generativeAlgorithms'
+import { applyGlitchEffect, getRandomGlitchEffect, applyMultipleGlitchEffects } from '../lib/glitchEffects'
+
+// Convert local image arrays to match the expected format
+const getConceptArtImages = () => conceptArtImages.map(img => ({ url: img.path, filename: img.filename, directory: img.directory }))
+const getLandscapeImages = () => landscapeImages.map(img => ({ url: img.path, filename: img.filename, directory: img.directory }))
+const getPortraitImages = () => portraitImages.map(img => ({ url: img.path, filename: img.filename, directory: img.directory }))
+const getAllCloudImages = () => [...getConceptArtImages(), ...getLandscapeImages(), ...getPortraitImages()]
 
 export default function EllaPage() {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -16,7 +24,7 @@ export default function EllaPage() {
   const [allImages] = useState(() => getAllCloudImages())
   const [conceptImages] = useState(() => getConceptArtImages())
   const [displayImages] = useState(() => {
-    const combined = [...getAllCloudImages(), ...getConceptArtImages()]
+    const combined = [...getAllCloudImages()]
     return combined.slice(0, 20) // Limit for performance
   })
 

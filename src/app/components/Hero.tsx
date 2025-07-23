@@ -2,9 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { getAllCloudImages, getConceptArtImages } from '../lib/supabaseImages'
+import { conceptArtImages, getAllImagePaths } from '../lib/images'
+import { generativeAlgorithms } from '../lib/generativeAlgorithms'
 import SocialLinks from './SocialLinks'
 import Link from 'next/link'
+
+// Convert local image arrays to match the expected format
+const getConceptArtImages = () => conceptArtImages.map(img => ({ url: img.path, filename: img.filename, directory: img.directory }))
+const getAllCloudImages = () => getConceptArtImages()
 
 // Use all available images for backgrounds
 const allImages = getAllCloudImages()

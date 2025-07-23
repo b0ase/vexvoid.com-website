@@ -1,17 +1,17 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { 
-  getConceptArtImages, 
-  getLandscapeImages, 
-  getPortraitImages, 
-  getVideoJamImages,
-  getAllCloudImages 
-} from '../lib/supabaseImages'
+import { useState, useEffect, useRef } from 'react'
+import { conceptArtImages, landscapeImages, portraitImages } from '../lib/images'
 import { generativeAlgorithms } from '../lib/generativeAlgorithms'
 import { applyGlitchEffect, getRandomGlitchEffect, applyMultipleGlitchEffects } from '../lib/glitchEffects'
 import { useMusicPlayer } from '../lib/musicPlayerContext'
 import Image from 'next/image'
+
+// Convert local image arrays to match the expected format
+const getConceptArtImages = () => conceptArtImages.map(img => ({ url: img.path, filename: img.filename, directory: img.directory }))
+const getLandscapeImages = () => landscapeImages.map(img => ({ url: img.path, filename: img.filename, directory: img.directory }))
+const getPortraitImages = () => portraitImages.map(img => ({ url: img.path, filename: img.filename, directory: img.directory }))
+const getAllCloudImages = () => [...getConceptArtImages(), ...getLandscapeImages(), ...getPortraitImages()]
 
 // Available video clips - using Supabase v3xv0id-videos bucket
 const SUPABASE_URL = 'https://bgotvvrslolholxgcivz.supabase.co'
@@ -68,7 +68,6 @@ export default function VideoPreviewPage() {
   const [conceptArtImages] = useState(() => getConceptArtImages())
   const [landscapeImages] = useState(() => getLandscapeImages())
   const [portraitImages] = useState(() => getPortraitImages())
-  const [videoJamImages] = useState(() => getVideoJamImages())
   const [allImages] = useState(() => getAllCloudImages())
   const [logoImages] = useState(() => getConceptArtImages().slice(0, 15))
 
@@ -633,14 +632,13 @@ export default function VideoPreviewPage() {
           </div>
           
           <div className="absolute bottom-8 right-8 w-20 h-20 opacity-12 transition-all duration-4000 transform -rotate-3">
-            {videoJamImages[currentOverlayIndex % videoJamImages.length] && (
-              <Image
-                src={videoJamImages[currentOverlayIndex % videoJamImages.length].url}
-                alt="Video Jam Art"
-                fill
-                className="object-cover rounded-lg blur-[1px] mix-blend-overlay"
-              />
-            )}
+            {/* Removed videoJamImages as it's no longer available locally */}
+            {/* <Image
+              src={videoJamImages[currentOverlayIndex % videoJamImages.length].url}
+              alt="Video Jam Art"
+              fill
+              className="object-cover rounded-lg blur-[1px] mix-blend-overlay"
+            /> */}
           </div>
         </div>
 

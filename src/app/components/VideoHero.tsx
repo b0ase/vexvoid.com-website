@@ -1,18 +1,17 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import Image from 'next/image'
-import { 
-  getConceptArtImages, 
-  getLandscapeImages, 
-  getPortraitImages, 
-  getVideoJamImages,
-  getAllCloudImages 
-} from '../lib/supabaseImages'
+import { useState, useEffect, useRef } from 'react'
+import { conceptArtImages, landscapeImages, portraitImages } from '../lib/images'
 import { generativeAlgorithms } from '../lib/generativeAlgorithms'
-import { applyMultipleGlitchEffects } from '../lib/glitchEffects'
+import { applyGlitchEffect, getRandomGlitchEffect, applyMultipleGlitchEffects } from '../lib/glitchEffects'
+import Image from 'next/image'
 import SocialLinks from './SocialLinks'
 import { videoClips } from '../lib/videos'
+
+// Convert local image arrays to match the expected format
+const getConceptArtImages = () => conceptArtImages.map(img => ({ url: img.path, filename: img.filename, directory: img.directory }))
+const getLandscapeImages = () => landscapeImages.map(img => ({ url: img.path, filename: img.filename, directory: img.directory }))
+const getPortraitImages = () => portraitImages.map(img => ({ url: img.path, filename: img.filename, directory: img.directory }))
 
 // Using centralized video management from videos.ts
 

@@ -1,13 +1,16 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import Image from 'next/image'
-import { 
-  getConceptArtImages, 
-  getAllCloudImages 
-} from '../lib/supabaseImages'
+import { useState, useEffect, useRef } from 'react'
+import { conceptArtImages } from '../lib/images'
 import { generativeAlgorithms } from '../lib/generativeAlgorithms'
+import { applyGlitchEffect, getRandomGlitchEffect, applyMultipleGlitchEffects } from '../lib/glitchEffects'
+import Image from 'next/image'
+
 import { videoClips } from '../lib/videos'
+
+// Convert local image arrays to match the expected format
+const getConceptArtImages = () => conceptArtImages.map(img => ({ url: img.path, filename: img.filename, directory: img.directory }))
+const getAllCloudImages = () => getConceptArtImages()
 
 // Use first 8 videos from the centralized video management
 const heroVideoClips = videoClips.slice(0, 8).map((clip, index) => ({
