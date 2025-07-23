@@ -2,6 +2,7 @@
 
 import { useMusicPlayer } from '../lib/musicPlayerContext'
 import { musicTracks } from '../lib/musicLibrary'
+import { useEffect } from 'react'
 
 export default function MusicPlayer() {
   const {
@@ -19,8 +20,20 @@ export default function MusicPlayer() {
     prevTrack,
     selectTrack,
     setShowPlaylist,
-    setAutoPlay
+    setAutoPlay,
+    audioRef
   } = useMusicPlayer()
+
+  // Debug logging for Supabase URLs
+  useEffect(() => {
+    console.log('🎵 MusicPlayer Debug Info:')
+    console.log('Current track:', currentTrack)
+    console.log('Track title:', currentTrackTitle)
+    console.log('Track data:', musicTracks[currentTrack])
+    console.log('Supabase URL:', musicTracks[currentTrack]?.supabaseUrl)
+    console.log('Audio ref src:', audioRef.current?.src)
+    console.log('Connection status:', connectionStatus)
+  }, [currentTrack, currentTrackTitle, connectionStatus])
 
   // Don't render if globally hidden (projection mode)
   if (!isGlobalPlayerVisible) {
