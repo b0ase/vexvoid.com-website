@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useRef, useEffect, ReactNode } from 'react'
 import { musicTracks } from './musicLibrary'
-import { getMusicUrl, getSignedMusicUrl } from './supabase'
+import { getMusicUrl } from './supabase'
 
 interface MusicPlayerContextType {
   // Visibility control
@@ -162,19 +162,11 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
   // Get current track URL dynamically
   const getCurrentTrackUrl = async () => {
     const track = musicTracks[currentTrack]
-    try {
-      // Try to get a signed URL for private bucket access
-      const signedUrl = await getSignedMusicUrl(track.filename)
-      console.log(`Track ${currentTrack}: ${track.title}`)
-      console.log(`Signed URL: ${signedUrl}`)
-      return signedUrl
-    } catch (error) {
-      console.error('Error getting signed URL:', error)
-      // Fallback to public URL
-      const supabaseUrl = track.supabaseUrl || getMusicUrl(track.filename)
-      console.log(`Fallback URL: ${supabaseUrl}`)
-      return supabaseUrl || track.path
-    }
+    // Since bucket is public, use public URL directly
+    const supabaseUrl = track.supabaseUrl || getMusicUrl(track.filename)
+    console.log(`Track ${currentTrack}: ${track.title}`)
+    console.log(`Public URL: ${supabaseUrl}`)
+    return supabaseUrl || track.path
   }
 
   // Update audio source when track changes
