@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useRef, useEffect, ReactNode } from 'react'
 import { musicTracks } from './musicLibrary'
-import { getMusicUrl } from './supabase'
+import { getMusicUrl, getSignedMusicUrl } from './supabase'
 
 interface MusicPlayerContextType {
   // Visibility control
@@ -160,26 +160,37 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
   }, [])
 
   // Get current track URL dynamically
-  const getCurrentTrackUrl = () => {
+  const getCurrentTrackUrl = async () => {
     const track = musicTracks[currentTrack]
-    // Use pre-generated Supabase URL, fallback to dynamic generation
-    const supabaseUrl = track.supabaseUrl || getMusicUrl(track.filename)
-    console.log(`Track ${currentTrack}: ${track.title}`)
-    console.log(`Supabase URL: ${supabaseUrl}`)
-    console.log(`Fallback path: ${track.path}`)
-    return supabaseUrl || track.path
+    try {
+      // Try to get a signed URL for private bucket access
+      const signedUrl = await getSignedMusicUrl(track.filename)
+      console.log(`Track ${currentTrack}: ${track.title}`)
+      console.log(`Signed URL: ${signedUrl}`)
+      return signedUrl
+    } catch (error) {
+      console.error('Error getting signed URL:', error)
+      // Fallback to public URL
+      const supabaseUrl = track.supabaseUrl || getMusicUrl(track.filename)
+      console.log(`Fallback URL: ${supabaseUrl}`)
+      return supabaseUrl || track.path
+    }
   }
 
   // Update audio source when track changes
   useEffect(() => {
-    if (audioRef.current) {
-      const newUrl = getCurrentTrackUrl()
-      console.log('=== TRACK CHANGE ===')
-      console.log('Loading track:', musicTracks[currentTrack].title, 'from:', newUrl)
-      console.log('Current track index:', currentTrack)
-      audioRef.current.src = newUrl
-      audioRef.current.load()
+    const loadTrack = async () => {
+      if (audioRef.current) {
+        const newUrl = await getCurrentTrackUrl()
+        console.log('=== TRACK CHANGE ===')
+        console.log('Loading track:', musicTracks[currentTrack].title, 'from:', newUrl)
+        console.log('Current track index:', currentTrack)
+        audioRef.current.src = newUrl
+        audioRef.current.load()
+      }
     }
+    
+    loadTrack()
   }, [currentTrack])
 
   // Connection monitoring

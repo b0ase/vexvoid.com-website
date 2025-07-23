@@ -10,11 +10,34 @@ export const MUSIC_BUCKET = 'v3xv0id-music'
 
 // Helper function to get the public URL for a music file
 export const getMusicUrl = (filename: string): string => {
+  // Since the bucket is private, we need to use the signed URL approach
+  // For now, return the public URL format - this will work once bucket is public
   const { data } = supabase.storage
     .from(MUSIC_BUCKET)
     .getPublicUrl(filename)
   
   return data.publicUrl
+}
+
+// Helper function to get a signed URL for private bucket access
+export const getSignedMusicUrl = async (filename: string): Promise<string> => {
+  try {
+    const { data, error } = await supabase.storage
+      .from(MUSIC_BUCKET)
+      .createSignedUrl(filename, 3600) // 1 hour expiry
+    
+    if (error) {
+      console.error('Error getting signed URL:', error)
+      // Fallback to public URL
+      return getMusicUrl(filename)
+    }
+    
+    return data.signedUrl
+  } catch (error) {
+    console.error('Error getting signed URL:', error)
+    // Fallback to public URL
+    return getMusicUrl(filename)
+  }
 }
 
 // Helper function to upload a music file
