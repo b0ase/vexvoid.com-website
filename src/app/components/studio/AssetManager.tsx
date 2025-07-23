@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { allImages, conceptArtImages, streetArtImages, landscapeImages, portraitImages } from '../../lib/images'
+import { conceptArtImages, landscapeImages, portraitImages } from '../../lib/images'
 
 // Create a unified interface for the AssetManager
 interface ImageAsset {
@@ -36,12 +36,7 @@ export default function AssetManager({}: AssetManagerProps) {
         path: img.path,
         category: 'concept art'
       })),
-      ...streetArtImages.map((img, index) => ({
-        id: `street-${index}`,
-        name: img.filename,
-        path: img.path,
-        category: 'street art'
-      })),
+
       ...landscapeImages.map((img, index) => ({
         id: `landscape-${index}`,
         name: img.filename,
